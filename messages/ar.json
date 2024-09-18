@@ -8,8 +8,25 @@
     "Car_rentals": "تأجير السيارات"
   },
   "chooselang": {
-    "choose": "اختر لغتك",
+    "choose": "اختر لغتك:",
     "lang1": "عربي",
     "lang2": "انجليزي"
+  },
+  "Login": {
+    "LoginButton": "تسجيل الدخول",
+    "header": "قم بتسجيل الدخول",
+    "email": "الايميل",
+    "password": "الباسوورد"
+  },
+  "SignUp": {
+    "SignUpButton": "التسجيل",
+    "header": "قم بانشاء حساب جديد",
+    "name": "الاسم",
+    "email": "الايميل",
+    "phonenumber": "رقم الهاتف",
+    "password": "الباسوورد",
+    "repeat_password": "قم بتكرار الباسوورد",
+    "passwordValidationMin": "يجب ان يكون الباسوورد على الاقل 8 حروف",
+    "passwordValidationMax": "الباسوورد على الاكثر 20 حرف"
   }
 }

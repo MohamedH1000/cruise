@@ -1,12 +1,17 @@
+"use client";
 import { useTranslations } from "next-intl";
 import Image from "next/image";
 import { Link } from "@/i18n/routing";
-import React from "react";
+import React, { useState } from "react";
 import LanguageSelector from "../LanguageSelector";
+import { Button } from "../ui/button";
+import { useRouter } from "@/i18n/routing";
+import { usePathname } from "@/i18n/routing";
 
 const NavBar = () => {
+  const pathname = usePathname();
   const t = useTranslations();
-
+  const router = useRouter();
   return (
     <header
       className="h-[64px] bg-[#003b95] fixed top-0 z-50 w-full flex justify-between items-center lg:px-[180px]
@@ -16,11 +21,48 @@ const NavBar = () => {
         <Image src={"/assets/logo.png"} alt="Cruise" width={150} height={50} />
       </Link>
       <nav className="flex justify-center items-center gap-5 text-white">
-        <Link href={"/"}>{t("NavItems.main")}</Link>
-        <Link href={"/attractions"}>{t("NavItems.attractions")}</Link>
-        <Link href={"/car-rentals"}>{t("NavItems.Car_rentals")}</Link>
+        <Link
+          href={"/"}
+          className={`${
+            pathname === "/" ? "border-[1.5px] bg-[#0b152592]" : ""
+          }  p-2 rounded-[7px] hover:bg-[#0b152592] transition duration-300`}
+        >
+          {t("NavItems.main")}
+        </Link>
+        <Link
+          href={"/attractions"}
+          className={`${
+            pathname === "/attractions" ? "border-[1.5px] bg-[#0b152592]" : ""
+          }  p-2 rounded-[7px] hover:bg-[#0b152592] transition duration-300`}
+        >
+          {t("NavItems.attractions")}
+        </Link>
+        <Link
+          href={"/car-rentals"}
+          className={`${
+            pathname === "/car-rentals" ? "border-[1.5px] bg-[#0b152592]" : ""
+          }  p-2 rounded-[7px] hover:bg-[#0b152592] transition duration-300`}
+        >
+          {t("NavItems.Car_rentals")}
+        </Link>
       </nav>
-      <LanguageSelector />
+      <div className="flex justify-between items-center gap-2">
+        <LanguageSelector />
+        <div className="gap-2 flex">
+          <Button
+            className="bg-white text-[#003b95] rounded-[12px] hover:opacity-90 transition duration-300"
+            onClick={() => router.push("/sign-in")}
+          >
+            {t("Login.LoginButton")}
+          </Button>
+          <Button
+            className="bg-white text-[#003b95] rounded-[12px] hover:opacity-90 transition duration-300"
+            onClick={() => router.push("/sign-up")}
+          >
+            {t("SignUp.SignUpButton")}
+          </Button>
+        </div>
+      </div>
     </header>
   );
 };
