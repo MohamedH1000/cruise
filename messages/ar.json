@@ -1,0 +1,15 @@
+{
+  "HomePage": {
+    "title": "مرحبا بالعالم!"
+  },
+  "NavItems": {
+    "main": "الرئيسية",
+    "attractions": "المعالم السياحية",
+    "Car_rentals": "تأجير السيارات"
+  },
+  "chooselang": {
+    "choose": "اختر لغتك",
+    "lang1": "عربي",
+    "lang2": "انجليزي"
+  }
+}
