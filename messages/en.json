@@ -1,0 +1,15 @@
+{
+  "HomePage": {
+    "title": "Hello World!"
+  },
+  "NavItems": {
+    "main": "Main",
+    "attractions": "Attractions",
+    "Car_rentals": "Car rentals"
+  },
+  "chooselang": {
+    "choose": "Choose language",
+    "lang1": "Arabic",
+    "lang2": "English"
+  }
+}
