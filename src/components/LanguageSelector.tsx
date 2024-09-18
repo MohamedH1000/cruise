@@ -29,26 +29,34 @@ const LanguageSelector = () => {
   };
 
   return (
-    <Select
-      dir={locale === "ar" ? "rtl" : "ltr"}
-      onValueChange={handleSelect}
-      defaultValue={locale}
-    >
-      <SelectTrigger
-        className="w-[180px] rounded-md text-white"
-        disabled={isPending}
-      >
-        <SelectValue placeholder={t("chooselang.choose")} />
-      </SelectTrigger>
-      <SelectContent className="bg-white text-black rounded-md py-2 cursor-pointer">
-        <SelectItem value="ar" className="border-b-2 cursor-pointer">
-          {t("chooselang.lang1")}
-        </SelectItem>
-        <SelectItem value="en" className="cursor-pointer">
-          {t("chooselang.lang2")}
-        </SelectItem>
-      </SelectContent>
-    </Select>
+    <>
+      <div className="flex justify-center items-center gap-2">
+        <label className="text-white" htmlFor="language">
+          {t("chooselang.choose")}
+        </label>
+        <Select
+          name="language"
+          dir={locale === "ar" ? "rtl" : "ltr"}
+          onValueChange={handleSelect}
+          defaultValue={locale}
+        >
+          <SelectTrigger
+            className="w-[150px] rounded-[10px] text-white"
+            disabled={isPending}
+          >
+            <SelectValue placeholder={t("chooselang.choose")} />
+          </SelectTrigger>
+          <SelectContent className="bg-white text-black rounded-md py-2 cursor-pointer">
+            <SelectItem value="ar" className="border-b-2 cursor-pointer">
+              {t("chooselang.lang1")}
+            </SelectItem>
+            <SelectItem value="en" className="cursor-pointer">
+              {t("chooselang.lang2")}
+            </SelectItem>
+          </SelectContent>
+        </Select>
+      </div>
+    </>
   );
 };
 

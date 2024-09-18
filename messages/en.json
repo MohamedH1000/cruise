@@ -8,8 +8,25 @@
     "Car_rentals": "Car rentals"
   },
   "chooselang": {
-    "choose": "Choose language",
+    "choose": "Choose language:",
     "lang1": "Arabic",
     "lang2": "English"
+  },
+  "Login": {
+    "LoginButton": "Login",
+    "header": "Sign in to your account",
+    "email": "email",
+    "password": "Password"
+  },
+  "SignUp": {
+    "SignUpButton": "Sign Up",
+    "header": "Create a New Account",
+    "name": "name",
+    "email": "email",
+    "phonenumber": "Phone Number",
+    "password": "Password",
+    "repeat_password": "Repeat Password",
+    "passwordValidationMin": "password is minimum 8 characters",
+    "passwordValidationMax": "password is maximum 20 characters"
   }
 }
