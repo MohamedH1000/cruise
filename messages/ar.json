@@ -15,8 +15,11 @@
   "Login": {
     "LoginButton": "تسجيل الدخول",
     "header": "قم بتسجيل الدخول",
+    "logingoogle": "قم بتسجيل الدخول باستخدام جوجل",
     "email": "الايميل",
-    "password": "الباسوورد"
+    "password": "الباسوورد",
+    "noaccount": "ليس لديك حساب؟",
+    "signup": "قم بالتسجيل "
   },
   "SignUp": {
     "SignUpButton": "التسجيل",
@@ -25,8 +28,11 @@
     "email": "الايميل",
     "phonenumber": "رقم الهاتف",
     "password": "الباسوورد",
+    "signupgoogle": "قم بالتسجيل باستخدام جوجل",
     "repeat_password": "قم بتكرار الباسوورد",
     "passwordValidationMin": "يجب ان يكون الباسوورد على الاقل 8 حروف",
-    "passwordValidationMax": "الباسوورد على الاكثر 20 حرف"
+    "passwordValidationMax": "الباسوورد على الاكثر 20 حرف",
+    "haveaccount": "هل لديك حساب؟",
+    "signin": "قم بتسجيل الدخول"
   }
 }

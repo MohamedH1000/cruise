@@ -13,7 +13,10 @@ import { useLocale } from "next-intl";
 import { useTransition } from "react";
 import { usePathname } from "next/navigation";
 
-const LanguageSelector = () => {
+interface LanguageSelectorProps {
+  isMobile: Boolean;
+}
+const LanguageSelector = ({ isMobile }: LanguageSelectorProps) => {
   const pathname = usePathname();
   const router = useRouter();
   // const localeURL = pathname?.split("/")[1];
@@ -30,8 +33,15 @@ const LanguageSelector = () => {
 
   return (
     <>
-      <div className="flex justify-center items-center gap-2">
-        <label className="text-white" htmlFor="language">
+      <div
+        className={`flex justify-center items-center gap-2 ${
+          isMobile ? "sm:hidden" : "max-sm:hidden"
+        }`}
+      >
+        <label
+          className={`${isMobile ? "text-black" : "text-white"}`}
+          htmlFor="language"
+        >
           {t("chooselang.choose")}
         </label>
         <Select
@@ -41,12 +51,14 @@ const LanguageSelector = () => {
           defaultValue={locale}
         >
           <SelectTrigger
-            className="w-[150px] rounded-[10px] text-white"
+            className={`${
+              isMobile ? "text-black" : "text-white"
+            } w-[150px] rounded-[10px]  max-md:w-[100px]`}
             disabled={isPending}
           >
             <SelectValue placeholder={t("chooselang.choose")} />
           </SelectTrigger>
-          <SelectContent className="bg-white text-black rounded-md py-2 cursor-pointer">
+          <SelectContent className="bg-white text-black rounded-md py-2 cursor-pointer z-[50]">
             <SelectItem value="ar" className="border-b-2 cursor-pointer">
               {t("chooselang.lang1")}
             </SelectItem>
