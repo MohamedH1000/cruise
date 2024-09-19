@@ -15,11 +15,15 @@
   "Login": {
     "LoginButton": "Login",
     "header": "Sign in to your account",
+    "logingoogle": "Login using google",
     "email": "email",
-    "password": "Password"
+    "password": "Password",
+    "noaccount": "Don't have an account?",
+    "signup": "Sign up"
   },
   "SignUp": {
     "SignUpButton": "Sign Up",
+    "signupgoogle": "Sign Up using google",
     "header": "Create a New Account",
     "name": "name",
     "email": "email",
@@ -27,6 +31,8 @@
     "password": "Password",
     "repeat_password": "Repeat Password",
     "passwordValidationMin": "password is minimum 8 characters",
-    "passwordValidationMax": "password is maximum 20 characters"
+    "passwordValidationMax": "password is maximum 20 characters",
+    "haveaccount": "Do you have an account?",
+    "signin": "Sign in"
   }
 }

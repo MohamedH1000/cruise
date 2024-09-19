@@ -4,7 +4,6 @@ import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { motion } from "framer-motion";
-import { Button } from "@/components/ui/button";
 import {
   Form,
   FormControl,
@@ -15,6 +14,9 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { useTranslations } from "next-intl";
+import { FcGoogle } from "react-icons/fc";
+import { Separator } from "@/components/ui/separator";
+import { Link } from "@/i18n/routing";
 
 const page = () => {
   const t = useTranslations();
@@ -47,11 +49,11 @@ const page = () => {
     console.log(values);
   }
   return (
-    <div className="flex justify-center items-center min-h-screen w-full mt-[64px]">
+    <div className="flex justify-center items-center min-h-screen mt-[64px] w-full px-5">
       <Form {...form}>
         <form
           onSubmit={form.handleSubmit(onSubmit)}
-          className="border-[1.5px] px-4 py-8 rounded-[14px] shadow-md"
+          className="border-[1.5px] px-4 py-8 rounded-[14px] shadow-md max-w-[500px] w-full"
         >
           <h1 className="text-[#003b95] text-center font-bold text-3xl">
             {t("SignUp.header")}
@@ -66,7 +68,7 @@ const page = () => {
                   <Input
                     placeholder={t("SignUp.name")}
                     {...field}
-                    className="p-4 placeholder:opacity-65 rounded-[12px] border-[gray] w-[500px]"
+                    className="p-4 placeholder:opacity-65 rounded-[12px] border-[gray] w-full"
                   />
                 </FormControl>
                 <FormMessage />
@@ -83,7 +85,7 @@ const page = () => {
                   <Input
                     placeholder={t("SignUp.email")}
                     {...field}
-                    className="p-4 placeholder:opacity-65 rounded-[12px] border-[gray] w-[500px]"
+                    className="p-4 placeholder:opacity-65 rounded-[12px] border-[gray] w-full"
                   />
                 </FormControl>
                 <FormMessage />
@@ -102,7 +104,7 @@ const page = () => {
                   <Input
                     placeholder={t("SignUp.phonenumber")}
                     {...field}
-                    className="p-4 placeholder:opacity-65 rounded-[12px] border-[gray] w-[500px]"
+                    className="p-4 placeholder:opacity-65 rounded-[12px] border-[gray] w-full"
                   />
                 </FormControl>
                 <FormMessage />
@@ -121,7 +123,7 @@ const page = () => {
                   <Input
                     placeholder={t("SignUp.password")}
                     {...field}
-                    className="p-4 placeholder:opacity-65 rounded-[12px] border-[gray] w-[500px]"
+                    className="p-4 placeholder:opacity-65 rounded-[12px] border-[gray] w-full"
                   />
                 </FormControl>
                 <FormMessage />
@@ -140,7 +142,7 @@ const page = () => {
                   <Input
                     placeholder={t("SignUp.repeat_password")}
                     {...field}
-                    className="p-4 placeholder:opacity-65 rounded-[12px] border-[gray] w-[500px]"
+                    className="p-4 placeholder:opacity-65 rounded-[12px] border-[gray] w-full"
                   />
                 </FormControl>
                 <FormMessage />
@@ -155,6 +157,22 @@ const page = () => {
           >
             {t("SignUp.SignUpButton")}
           </motion.button>
+          <Separator className="bg-[gray] mt-8" />
+          <motion.button
+            className="flex justify-center items-center gap-3 w-full mt-6 shadow-md py-2 px-4 rounded-[12px]
+          text-[18px] font-semibold border-[1px]"
+            whileTap={{ scale: 0.9 }}
+            whileHover={{ scale: 1.025 }}
+          >
+            <FcGoogle />
+            {t("SignUp.signupgoogle")}
+          </motion.button>
+          <div className="mt-4 flex justify-center items-center gap-3">
+            <p>{t("SignUp.haveaccount")}</p>
+            <Link href={"/sign-in"}>
+              <p className="font-bold">{t("SignUp.signin")}</p>
+            </Link>
+          </div>
         </form>
       </Form>
     </div>

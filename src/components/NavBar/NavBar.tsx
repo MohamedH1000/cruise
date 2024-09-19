@@ -7,8 +7,10 @@ import LanguageSelector from "../LanguageSelector";
 import { Button } from "../ui/button";
 import { useRouter } from "@/i18n/routing";
 import { usePathname } from "@/i18n/routing";
+import MobileNav from "./MobileNav";
 
 const NavBar = () => {
+  const [open, setOpen] = useState(false);
   const pathname = usePathname();
   const t = useTranslations();
   const router = useRouter();
@@ -20,7 +22,7 @@ const NavBar = () => {
       <Link href={"/"}>
         <Image src={"/assets/logo.png"} alt="Cruise" width={150} height={50} />
       </Link>
-      <nav className="flex justify-center items-center gap-5 text-white">
+      <nav className="flex justify-center items-center gap-5 text-white max-lg:gap-2 max-lg:text-[12px] max-sm:hidden">
         <Link
           href={"/"}
           className={`${
@@ -48,7 +50,7 @@ const NavBar = () => {
       </nav>
       <div className="flex justify-between items-center gap-2">
         <LanguageSelector />
-        <div className="gap-2 flex">
+        <div className="gap-2 flex max-md:hidden">
           <Button
             className="bg-white text-[#003b95] rounded-[12px] hover:opacity-90 transition duration-300"
             onClick={() => router.push("/sign-in")}
@@ -63,6 +65,7 @@ const NavBar = () => {
           </Button>
         </div>
       </div>
+      <MobileNav open={open} setOpen={setOpen} />
     </header>
   );
 };
