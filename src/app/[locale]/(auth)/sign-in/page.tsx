@@ -114,7 +114,7 @@ const page = () => {
           <div className="mt-4 flex justify-center items-center gap-3">
             <p>{t("Login.noaccount")}</p>
             <Link href={"/sign-up"}>
-              <p className="font-bold">{t("Login.signup")}</p>
+              <p className="font-bold hover:underline">{t("Login.signup")}</p>
             </Link>
           </div>
         </form>

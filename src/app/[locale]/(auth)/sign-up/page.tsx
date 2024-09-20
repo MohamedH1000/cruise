@@ -4,6 +4,8 @@ import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { motion } from "framer-motion";
+import PhoneInput from "react-phone-number-input";
+import "react-phone-number-input/style.css";
 import {
   Form,
   FormControl,
@@ -41,7 +43,7 @@ const page = () => {
       confirmPassword: "",
     },
   });
-
+  // console.log(form.getValues());
   // 2. Define a submit handler.
   function onSubmit(values: z.infer<typeof formSchema>) {
     // Do something with the form values.
@@ -49,7 +51,7 @@ const page = () => {
     console.log(values);
   }
   return (
-    <div className="flex justify-center items-center min-h-screen mt-[64px] w-full px-5">
+    <div className="flex justify-center items-center min-h-screen mt-[100px] w-full px-5 mb-[50px]">
       <Form {...form}>
         <form
           onSubmit={form.handleSubmit(onSubmit)}
@@ -101,11 +103,20 @@ const page = () => {
                   {t("SignUp.phonenumber")}:
                 </FormLabel>
                 <FormControl>
-                  <Input
+                  <PhoneInput
+                    {...field}
+                    defaultCountry="US"
+                    international
+                    withCountryCallingCode
+                    placeholder="رقم هاتفك"
+                    required
+                    className="p-4 placeholder:opacity-65 rounded-[12px] border-[gray] w-full border-[1px]"
+                  />
+                  {/* <Input
                     placeholder={t("SignUp.phonenumber")}
                     {...field}
                     className="p-4 placeholder:opacity-65 rounded-[12px] border-[gray] w-full"
-                  />
+                  /> */}
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -170,7 +181,7 @@ const page = () => {
           <div className="mt-4 flex justify-center items-center gap-3">
             <p>{t("SignUp.haveaccount")}</p>
             <Link href={"/sign-in"}>
-              <p className="font-bold">{t("SignUp.signin")}</p>
+              <p className="font-bold hover:underline">{t("SignUp.signin")}</p>
             </Link>
           </div>
         </form>
