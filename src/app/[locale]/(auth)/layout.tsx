@@ -7,7 +7,7 @@ export const metadata: Metadata = {
   description: "Sign in and Sign up pages for the website",
 };
 
-const layout = ({ children }: { children: React.ReactNode }) => {
+const layout = async ({ children }: { children: React.ReactNode }) => {
   return (
     <div>
       <NavBar />

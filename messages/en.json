@@ -19,7 +19,9 @@
     "email": "email",
     "password": "Password",
     "noaccount": "Don't have an account?",
-    "signup": "Sign up"
+    "signup": "Sign up",
+    "logout": "Logout",
+    "Loading": "Loading"
   },
   "SignUp": {
     "SignUpButton": "Sign Up",
@@ -33,6 +35,12 @@
     "passwordValidationMin": "password is minimum 8 characters",
     "passwordValidationMax": "password is maximum 20 characters",
     "haveaccount": "Do you have an account?",
-    "signin": "Sign in"
+    "signin": "Sign in",
+    "Loading": "Loading"
+  },
+  "ToastMessages": {
+    "signout": "Logout successfully",
+    "login": "Logged in successfully",
+    "signup": "Signed up successfully"
   }
 }

@@ -1,16 +1,24 @@
 import { Link, usePathname } from "@/i18n/routing";
 import Image from "next/image";
-import React, { Dispatch, SetStateAction } from "react";
+import React from "react";
 import { motion } from "framer-motion";
 import { useTranslations } from "next-intl";
 import { Separator } from "../ui/separator";
 import LanguageSelector from "../LanguageSelector";
+import { Button } from "../ui/button";
+import { signOut } from "next-auth/react";
+import toast from "react-hot-toast";
 
 interface MobileNavProps {
   open: Boolean;
-  setOpen: Dispatch<SetStateAction<Boolean>>;
+  setOpen: any;
+  currentUser: any;
 }
-const MobileNav: React.FC<MobileNavProps> = ({ open, setOpen }) => {
+const MobileNav: React.FC<MobileNavProps> = ({
+  open,
+  setOpen,
+  currentUser,
+}) => {
   const pathname = usePathname();
   const t = useTranslations();
   return (
@@ -79,28 +87,42 @@ const MobileNav: React.FC<MobileNavProps> = ({ open, setOpen }) => {
           </Link>
           <LanguageSelector isMobile />
           <Separator className="bg-[gray] w-full h-[1px] sm:hidden" />
-          <Link
-            href={"/sign-in"}
-            className={`${
-              pathname === "/sign-in"
-                ? "bg-[#003b95] text-white"
-                : "hover:bg-[#c3bbbb] text-black"
-            } w-full  px-4 py-2 rounded-[12px]`}
-            onClick={() => setOpen((prev: any) => !prev)}
-          >
-            {t("Login.LoginButton")}
-          </Link>
-          <Link
-            href={"/sign-up"}
-            className={`${
-              pathname === "/sign-up"
-                ? "bg-[#003b95] text-white"
-                : "hover:bg-[#c3bbbb] text-black"
-            } w-full  px-4 py-2 rounded-[12px]`}
-            onClick={() => setOpen((prev: any) => !prev)}
-          >
-            {t("SignUp.SignUpButton")}
-          </Link>
+          {currentUser ? (
+            <Button
+              className="w-full  px-4 py-4 rounded-[12px] flex justify-start text-[16px]"
+              onClick={() => {
+                signOut();
+                toast.success(`${t("ToastMessages.signout")}`);
+              }}
+            >
+              {t("Login.logout")}
+            </Button>
+          ) : (
+            <>
+              <Link
+                href={"/sign-in"}
+                className={`${
+                  pathname === "/sign-in"
+                    ? "bg-[#003b95] text-white"
+                    : "hover:bg-[#c3bbbb] text-black"
+                } w-full  px-4 py-2 rounded-[12px]`}
+                onClick={() => setOpen((prev: any) => !prev)}
+              >
+                {t("Login.LoginButton")}
+              </Link>
+              <Link
+                href={"/sign-up"}
+                className={`${
+                  pathname === "/sign-up"
+                    ? "bg-[#003b95] text-white"
+                    : "hover:bg-[#c3bbbb] text-black"
+                } w-full  px-4 py-2 rounded-[12px]`}
+                onClick={() => setOpen((prev: any) => !prev)}
+              >
+                {t("SignUp.SignUpButton")}
+              </Link>
+            </>
+          )}
         </motion.nav>
       )}
     </div>

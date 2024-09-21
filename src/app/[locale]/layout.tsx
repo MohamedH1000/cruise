@@ -1,6 +1,7 @@
 import localFont from "next/font/local";
 import { getMessages } from "next-intl/server";
 import { NextIntlClientProvider } from "next-intl";
+import { Toaster } from "react-hot-toast";
 
 import "../globals.css";
 
@@ -32,6 +33,7 @@ export default async function RootLayout({
         <NextIntlClientProvider messages={messages}>
           {children}
         </NextIntlClientProvider>
+        <Toaster position="bottom-right" reverseOrder={false} />
       </body>
     </html>
   );

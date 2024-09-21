@@ -8,8 +8,20 @@ import { Button } from "../ui/button";
 import { useRouter } from "@/i18n/routing";
 import { usePathname } from "@/i18n/routing";
 import MobileNav from "./MobileNav";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import {
+  Menubar,
+  MenubarContent,
+  MenubarItem,
+  MenubarMenu,
+  MenubarSeparator,
+  MenubarTrigger,
+} from "@/components/ui/menubar";
+import { signOut } from "next-auth/react";
+import toast from "react-hot-toast";
 
-const NavBar = () => {
+const NavBar = ({ currentUser }: any) => {
+  console.log(currentUser);
   const [open, setOpen] = useState(false);
   const pathname = usePathname();
   const t = useTranslations();
@@ -51,21 +63,56 @@ const NavBar = () => {
       <div className="flex justify-between items-center gap-2">
         <LanguageSelector />
         <div className="gap-2 flex max-md:hidden">
-          <Button
-            className="bg-white text-[#003b95] rounded-[12px] hover:opacity-90 transition duration-300"
-            onClick={() => router.push("/sign-in")}
-          >
-            {t("Login.LoginButton")}
-          </Button>
-          <Button
-            className="bg-white text-[#003b95] rounded-[12px] hover:opacity-90 transition duration-300"
-            onClick={() => router.push("/sign-up")}
-          >
-            {t("SignUp.SignUpButton")}
-          </Button>
+          {currentUser && (
+            <Menubar className="border-none" dir="rtl">
+              <MenubarMenu>
+                <MenubarTrigger className="cursor-pointer">
+                  <Avatar className="bg-white">
+                    <AvatarImage src={currentUser?.image} />
+                    <AvatarFallback>
+                      {currentUser?.name.slice(0, 2)}
+                    </AvatarFallback>
+                  </Avatar>
+                </MenubarTrigger>
+                <MenubarContent>
+                  <Link href={"/profile"}>
+                    <MenubarItem className="cursor-pointer">حسابي</MenubarItem>
+                  </Link>
+                  <MenubarSeparator />
+
+                  <MenubarSeparator />
+                  <MenubarItem
+                    className="cursor-pointer"
+                    onClick={() => {
+                      signOut();
+                      toast.success("تم تسجيل الخروج بنجاح");
+                    }}
+                  >
+                    تسجيل الخروج
+                  </MenubarItem>
+                </MenubarContent>
+              </MenubarMenu>
+            </Menubar>
+          )}
+          {!currentUser && (
+            <>
+              <Button
+                className="bg-white text-[#003b95] rounded-[12px] hover:opacity-90 transition duration-300"
+                onClick={() => router.push("/sign-in")}
+              >
+                {t("Login.LoginButton")}
+              </Button>
+              <Button
+                className="bg-white text-[#003b95] rounded-[12px] hover:opacity-90 transition duration-300"
+                onClick={() => router.push("/sign-up")}
+              >
+                {t("SignUp.SignUpButton")}
+              </Button>
+            </>
+          )}
         </div>
       </div>
-      <MobileNav open={open} setOpen={setOpen} />
+      <MobileNav open={open} setOpen={setOpen} currentUser={currentUser} />
     </header>
   );
 };
