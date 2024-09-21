@@ -1,4 +1,5 @@
 import NavBar from "@/components/NavBar/NavBar";
+import { getCurrentUser } from "@/lib/actions/user.action";
 import { Metadata } from "next";
 import React from "react";
 
@@ -8,9 +9,10 @@ export const metadata: Metadata = {
 };
 
 const layout = async ({ children }: { children: React.ReactNode }) => {
+  const currentUser = await getCurrentUser();
   return (
     <div>
-      <NavBar />
+      <NavBar currentUser={currentUser} />
       {children}
     </div>
   );

@@ -19,7 +19,7 @@ model User {
   email String @unique
   emailVerified DateTime?
   image String?
-  phoneNumber String
+  phoneNumber String?
   hashedPassword String?
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt

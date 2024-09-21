@@ -14,7 +14,7 @@ import { useTransition } from "react";
 import { usePathname } from "next/navigation";
 
 interface LanguageSelectorProps {
-  isMobile: Boolean;
+  isMobile?: Boolean;
 }
 const LanguageSelector = ({ isMobile }: LanguageSelectorProps) => {
   const pathname = usePathname();
