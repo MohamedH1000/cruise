@@ -42,5 +42,9 @@
     "signout": "Logout successfully",
     "login": "Logged in successfully",
     "signup": "Signed up successfully"
+  },
+  "Accessibility": {
+    "noadmin": "This page is accissible by admins only",
+    "backMain": "Back Home Page"
   }
 }

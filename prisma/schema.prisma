@@ -27,6 +27,7 @@ model User {
   role String?
 
   account Account[]
+  cruise Cruise[]
 }
 
 model Account {
@@ -50,8 +51,30 @@ model Account {
 
 model Cruise {
   id String @id @default(auto()) @map("_id") @db.ObjectId
+  userId String @db.ObjectId
   name String
   description String?
   imageSrc String[] @default([])
+  amenities String[] @default([])
+  location Json?
+  type String?
+  numberOfGuests Int?
+  discount String?
+  price Int
+  choices String[] @default([])
   createdAt DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  attractions Attractions[]
+}
+
+model Attractions {
+    id String @id @default(auto()) @map("_id") @db.ObjectId
+    cruiseId String @db.ObjectId
+    name String
+    Description String
+    imageSrc String[] @default([])
+    location Json?
+
+    cruise Cruise? @relation(fields: [cruiseId], references: [id], onDelete: Cascade)
 }
