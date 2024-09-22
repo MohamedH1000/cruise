@@ -78,9 +78,17 @@ const NavBar = ({ currentUser }: any) => {
                   <Link href={"/profile"}>
                     <MenubarItem className="cursor-pointer">حسابي</MenubarItem>
                   </Link>
-                  <MenubarSeparator />
-
-                  <MenubarSeparator />
+                  <MenubarSeparator className="bg-[gray]" />
+                  {currentUser.role === "admin" && (
+                    <>
+                      <Link href={"/admin"}>
+                        <MenubarItem className="cursor-pointer">
+                          لوحة التحكم
+                        </MenubarItem>
+                      </Link>
+                      <MenubarSeparator className="bg-[gray]" />
+                    </>
+                  )}
                   <MenubarItem
                     className="cursor-pointer"
                     onClick={() => {

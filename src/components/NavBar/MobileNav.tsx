@@ -85,7 +85,9 @@ const MobileNav: React.FC<MobileNavProps> = ({
           >
             {t("NavItems.Car_rentals")}
           </Link>
-          <LanguageSelector isMobile />
+          <div className="z-[120] relative">
+            <LanguageSelector isMobile />
+          </div>
           <Separator className="bg-[gray] w-full h-[1px] sm:hidden" />
           {currentUser ? (
             <Button

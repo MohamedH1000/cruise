@@ -63,8 +63,8 @@ const Register = () => {
     // ✅ This will be type-safe and validated.
     // console.log(values);
     setError("");
-    setIsLoading(true);
     try {
+      setIsLoading(true);
       await createUser(values);
       toast.success(`${t("ToastMessages.signup")}`);
       const loginData = {
@@ -75,7 +75,6 @@ const Register = () => {
         ...loginData,
         redirect: false,
       }).then((callback) => {
-        setIsLoading(false);
         if (callback?.ok) {
           router.push("/");
         }
@@ -85,6 +84,7 @@ const Register = () => {
       console.log(error);
       toast("مشكلة في انشاء المستخدم");
     } finally {
+      router.refresh();
       setIsLoading(false);
     }
   }
@@ -206,7 +206,7 @@ const Register = () => {
         >
           {isLoading ? (
             <>
-              {t("SignUp.loading")} <Loader size="md" />
+              <Loader size="md" content={`${t("SignUp.Loading")}`} />
             </>
           ) : (
             t("SignUp.SignUpButton")

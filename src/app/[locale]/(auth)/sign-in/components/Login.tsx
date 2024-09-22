@@ -42,16 +42,16 @@ const Login = () => {
     },
   });
 
-  console.log(form.getValues());
+  // console.log(form.getValues());
 
   // 2. Define a submit handler.
   async function onSubmit(values: z.infer<typeof formSchema>) {
-    setIsLoading(true);
     const loginData = {
       email: values.email,
       password: values.password,
     };
     try {
+      setIsLoading(true);
       signIn("credentials", {
         ...loginData,
         redirect: false,
@@ -68,6 +68,7 @@ const Login = () => {
     } catch (error) {
       console.log(error);
     } finally {
+      router.refresh();
       setIsLoading(false);
     }
     // console.log(values);
@@ -127,7 +128,7 @@ const Login = () => {
         >
           {isLoading ? (
             <>
-              {t("Login.loading")} <Loader size="md" />
+              <Loader size="md" content={`${t("Login.Loading")}`} />
             </>
           ) : (
             t("Login.LoginButton")
