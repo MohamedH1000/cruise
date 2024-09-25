@@ -10,6 +10,10 @@ const nextConfig = {
   eslint: {
     ignoreDuringBuilds: true,
   },
+  images: {
+    domains: ["res.cloudinary.com"],
+    unoptimized: true,
+  },
 };
 
 export default withNextIntl(nextConfig);

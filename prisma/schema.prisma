@@ -58,6 +58,7 @@ model Cruise {
   amenities String[] @default([])
   location Json?
   type String?
+  status String?
   numberOfGuests Int?
   discount String?
   price Int

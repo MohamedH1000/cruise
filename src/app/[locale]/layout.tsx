@@ -2,6 +2,7 @@ import localFont from "next/font/local";
 import { getMessages } from "next-intl/server";
 import { NextIntlClientProvider } from "next-intl";
 import { Toaster } from "react-hot-toast";
+import { getLangDir } from "rtl-detect";
 
 import "../globals.css";
 
@@ -24,17 +25,18 @@ export default async function RootLayout({
   params: { locale: string };
 }>) {
   const messages = await getMessages();
+  const direction = getLangDir(locale);
 
   return (
-    <html lang={locale} dir={locale === "ar" ? "rtl" : "ltr"}>
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-      >
-        <NextIntlClientProvider messages={messages}>
+    <html lang={locale} dir={direction}>
+      <NextIntlClientProvider messages={messages}>
+        <body
+          className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        >
           {children}
-        </NextIntlClientProvider>
-        <Toaster position="bottom-right" reverseOrder={false} />
-      </body>
+          <Toaster position="bottom-right" reverseOrder={false} />
+        </body>
+      </NextIntlClientProvider>
     </html>
   );
 }

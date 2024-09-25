@@ -24,6 +24,18 @@ export async function createUser(userData: any) {
   }
 }
 
+export async function getAllUsers() {
+  try {
+    const users = await prisma.user.findMany({
+      orderBy: {
+        createdAt: "asc",
+      },
+    });
+    return users;
+  } catch (error) {
+    console.log(error);
+  }
+}
 export async function getSession() {
   return await getServerSession(authOptions);
 }

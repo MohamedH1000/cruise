@@ -2,8 +2,14 @@ import { Link } from "@/i18n/routing";
 import { getCurrentUser } from "@/lib/actions/user.action";
 import { getTranslations } from "next-intl/server";
 import React from "react";
+import { Metadata } from "next";
 
-const page = async () => {
+export const metadata: Metadata = {
+  title: "Admin Dashboard",
+  description: "A dashboard for managing the cruises and users",
+};
+
+const page = async ({ children }: { children: React.ReactNode }) => {
   const currentUser = await getCurrentUser();
   const t = await getTranslations();
 
@@ -20,7 +26,14 @@ const page = async () => {
       </div>
     );
   }
-  return <div>page</div>;
+  return (
+    <div
+      className="mt-[120px] lg:px-[180px]
+  md:px-[50px] max-sm:px-[10px] max-md:px-[50px]"
+    >
+      {children}
+    </div>
+  );
 };
 
 export default page;

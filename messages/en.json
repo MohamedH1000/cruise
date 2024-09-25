@@ -45,6 +45,23 @@
   },
   "Accessibility": {
     "noadmin": "This page is accissible by admins only",
-    "backMain": "Back Home Page"
+    "backMain": "Back Home Page",
+    "controlpanel": "Dashboard",
+    "myaccount": "My Account",
+    "users": "Users",
+    "cruises": "Cruises"
+  },
+  "cruisesTable": {
+    "name": "Name",
+    "description": "Description",
+    "amenities": "Amenities",
+    "numberOfGuests": "Number of guests",
+    "price": "Price",
+    "discount": "Discount",
+    "status": "Status",
+    "addNewCruise": "Add New Cruise",
+    "phonenumber": "Phone Number",
+    "createdAt": "Created At",
+    "role": "Role"
   }
 }
