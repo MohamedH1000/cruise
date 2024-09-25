@@ -45,6 +45,24 @@
   },
   "Accessibility": {
     "noadmin": "هذه الصفحة خاصة بالادمن فقط",
-    "backMain": "العودة للصفحة الرئيسية"
+    "backMain": "العودة للصفحة الرئيسية",
+    "controlpanel": "لوحة التحكم",
+    "myaccount": "حسابي",
+    "users": "المستخدمين",
+    "cruises": "اليخوت"
+  },
+  "cruisesTable": {
+    "name": "الاسم",
+    "email": "الايميل",
+    "description": "الوصف",
+    "amenities": "وسائل الراحة",
+    "numberOfGuests": "عدد الضيوف",
+    "price": "السعر",
+    "discount": "الخصم",
+    "status": "الحالة",
+    "addNewCruise": "اضف يخت جديد",
+    "phonenumber": "رقم الهاتف",
+    "createdAt": "سجل الحساب بتاريخ",
+    "role": "نوع الحساب"
   }
 }

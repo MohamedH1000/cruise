@@ -13,11 +13,15 @@ interface MobileNavProps {
   open: Boolean;
   setOpen: any;
   currentUser: any;
+  isAdmin: Boolean;
+  isClient: Boolean;
 }
 const MobileNav: React.FC<MobileNavProps> = ({
   open,
   setOpen,
   currentUser,
+  isAdmin,
+  isClient,
 }) => {
   const pathname = usePathname();
   const t = useTranslations();
@@ -52,39 +56,89 @@ const MobileNav: React.FC<MobileNavProps> = ({
     shadow-md px-10 absolute
     top-[64px] right-0 w-full z-10 max-sm:top-[64px] pt-20"
         >
-          <Link
-            href={"/"}
-            className={`${
-              pathname === "/"
-                ? "bg-[#003b95] text-white"
-                : "hover:bg-[#c3bbbb] text-black"
-            } w-full  px-4 py-2 rounded-[12px] sm:hidden`}
-            onClick={() => setOpen((prev: any) => !prev)}
-          >
-            {t("NavItems.main")}
-          </Link>
-          <Link
-            href={"/attractions"}
-            className={`${
-              pathname === "/attractions"
-                ? "bg-[#003b95] text-white"
-                : "hover:bg-[#c3bbbb] text-black"
-            } w-full  px-4 py-2 rounded-[12px] sm:hidden`}
-            onClick={() => setOpen((prev: any) => !prev)}
-          >
-            {t("NavItems.attractions")}
-          </Link>
-          <Link
-            href={"/car-rentals"}
-            className={`${
-              pathname === "/car-rentals"
-                ? "bg-[#003b95] text-white"
-                : "hover:bg-[#c3bbbb] text-black"
-            } w-full  px-4 py-2 rounded-[12px] sm:hidden`}
-            onClick={() => setOpen((prev: any) => !prev)}
-          >
-            {t("NavItems.Car_rentals")}
-          </Link>
+          {isClient && (
+            <>
+              <Link
+                href={"/"}
+                className={`${
+                  pathname === "/"
+                    ? "bg-[#003b95] text-white"
+                    : "hover:bg-[#c3bbbb] text-black"
+                } w-full  px-4 py-2 rounded-[12px] sm:hidden`}
+                onClick={() => setOpen((prev: any) => !prev)}
+              >
+                {t("NavItems.main")}
+              </Link>
+              <Link
+                href={"/profile"}
+                className={`${
+                  pathname === "/profile"
+                    ? "bg-[#003b95] text-white"
+                    : "hover:bg-[#c3bbbb] text-black"
+                } w-full  px-4 py-2 rounded-[12px] sm:hidden`}
+                onClick={() => setOpen((prev: any) => !prev)}
+              >
+                {t("Accessibility.myaccount")}
+              </Link>
+              <Link
+                href={"/admin"}
+                className={`${
+                  pathname === "/admin"
+                    ? "bg-[#003b95] text-white"
+                    : "hover:bg-[#c3bbbb] text-black"
+                } w-full  px-4 py-2 rounded-[12px] sm:hidden`}
+                onClick={() => setOpen((prev: any) => !prev)}
+              >
+                {t("Accessibility.controlpanel")}
+              </Link>
+              <Link
+                href={"/attractions"}
+                className={`${
+                  pathname === "/attractions"
+                    ? "bg-[#003b95] text-white"
+                    : "hover:bg-[#c3bbbb] text-black"
+                } w-full  px-4 py-2 rounded-[12px] sm:hidden`}
+                onClick={() => setOpen((prev: any) => !prev)}
+              >
+                {t("NavItems.attractions")}
+              </Link>
+              <Link
+                href={"/car-rentals"}
+                className={`${
+                  pathname === "/car-rentals"
+                    ? "bg-[#003b95] text-white"
+                    : "hover:bg-[#c3bbbb] text-black"
+                } w-full  px-4 py-2 rounded-[12px] sm:hidden`}
+                onClick={() => setOpen((prev: any) => !prev)}
+              >
+                {t("NavItems.Car_rentals")}
+              </Link>
+            </>
+          )}
+          {isAdmin && (
+            <>
+              <Link
+                href={"/admin/users"}
+                className={`${
+                  pathname === "/admin/users"
+                    ? "bg-[#003b95] text-white"
+                    : "hover:bg-[#c3bbbb] text-black"
+                } w-full  px-4 py-2 rounded-[12px] sm:hidden`}
+              >
+                {t("Accessibility.users")}
+              </Link>
+              <Link
+                href={"/admin/cruises"}
+                className={`${
+                  pathname === "/admin/cruises"
+                    ? "bg-[#003b95] text-white"
+                    : "hover:bg-[#c3bbbb] text-black"
+                } w-full  px-4 py-2 rounded-[12px] sm:hidden`}
+              >
+                {t("Accessibility.cruises")}
+              </Link>
+            </>
+          )}
           <div className="z-[120] relative">
             <LanguageSelector isMobile />
           </div>

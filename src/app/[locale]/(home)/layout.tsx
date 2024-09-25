@@ -12,7 +12,7 @@ const layout = async ({ children }: { children: React.ReactNode }) => {
   const currentUser = await getCurrentUser();
   return (
     <div>
-      <NavBar currentUser={currentUser} />
+      <NavBar currentUser={currentUser} isClient />
       {children}
     </div>
   );
