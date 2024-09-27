@@ -6,7 +6,7 @@ import { authOptions } from "@/pages/api/auth/[...nextauth]";
 
 export async function createUser(userData: any) {
   try {
-    const { email, name, password, phoneNumber } = userData;
+    const { email, name, password, phoneNumber, accountRole: role } = userData;
     const hashedPassword = await bcrypt.hash(password, 12);
 
     const user = await prisma.user.create({
@@ -14,6 +14,7 @@ export async function createUser(userData: any) {
         email,
         name,
         phoneNumber,
+        role,
         hashedPassword,
       },
     });

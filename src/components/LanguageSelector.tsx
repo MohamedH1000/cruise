@@ -59,7 +59,7 @@ const LanguageSelector = ({ isMobile }: LanguageSelectorProps) => {
             <SelectValue placeholder={t("chooselang.choose")} />
           </SelectTrigger>
           <SelectContent
-            className="bg-white text-black rounded-md py-2 cursor-pointer"
+            className="bg-white text-black rounded-md py-2 cursor-pointer rounded-[12px]"
             ref={(ref) => {
               if (!ref) return;
               ref.ontouchend = (e) => e.preventDefault();

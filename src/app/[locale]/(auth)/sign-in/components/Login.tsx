@@ -50,8 +50,8 @@ const Login = () => {
       email: values.email,
       password: values.password,
     };
-    setIsLoading(true);
     try {
+      setIsLoading(true);
       signIn("credentials", {
         ...loginData,
         redirect: false,

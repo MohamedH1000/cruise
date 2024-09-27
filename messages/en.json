@@ -5,7 +5,9 @@
   "NavItems": {
     "main": "Main",
     "attractions": "Attractions",
-    "Car_rentals": "Car rentals"
+    "Car_rentals": "Car rentals",
+    "CruiseSearch": "Find your next cruise",
+    "PickDate": "Pick a date: Check-in Date - Check-out Date"
   },
   "chooselang": {
     "choose": "Choose language:",
@@ -14,6 +16,7 @@
   },
   "Login": {
     "LoginButton": "Login",
+    "cruiseOwnerButton": "Are you cruise owner ?",
     "header": "Sign in to your account",
     "logingoogle": "Login using google",
     "email": "email",
@@ -30,6 +33,7 @@
     "name": "name",
     "email": "email",
     "phonenumber": "Phone Number",
+    "accountRole": "Account Type",
     "password": "Password",
     "repeat_password": "Repeat Password",
     "passwordValidationMin": "password is minimum 8 characters",
@@ -53,6 +57,7 @@
   },
   "cruisesTable": {
     "name": "Name",
+    "email": "Email",
     "description": "Description",
     "amenities": "Amenities",
     "numberOfGuests": "Number of guests",
@@ -63,5 +68,9 @@
     "phonenumber": "Phone Number",
     "createdAt": "Created At",
     "role": "Role"
+  },
+  "chooseAccountType": {
+    "client": "Client",
+    "cruiseOwner": "Cruise Owner"
   }
 }

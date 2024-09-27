@@ -80,17 +80,19 @@ const MobileNav: React.FC<MobileNavProps> = ({
               >
                 {t("Accessibility.myaccount")}
               </Link>
-              <Link
-                href={"/admin"}
-                className={`${
-                  pathname === "/admin"
-                    ? "bg-[#003b95] text-white"
-                    : "hover:bg-[#c3bbbb] text-black"
-                } w-full  px-4 py-2 rounded-[12px] sm:hidden`}
-                onClick={() => setOpen((prev: any) => !prev)}
-              >
-                {t("Accessibility.controlpanel")}
-              </Link>
+              {currentUser.role === "admin" && (
+                <Link
+                  href={"/admin"}
+                  className={`${
+                    pathname === "/admin"
+                      ? "bg-[#003b95] text-white"
+                      : "hover:bg-[#c3bbbb] text-black"
+                  } w-full  px-4 py-2 rounded-[12px] sm:hidden`}
+                  onClick={() => setOpen((prev: any) => !prev)}
+                >
+                  {t("Accessibility.controlpanel")}
+                </Link>
+              )}
               <Link
                 href={"/attractions"}
                 className={`${

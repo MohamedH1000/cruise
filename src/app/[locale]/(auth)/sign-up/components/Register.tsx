@@ -14,6 +14,13 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { Input } from "@/components/ui/input";
 import { useTranslations } from "next-intl";
 import { FcGoogle } from "react-icons/fc";
@@ -35,6 +42,7 @@ const Register = () => {
     name: z.string().min(2).max(50),
     email: z.string().email(),
     phoneNumber: z.string().min(5).max(14),
+    accountRole: z.string(),
     password: z
       .string()
       .min(8, { message: `${t("SignUp.passwordValidationMin")}` })
@@ -52,11 +60,12 @@ const Register = () => {
       name: "",
       email: "",
       phoneNumber: "",
+      accountRole: "",
       password: "",
       confirmPassword: "",
     },
   });
-  // console.log(form.getValues());
+  console.log(form.getValues());
   // 2. Define a submit handler.
   async function onSubmit(values: z.infer<typeof formSchema>) {
     // Do something with the form values.
@@ -154,6 +163,39 @@ const Register = () => {
               {...field}
               className="p-4 placeholder:opacity-65 rounded-[12px] border-[gray] w-full"
             /> */}
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name="accountRole"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel className="text-xl">
+                {t("SignUp.accountRole")}:
+              </FormLabel>{" "}
+              <FormControl>
+                <Select
+                  value={field.value}
+                  onValueChange={(value) => field.onChange(value)}
+                >
+                  <SelectTrigger className="w-full rounded-[12px]">
+                    <SelectValue
+                      placeholder={`${t("SignUp.accountRole")}`}
+                      className="placeholder:opacity-30"
+                    />
+                  </SelectTrigger>
+                  <SelectContent className="bg-white cursor-pointer rounded-[12px] z-30">
+                    <SelectItem value="client" className="cursor-pointer">
+                      {t("chooseAccountType.client")}
+                    </SelectItem>
+                    <SelectItem value="cruiseOwner" className="cursor-pointer">
+                      {t("chooseAccountType.cruiseOwner")}
+                    </SelectItem>
+                  </SelectContent>
+                </Select>
               </FormControl>
               <FormMessage />
             </FormItem>

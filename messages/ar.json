@@ -5,7 +5,9 @@
   "NavItems": {
     "main": "الرئيسية",
     "attractions": "المعالم السياحية",
-    "Car_rentals": "تأجير السيارات"
+    "Car_rentals": "تأجير السيارات",
+    "CruiseSearch": "ابحث عن يختك التالي",
+    "PickDate": "حدد موعد: تاريخ الوصول - تاريخ المغادرة"
   },
   "chooselang": {
     "choose": "اختر لغتك:",
@@ -14,6 +16,7 @@
   },
   "Login": {
     "LoginButton": "تسجيل الدخول",
+    "cruiseOwnerButton": "هل تريد عرض اليخت ؟",
     "header": "قم بتسجيل الدخول",
     "logingoogle": "قم بتسجيل الدخول باستخدام جوجل",
     "email": "الايميل",
@@ -29,6 +32,7 @@
     "name": "الاسم",
     "email": "الايميل",
     "phonenumber": "رقم الهاتف",
+    "accountRole": "نوع الحساب",
     "password": "الباسوورد",
     "signupgoogle": "قم بالتسجيل باستخدام جوجل",
     "repeat_password": "قم بتكرار الباسوورد",
@@ -64,5 +68,9 @@
     "phonenumber": "رقم الهاتف",
     "createdAt": "سجل الحساب بتاريخ",
     "role": "نوع الحساب"
+  },
+  "chooseAccountType": {
+    "client": "عميل",
+    "cruiseOwner": "مالك يخت"
   }
 }
