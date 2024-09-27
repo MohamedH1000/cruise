@@ -87,15 +87,15 @@ const NavBar = ({ currentUser, isAdmin, isClient }: any) => {
           {currentUser && (
             <Menubar className="border-none" dir="rtl">
               <MenubarMenu>
-                <MenubarTrigger className="cursor-pointer">
-                  <Avatar className="bg-white">
+                <MenubarTrigger className="cursor-pointer bg-[#003b95]">
+                  <Avatar>
                     <AvatarImage src={currentUser?.image} />
                     <AvatarFallback>
                       {currentUser?.name.slice(0, 2)}
                     </AvatarFallback>
                   </Avatar>
                 </MenubarTrigger>
-                <MenubarContent>
+                <MenubarContent className="bg-white">
                   <Link href={"/profile"}>
                     <MenubarItem className="cursor-pointer">
                       {t("Accessibility.myaccount")}
@@ -132,7 +132,7 @@ const NavBar = ({ currentUser, isAdmin, isClient }: any) => {
                   {t("Login.LoginButton")}
                 </Button>
               </Link>
-              <Link href={"sign-up"}>
+              <Link href={"/sign-up"}>
                 <Button className="bg-white text-[#003b95] rounded-[12px] hover:opacity-90 transition duration-300">
                   {t("SignUp.SignUpButton")}
                 </Button>

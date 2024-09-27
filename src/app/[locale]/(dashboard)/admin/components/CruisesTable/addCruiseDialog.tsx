@@ -37,7 +37,7 @@ const AddCruiseDialog = () => {
     });
   };
 
-  console.log(cruiseDetails);
+  // console.log(cruiseDetails);
 
   const handleSubmit = async (e: any) => {
     e.preventDefault();
