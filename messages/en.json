@@ -7,7 +7,13 @@
     "attractions": "Attractions",
     "Car_rentals": "Car rentals",
     "CruiseSearch": "Find your next cruise",
-    "PickDate": "Pick a date: Check-in Date - Check-out Date"
+    "PickDate": "Pick a date: Check-in Date - Check-out Date",
+    "adults": "adults",
+    "kids": "kids"
+  },
+  "PopoverContent": {
+    "adults": "adults",
+    "kids": "kids"
   },
   "chooselang": {
     "choose": "Choose language:",
@@ -72,5 +78,8 @@
   "chooseAccountType": {
     "client": "Client",
     "cruiseOwner": "Cruise Owner"
+  },
+  "Buttons": {
+    "search": "Search"
   }
 }

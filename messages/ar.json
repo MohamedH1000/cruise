@@ -7,7 +7,13 @@
     "attractions": "المعالم السياحية",
     "Car_rentals": "تأجير السيارات",
     "CruiseSearch": "ابحث عن يختك التالي",
-    "PickDate": "حدد موعد: تاريخ الوصول - تاريخ المغادرة"
+    "PickDate": "حدد موعد: تاريخ الوصول - تاريخ المغادرة",
+    "adults": "اشخاص بالغين",
+    "kids": "اطفال"
+  },
+  "PopoverContent": {
+    "adults": "بالغون",
+    "kids": "اطفال"
   },
   "chooselang": {
     "choose": "اختر لغتك:",
@@ -72,5 +78,8 @@
   "chooseAccountType": {
     "client": "عميل",
     "cruiseOwner": "مالك يخت"
+  },
+  "Buttons": {
+    "search": "بحث"
   }
 }
