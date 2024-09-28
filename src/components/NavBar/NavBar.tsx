@@ -87,7 +87,7 @@ const NavBar = ({ currentUser, isAdmin, isClient }: any) => {
           {currentUser && (
             <Menubar className="border-none" dir="rtl">
               <MenubarMenu>
-                <MenubarTrigger className="cursor-pointer bg-[#003b95]">
+                <MenubarTrigger className="cursor-pointer">
                   <Avatar>
                     <AvatarImage src={currentUser?.image} />
                     <AvatarFallback>

@@ -80,7 +80,7 @@ const MobileNav: React.FC<MobileNavProps> = ({
               >
                 {t("Accessibility.myaccount")}
               </Link>
-              {currentUser.role === "admin" && (
+              {currentUser?.role === "admin" && (
                 <Link
                   href={"/admin"}
                   className={`${

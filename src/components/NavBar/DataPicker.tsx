@@ -13,16 +13,19 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { useTranslations } from "next-intl";
+import AdultCounter from "./AdultCounter";
 
 const DataPicker = () => {
   const [date, setDate] = useState<DateRange | undefined>();
+  const [adults, setAdults] = useState(0);
+  const [kids, setKids] = useState(0);
   const t = useTranslations();
   return (
-    <div className="text-black w-[90%] max-w-[1000px] bg-[#ffb700] h-[62px] rounded-[12px] p-1">
+    <div className="text-black w-[90%] max-w-[1000px] bg-[#ffb700] h-[62px] rounded-[12px] p-1 flex gap-2 max-md:flex-col max-md:h-auto">
       <Popover>
         <PopoverTrigger
           asChild
-          className="bg-white border-none h-full rounded-[12px]"
+          className="bg-white border-none h-full rounded-[12px] flex-1 max-md:w-full"
         >
           <Button
             id="date"
@@ -63,6 +66,36 @@ const DataPicker = () => {
           />
         </PopoverContent>
       </Popover>
+      <Popover>
+        <PopoverTrigger
+          asChild
+          className="bg-white border-none h-full rounded-[12px] flex-1 max-md:w-full"
+        >
+          <Button
+            variant={"outline"}
+            className={"w-[300px] justify-start text-left font-normal"}
+          >
+            <span className="font-bold truncate">
+              {adults + " "}
+              {t("NavItems.adults")}
+              {" " + kids + " "}
+              {t("NavItems.kids")}
+            </span>
+          </Button>
+        </PopoverTrigger>
+        <PopoverContent
+          className="w-full p-4 bg-white rounded-[12px] max-w-[500px]"
+          align="start"
+        >
+          <div className="flex justify-between items-center">
+            <p>{t("PopoverContent.adults")}</p>
+            <AdultCounter adults={adults} setAdults={setAdults} />
+          </div>
+        </PopoverContent>
+      </Popover>
+      <Button className="h-full rounded-[12px] ml-auto w-[100px] max-md:w-full">
+        {t("Buttons.search")}
+      </Button>
     </div>
   );
 };
