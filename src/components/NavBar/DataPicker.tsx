@@ -14,6 +14,7 @@ import {
 } from "@/components/ui/popover";
 import { useTranslations } from "next-intl";
 import AdultCounter from "./AdultCounter";
+import KidCounter from "./KidCounter";
 
 const DataPicker = () => {
   const [date, setDate] = useState<DateRange | undefined>();
@@ -90,6 +91,10 @@ const DataPicker = () => {
           <div className="flex justify-between items-center">
             <p>{t("PopoverContent.adults")}</p>
             <AdultCounter adults={adults} setAdults={setAdults} />
+          </div>
+          <div className="flex justify-between items-center">
+            <p>{t("PopoverContent.kids")}</p>
+            <KidCounter kids={kids} setKids={setKids} />
           </div>
         </PopoverContent>
       </Popover>
