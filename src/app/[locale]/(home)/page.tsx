@@ -1,10 +1,57 @@
 import DataPickNavbar from "@/components/NavBar/DataPickNavbar";
+import { getCurrentUser } from "@/lib/actions/user.action";
 import Image from "next/image";
+import AddCruiseDialog from "../(dashboard)/admin/components/CruisesTable/addCruiseDialog";
+import { getAllCruises } from "@/lib/actions/cruise.action";
+import EmptyState from "@/components/EmptyState";
+import ListingCard from "@/components/ListingCard/ListingCard";
 
-export default function Home() {
+export default async function Home() {
+  const currentUser = await getCurrentUser();
+  const allCruises = await getAllCruises();
+
+  const allowedCruises = allCruises?.filter(
+    (cruise) => cruise.status === "active"
+  );
+  console.log(allCruises);
+
+  if (allCruises?.length === 0)
+    return (
+      <>
+        <DataPickNavbar />
+        <div className="flex justify-center items-center mt-5">
+          {currentUser?.role === "cruiseOwner" && (
+            <AddCruiseDialog cruiseOwner />
+          )}
+        </div>
+        <div className="min-h-screen mt-[130px] flex justify-center text-[40px]">
+          <EmptyState />
+        </div>
+      </>
+    );
+
   return (
     <>
       <DataPickNavbar />
+      <div className="flex justify-center items-center mt-5">
+        {currentUser?.role === "cruiseOwner" && <AddCruiseDialog cruiseOwner />}
+      </div>
+      <div
+        className="mt-10 grid gap-8 w-full lg:grid-cols-3 
+max-md:grid-cols-2 max-sm:grid-cols-1 md:grid-cols-2 mb-10 lg:px-[180px]
+md:px-[50px] max-sm:px-[10px] max-md:px-[50px]  max-md:mt-[100px]"
+      >
+        {allowedCruises?.map((cruise: any) => {
+          return (
+            <ListingCard
+              data={cruise}
+              key={cruise?.id}
+              currentUser={currentUser}
+            />
+          );
+        })}
+      </div>
+      <div className="flex justify-start items-center mt-6 flex-wrap"></div>
       <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
         <main className="flex flex-col gap-8 row-start-2 items-center sm:items-start">
           <Image

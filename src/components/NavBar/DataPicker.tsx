@@ -85,14 +85,14 @@ const DataPicker = () => {
           </Button>
         </PopoverTrigger>
         <PopoverContent
-          className="w-full p-4 bg-white rounded-[12px] max-w-[500px]"
+          className="w-[350px] p-4 bg-white rounded-[12px] max-w-[500px] max-sm:w-[225px]"
           align="start"
         >
           <div className="flex justify-between items-center">
             <p>{t("PopoverContent.adults")}</p>
             <AdultCounter adults={adults} setAdults={setAdults} />
           </div>
-          <div className="flex justify-between items-center">
+          <div className="flex justify-between items-center mt-5">
             <p>{t("PopoverContent.kids")}</p>
             <KidCounter kids={kids} setKids={setKids} />
           </div>
