@@ -1,14 +1,5 @@
 "use client";
 import React, { useState } from "react";
-
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
 import {
   ColumnDef,
   flexRender,
@@ -21,16 +12,40 @@ import {
   getFilteredRowModel,
   VisibilityState,
 } from "@tanstack/react-table";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Checkbox } from "@/components/ui/checkbox";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+import { ArrowUpDown } from "lucide-react";
 import {
   DropdownMenu,
   DropdownMenuCheckboxItem,
   DropdownMenuContent,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { Input } from "@/components/ui/input";
+import { Checkbox } from "@/components/ui/checkbox";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 import { useTranslations } from "next-intl";
+import AddCruiseDialog from "./addCruiseDialog";
+import { Button } from "@/components/ui/button";
+import {
+  handleDeleteById,
+  updateCruiseStatus,
+} from "@/lib/actions/cruise.action";
+import toast from "react-hot-toast";
+import { useRouter } from "@/i18n/routing";
 
 export type Payment = {
   id: string;
@@ -40,20 +55,22 @@ export type Payment = {
   numberOfGuests: number;
   price: number;
   discount: string;
-  status: string;
+  status: "pending" | "active" | "reject";
 };
 
 interface DataTableProps<TData, TValue> {
   data: TData[];
 }
 
-export function UsersTable<TData, TValue>({
+export function CruisesTable<TData, TValue>({
   data,
 }: DataTableProps<TData, TValue>) {
   const [sorting, setSorting] = useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
   const [rowSelection, setRowSelection] = useState({});
+  const [open, setOpen] = useState(false);
+  const router = useRouter();
   const t = useTranslations();
 
   const columns: ColumnDef<TData, any>[] = [
@@ -84,20 +101,149 @@ export function UsersTable<TData, TValue>({
       header: t("cruisesTable.name"),
     },
     {
-      accessorKey: "email",
-      header: `${t("cruisesTable.email")}`,
+      accessorKey: "description",
+      header: `${t("cruisesTable.description")}`,
     },
     {
-      accessorKey: "phoneNumber",
-      header: `${t("cruisesTable.phonenumber")}`,
+      accessorKey: "amenities",
+      header: `${t("cruisesTable.amenities")}`,
     },
     {
-      accessorKey: "createdAt",
-      header: `${t("cruisesTable.createdAt")}`,
+      accessorKey: "numberOfGuests",
+      header: `${t("cruisesTable.numberOfGuests")}`,
     },
     {
-      accessorKey: "role",
-      header: `${t("cruisesTable.role")}`,
+      accessorKey: "price",
+      header: ({ column }) => {
+        return (
+          <Button
+            variant="ghost"
+            onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+          >
+            {t("cruisesTable.price")}
+            <ArrowUpDown className="ml-2 h-4 w-4" />
+          </Button>
+        );
+      },
+    },
+    {
+      accessorKey: "discount",
+      header: `${t("cruisesTable.discount")}`,
+    },
+    {
+      accessorKey: "status",
+      header: `${t("cruisesTable.status")}`,
+      cell: ({ row }) => {
+        const cruise = row.original; // Access the original row data
+
+        const handleStatusChange = async (newStatus: string) => {
+          try {
+            await updateCruiseStatus({ id: cruise?.id, newStatus }); // Call your backend function to update the status
+            toast.success(`Status changed to ${newStatus}`);
+          } catch (error) {
+            toast.error("Error changing status");
+          } finally {
+            router.refresh();
+          }
+        };
+
+        return (
+          <div className="flex space-x-2">
+            {cruise?.status === "pending" && (
+              <>
+                <div className="flex justify-center gap-3">
+                  <span className="text-[gray] font-bold">
+                    {t("cruisesTable.pending")}
+                  </span>
+                  <div className="flex flex-col items-center gap-2">
+                    <Button onClick={() => handleStatusChange("active")}>
+                      {t("cruisesTable.activate")}
+                    </Button>
+                    <Button onClick={() => handleStatusChange("reject")}>
+                      {t("cruisesTable.reject")}
+                    </Button>
+                  </div>
+                </div>
+              </>
+            )}
+            {cruise?.status === "active" && (
+              <div className="flex justify-center gap-3">
+                <span className="text-[green] font-bold">
+                  {t("cruisesTable.active")}
+                </span>
+                <Button
+                  onClick={() => handleStatusChange("reject")}
+                  className="bg-[red]"
+                >
+                  {t("cruisesTable.reject")}
+                </Button>{" "}
+              </div>
+            )}
+            {cruise?.status === "reject" && (
+              <div className="flex justify-center gap-3">
+                <span className="text-[red] font-bold">
+                  {t("cruisesTable.rejected")}
+                </span>
+                <Button
+                  onClick={() => handleStatusChange("active")}
+                  className="bg-[green]"
+                >
+                  {t("cruisesTable.activate")}
+                </Button>
+              </div>
+            )}
+          </div>
+        );
+      },
+    },
+    {
+      accessorKey: "delete",
+      header: `${t("cruisesTable.delete")}`,
+      cell: ({ row }) => {
+        const cruise = row.original; // Access the original row data
+
+        const handleDelete = async (id: string) => {
+          try {
+            await handleDeleteById(id); // Call your backend function to update the status
+            toast.success(`Cruise Deleted Successfully`);
+          } catch (error) {
+            toast.error("Error Deleting the cruise");
+          } finally {
+            router.refresh();
+          }
+        };
+
+        return (
+          <Dialog open={open} onOpenChange={setOpen}>
+            <DialogTrigger className="bg-[red] text-white p-2 rounded-md font-bold">
+              {t("cruisesTable.dialogTriggerDelete")}
+            </DialogTrigger>
+            <DialogContent>
+              <DialogHeader>
+                <DialogTitle>
+                  {" "}
+                  {t("cruisesTable.dialogTriggerTitleDelete")}
+                </DialogTitle>
+                <DialogDescription>
+                  {t("cruisesTable.dialogTriggerDescriptionDelete")}
+                </DialogDescription>
+              </DialogHeader>
+              <Button
+                className="bg-[red] text-white"
+                onClick={() => {
+                  handleDelete(cruise?.id);
+                  setOpen(false);
+                }}
+              >
+                {t("cruisesTable.dialogTriggerDelete")}
+              </Button>
+              <Button onClick={() => setOpen(false)}>
+                {t("cruisesTable.cancel")}
+              </Button>
+            </DialogContent>
+          </Dialog>
+        );
+      },
     },
   ];
   const table = useReactTable({
@@ -121,8 +267,9 @@ export function UsersTable<TData, TValue>({
 
   return (
     <>
+      <AddCruiseDialog />
       <div>
-        <div className="flex justify-start items-center gap-2">
+        <div className="flex items-center justify-start gap-2">
           <div className="flex items-center py-4">
             <Input
               placeholder="Filter names..."
@@ -131,34 +278,6 @@ export function UsersTable<TData, TValue>({
               }
               onChange={(event) =>
                 table.getColumn("name")?.setFilterValue(event.target.value)
-              }
-              className="max-w-sm"
-            />
-          </div>
-
-          <div className="flex items-center py-4">
-            <Input
-              placeholder="Filter Emails..."
-              value={
-                (table.getColumn("email")?.getFilterValue() as string) ?? ""
-              }
-              onChange={(event) =>
-                table.getColumn("email")?.setFilterValue(event.target.value)
-              }
-              className="max-w-sm"
-            />
-          </div>
-          <div className="flex items-center py-4">
-            <Input
-              placeholder="Filter Phone Number..."
-              value={
-                (table.getColumn("phoneNumber")?.getFilterValue() as string) ??
-                ""
-              }
-              onChange={(event) =>
-                table
-                  .getColumn("phoneNumber")
-                  ?.setFilterValue(event.target.value)
               }
               className="max-w-sm"
             />
@@ -267,4 +386,4 @@ export function UsersTable<TData, TValue>({
   );
 }
 
-export default UsersTable;
+export default CruisesTable;

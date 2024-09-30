@@ -70,6 +70,11 @@
     "price": "السعر",
     "discount": "الخصم",
     "status": "الحالة",
+    "delete": "حذف اليخت",
+    "cancel": "الغاء",
+    "dialogTriggerDelete": "حذف",
+    "dialogTriggerTitleDelete": "هل انت متاكد من حذف اليخت ؟",
+    "dialogTriggerDescriptionDelete": "هذا الاجراء لا يمكن الرجوع فيه. سيقوم بحذف جميع بيانات اليخت نهائيا وحذف البيانات من السيرفر الخاص بنا.",
     "addNewCruise": "اضف يخت جديد",
     "phonenumber": "رقم الهاتف",
     "createdAt": "سجل الحساب بتاريخ",
@@ -78,7 +83,10 @@
     "reject": "رفض",
     "active": "نشط",
     "rejected": "مرفوض",
-    "pending": "معلق"
+    "pending": "معلق",
+    "next": "التالي",
+    "previous": "السابق",
+    "columns": "اعمدة الجدول المعروضة"
   },
   "chooseAccountType": {
     "client": "عميل",

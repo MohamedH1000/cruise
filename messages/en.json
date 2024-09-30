@@ -70,6 +70,11 @@
     "price": "Price",
     "discount": "Discount",
     "status": "Status",
+    "delete": "Delete Cruise",
+    "cancel": "Cancel",
+    "dialogTriggerDelete": "Delete",
+    "dialogTriggerTitleDelete": "Are you sure you want to delete the cruise?",
+    "dialogTriggerDescriptionDelete": "This action cannot be undone. This will permanently delete the cruise and remove the data from our servers.",
     "addNewCruise": "Add New Cruise",
     "phonenumber": "Phone Number",
     "createdAt": "Created At",
@@ -78,7 +83,10 @@
     "reject": "Reject",
     "active": "Active",
     "rejected": "Rejected",
-    "pending": "pending"
+    "pending": "pending",
+    "next": "Next",
+    "previous": "Previous",
+    "columns": "Columns"
   },
   "chooseAccountType": {
     "client": "Client",

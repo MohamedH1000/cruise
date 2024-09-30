@@ -10,9 +10,7 @@ import {
 } from "../ui/carousel";
 import Image from "next/image";
 import HeartButton from "./HeartButton";
-import { Label } from "../ui/label";
 import { useLocale, useTranslations } from "next-intl";
-import { Button } from "../ui/button";
 import { Link } from "@/i18n/routing";
 
 const ListingCard = ({ data, currentUser }: any) => {
