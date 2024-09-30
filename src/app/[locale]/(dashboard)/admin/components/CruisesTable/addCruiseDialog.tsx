@@ -9,9 +9,10 @@ import { motion, AnimatePresence } from "framer-motion";
 import Image from "next/image";
 import ImageUpload from "@/components/imageUpload/ImageUpload";
 import { Textarea } from "@/components/ui/textarea";
-import { createCruise } from "@/lib/actions/cruise.action";
+import { createCruise, createCruiseByOwner } from "@/lib/actions/cruise.action";
+import { cn } from "@/lib/utils";
 
-const AddCruiseDialog = () => {
+const AddCruiseDialog = ({ cruiseOwner, admin }: any) => {
   const t = useTranslations();
   const [open, setOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -42,16 +43,33 @@ const AddCruiseDialog = () => {
   const handleSubmit = async (e: any) => {
     e.preventDefault();
     setIsLoading(true);
-    try {
-      await createCruise(cruiseDetails);
-      toast.success("تم اضافه اليخت للنظام بنجاح");
-      clear();
-    } catch (error) {
-      console.log(error);
-      toast.error("حدثت مشكله اثناء اضافة اليخت");
-    } finally {
-      setIsLoading(false);
-      setOpen(false);
+    if (admin) {
+      try {
+        await createCruise(cruiseDetails);
+        toast.success("تم اضافه اليخت للنظام بنجاح");
+        clear();
+      } catch (error) {
+        console.log(error);
+        toast.error("حدثت مشكله اثناء اضافة اليخت");
+      } finally {
+        setIsLoading(false);
+        setOpen(false);
+      }
+    }
+    if (cruiseOwner) {
+      try {
+        await createCruiseByOwner(cruiseDetails);
+        toast.success(
+          "تم اضافه اليخت للنظام بنجاح برجاء انتظار الادارة حتى الموافقة على اليخت وعرضه على الصفحة"
+        );
+        clear();
+      } catch (error) {
+        console.log(error);
+        toast.error("حدثت مشكله اثناء اضافة اليخت");
+      } finally {
+        setIsLoading(false);
+        setOpen(false);
+      }
     }
   };
   return (
@@ -64,8 +82,14 @@ const AddCruiseDialog = () => {
           transition={{ duration: 0.2 }}
         >
           <Button
-            className="mt-10 bg-black text-white rounded-[12px]
-             transition duration-300 p-4 text-[14px] font-medium"
+            className={cn(
+              `mt-10  text-white rounded-[12px]
+            transition duration-300 p-4 text-[14px] font-medium`,
+              {
+                "bg-[#003b95]": cruiseOwner,
+                "bg-black": admin,
+              }
+            )}
             onClick={() => setOpen((prev: any) => !prev)}
           >
             {t("cruisesTable.addNewCruise")}

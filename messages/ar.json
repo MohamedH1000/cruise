@@ -73,7 +73,12 @@
     "addNewCruise": "اضف يخت جديد",
     "phonenumber": "رقم الهاتف",
     "createdAt": "سجل الحساب بتاريخ",
-    "role": "نوع الحساب"
+    "role": "نوع الحساب",
+    "activate": "تفعيل",
+    "reject": "رفض",
+    "active": "نشط",
+    "rejected": "مرفوض",
+    "pending": "معلق"
   },
   "chooseAccountType": {
     "client": "عميل",
@@ -81,5 +86,13 @@
   },
   "Buttons": {
     "search": "بحث"
+  },
+  "EmptyState": {
+    "nocruises": "لا يوجد يخوت للعرض الان"
+  },
+  "translations": {
+    "pernight": "لكل ليلة",
+    "price": "السعر",
+    "reservenow": "قم بالحجز الان"
   }
 }

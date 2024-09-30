@@ -6,7 +6,6 @@ import {
   getCoreRowModel,
   useReactTable,
 } from "@tanstack/react-table";
-
 import {
   Table,
   TableBody,
@@ -17,6 +16,11 @@ import {
 } from "@/components/ui/table";
 import { useTranslations } from "next-intl";
 import AddCruiseDialog from "./addCruiseDialog";
+import { Button } from "@/components/ui/button";
+import { updateCruiseStatus } from "@/lib/actions/cruise.action";
+import toast from "react-hot-toast";
+import { useRouter } from "@/i18n/routing";
+import { id } from "date-fns/locale";
 
 export type Payment = {
   id: string;
@@ -26,7 +30,7 @@ export type Payment = {
   numberOfGuests: number;
   price: number;
   discount: string;
-  status: string;
+  status: "pending" | "active" | "reject";
 };
 
 interface DataTableProps<TData, TValue> {
@@ -36,6 +40,7 @@ interface DataTableProps<TData, TValue> {
 export function CruisesTable<TData, TValue>({
   data,
 }: DataTableProps<TData, TValue>) {
+  const router = useRouter();
   const t = useTranslations();
 
   const columns: ColumnDef<TData, any>[] = [
@@ -66,6 +71,62 @@ export function CruisesTable<TData, TValue>({
     {
       accessorKey: "status",
       header: `${t("cruisesTable.status")}`,
+      cell: ({ row }) => {
+        const cruise = row.original; // Access the original row data
+
+        const handleStatusChange = async (newStatus: string) => {
+          try {
+            await updateCruiseStatus({ id: cruise?.id, newStatus }); // Call your backend function to update the status
+            toast.success(`Status changed to ${newStatus}`);
+          } catch (error) {
+            toast.error("Error changing status");
+          } finally {
+            router.refresh();
+          }
+        };
+
+        return (
+          <div className="flex space-x-2">
+            {cruise.status === "pending" && (
+              <>
+                <div className="flex justify-center gap-3">
+                  <span className="text-[gray] font-bold">
+                    {t("cruisesTable.pending")}
+                  </span>
+                  <div className="flex flex-col items-center gap-2">
+                    <Button onClick={() => handleStatusChange("active")}>
+                      {t("cruisesTable.activate")}
+                    </Button>
+                    <Button onClick={() => handleStatusChange("reject")}>
+                      {t("cruisesTable.reject")}
+                    </Button>
+                  </div>
+                </div>
+              </>
+            )}
+            {cruise.status === "active" && (
+              <div className="flex justify-center gap-3">
+                <span className="text-[green] font-bold">
+                  {t("cruisesTable.active")}
+                </span>
+                <Button onClick={() => handleStatusChange("reject")}>
+                  {t("cruisesTable.reject")}
+                </Button>{" "}
+              </div>
+            )}
+            {cruise.status === "reject" && (
+              <div className="flex justify-center gap-3">
+                <span className="text-[red] font-bold">
+                  {t("cruisesTable.rejected")}
+                </span>
+                <Button onClick={() => handleStatusChange("active")}>
+                  {t("cruisesTable.activate")}
+                </Button>
+              </div>
+            )}
+          </div>
+        );
+      },
     },
   ];
   const table = useReactTable({
