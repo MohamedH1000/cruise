@@ -1,10 +1,10 @@
 import DataPickNavbar from "@/components/NavBar/DataPickNavbar";
 import { getCurrentUser } from "@/lib/actions/user.action";
 import Image from "next/image";
-import AddCruiseDialog from "../(dashboard)/admin/components/CruisesTable/addCruiseDialog";
 import { getAllCruises } from "@/lib/actions/cruise.action";
 import EmptyState from "@/components/EmptyState";
 import ListingCard from "@/components/ListingCard/ListingCard";
+import AddCruiseDialog from "../(dashboard)/admin/cruises/components/CruisesTable/addCruiseDialog";
 
 export default async function Home() {
   const currentUser = await getCurrentUser();
@@ -13,7 +13,7 @@ export default async function Home() {
   const allowedCruises = allCruises?.filter(
     (cruise) => cruise.status === "active"
   );
-  console.log(allCruises);
+  // console.log(allCruises);
 
   if (allCruises?.length === 0)
     return (

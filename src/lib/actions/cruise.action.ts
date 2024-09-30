@@ -83,7 +83,7 @@ export async function getAllCruises() {
 }
 
 export async function updateCruiseStatus({ id, newStatus }: any) {
-  console.log("Updating cruise status for:", id, newStatus); // Debugging
+  // console.log("Updating cruise status for:", id, newStatus); // Debugging
   try {
     const updatedState = await prisma.cruise.update({
       where: {
@@ -95,6 +95,18 @@ export async function updateCruiseStatus({ id, newStatus }: any) {
     });
 
     return updatedState;
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+export async function handleDeleteById(id: string) {
+  try {
+    await prisma.cruise.delete({
+      where: {
+        id,
+      },
+    });
   } catch (error) {
     console.log(error);
   }
