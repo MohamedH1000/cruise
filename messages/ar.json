@@ -101,6 +101,7 @@
   "translations": {
     "pernight": "لكل ليلة",
     "price": "السعر",
-    "reservenow": "قم بالحجز الان"
+    "reservenow": "قم بالحجز الان",
+    "clickToUpload": "انقر للرفع"
   }
 }
