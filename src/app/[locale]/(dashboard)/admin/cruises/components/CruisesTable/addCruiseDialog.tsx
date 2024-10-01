@@ -25,7 +25,7 @@ const AddCruiseDialog = ({ cruiseOwner, admin }: any) => {
     numberOfGuests: null,
     discount: "",
   });
-  // console.log("chalet details", chaletDetails);
+  // console.log("cruise details", cruiseDetails);
   const clear = () => {
     setCruiseDetails({
       name: "",
@@ -55,8 +55,7 @@ const AddCruiseDialog = ({ cruiseOwner, admin }: any) => {
         setIsLoading(false);
         setOpen(false);
       }
-    }
-    if (cruiseOwner) {
+    } else if (cruiseOwner) {
       try {
         await createCruiseByOwner(cruiseDetails);
         toast.success(
@@ -181,7 +180,7 @@ const AddCruiseDialog = ({ cruiseOwner, admin }: any) => {
                   <h1 className="mt-10">قم باضافة صورة:</h1>
                   <p className="opacity-60">أظهر لعملائك كيف يبدو المكان</p>
                   <ImageUpload
-                    value={cruiseDetails?.imageSrc}
+                    value={cruiseDetails?.imageSrc || []}
                     onChange={(value) =>
                       setCruiseDetails({
                         ...cruiseDetails,

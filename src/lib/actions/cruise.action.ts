@@ -6,7 +6,7 @@ import prisma from "@/lib/prisma";
 
 export async function createCruise(cruiseData: any) {
   const currentUser = await getCurrentUser();
-  if (currentUser?.role !== "admin" && currentUser?.role !== "cruiseOwner") {
+  if (currentUser?.role !== "admin") {
     throw new Error("You are not authorized to create the cruise");
   }
   const {
@@ -28,7 +28,7 @@ export async function createCruise(cruiseData: any) {
       discount,
       amenities: [],
       userId: currentUser.id,
-      status: "pending",
+      status: "active",
     },
   });
 
@@ -38,7 +38,7 @@ export async function createCruise(cruiseData: any) {
 }
 export async function createCruiseByOwner(cruiseData: any) {
   const currentUser = await getCurrentUser();
-  if (currentUser?.role !== "admin" && currentUser?.role !== "cruiseOwner") {
+  if (currentUser?.role !== "cruiseOwner") {
     throw new Error("You are not authorized to create the cruise");
   }
   const {
@@ -63,8 +63,6 @@ export async function createCruiseByOwner(cruiseData: any) {
       status: "pending",
     },
   });
-
-  revalidatePath("/admin/cruises");
 
   return cruise;
 }
@@ -77,6 +75,20 @@ export async function getAllCruises() {
       },
     });
     return cruises;
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+export async function getCruiseById(id: string) {
+  try {
+    const cruise = await prisma.cruise.findUnique({
+      where: {
+        id,
+      },
+    });
+
+    return cruise;
   } catch (error) {
     console.log(error);
   }

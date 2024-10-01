@@ -4,6 +4,7 @@ import { CldUploadWidget } from "next-cloudinary";
 import { useCallback } from "react";
 import { TbPhotoPlus } from "react-icons/tb";
 import Image from "next/image";
+import { useTranslations } from "next-intl";
 
 declare global {
   var cloudinary: any;
@@ -14,6 +15,7 @@ interface ImageUploadProps {
   value: string[];
 }
 const ImageUpload: React.FC<ImageUploadProps> = ({ onChange, value }) => {
+  const t = useTranslations();
   const handleUpload = useCallback(
     (result: any) => {
       // console.log(result);
@@ -26,9 +28,7 @@ const ImageUpload: React.FC<ImageUploadProps> = ({ onChange, value }) => {
     <CldUploadWidget
       onUpload={handleUpload}
       uploadPreset="cruises"
-      options={{
-        maxFiles: 10,
-      }}
+      options={{ maxFiles: 20 }}
     >
       {({ open }) => {
         return (
@@ -38,13 +38,15 @@ const ImageUpload: React.FC<ImageUploadProps> = ({ onChange, value }) => {
               border-neutral-300 flex flex-col justify-center items-center gap-4 text-neutral-600"
           >
             <TbPhotoPlus size={50} />
-            <div className="font-semibold text-lg">Click to upload</div>
+            <div className="font-semibold text-lg">
+              {t("translations.clickToUpload")}
+            </div>
             {value[0] && (
               <div className="absolute inset-0 w-full h-full">
                 <Image
                   alt="Upload"
-                  layout="fill"
-                  objectFit="cover"
+                  fill
+                  style={{ objectFit: "cover" }} // Replace objectFit and layout with style
                   src={value[0]}
                 />
               </div>

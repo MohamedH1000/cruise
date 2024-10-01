@@ -101,6 +101,7 @@
   "translations": {
     "pernight": "per night",
     "price": "Price",
-    "reservenow": "Reserve Now"
+    "reservenow": "Reserve Now",
+    "clickToUpload": "Click to upload"
   }
 }
