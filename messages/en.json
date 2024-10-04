@@ -107,6 +107,8 @@
     "price": "Price",
     "reservenow": "Reserve Now",
     "showAttraction": "Show Attraction Details",
-    "clickToUpload": "Click to upload"
+    "clickToUpload": "Click to upload",
+    "accountDetails": "Your account details",
+    "save": "Save"
   }
 }

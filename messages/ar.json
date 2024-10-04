@@ -107,6 +107,8 @@
     "price": "السعر",
     "reservenow": "قم بالحجز الان",
     "showAttraction": "عرض تفاصيل المعلم السياحي",
-    "clickToUpload": "انقر للرفع"
+    "clickToUpload": "انقر للرفع",
+    "accountDetails": "بيانات حسابك",
+    "save": "حفظ"
   }
 }
