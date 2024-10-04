@@ -6,7 +6,7 @@ interface ImageGalleryProps {
 }
 const ImageGallery = ({ images }: ImageGalleryProps) => {
   return (
-    <div className="grid grid-cols-2 md:grid-cols-3 gap-4 mt-[50px]">
+    <div className="grid grid-cols-3 max-md:grid-cols-2 max-sm:grid-cols-1 w-full h-[400px] overflow-y-auto gap-2 mt-10 rounded-md shadow-md border-[1px]">
       {images?.map((img, i) => (
         <div key={i}>
           <Image
@@ -14,7 +14,7 @@ const ImageGallery = ({ images }: ImageGalleryProps) => {
             alt="image"
             width={78}
             height={78}
-            className="w-full h-auto rounded-md"
+            className="w-full h-full rounded-md"
           />
         </div>
       ))}
