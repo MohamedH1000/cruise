@@ -18,6 +18,7 @@ import {
 } from "@/components/ui/menubar";
 import { signOut } from "next-auth/react";
 import toast from "react-hot-toast";
+import { motion } from "framer-motion";
 
 const NavBar = ({ currentUser, isAdmin, isClient }: any) => {
   const [open, setOpen] = useState(false);
@@ -29,10 +30,26 @@ const NavBar = ({ currentUser, isAdmin, isClient }: any) => {
     md:px-[50px] max-sm:px-[10px] max-md:px-[50px]"
     >
       <Link href={"/"}>
-        <Image src={"/assets/logo.png"} alt="Cruise" width={150} height={50} />
+        <motion.div
+          initial={{ opacity: 0, x: -100 }}
+          animate={{ opacity: 100, x: 0 }}
+          transition={{ duration: 0.3, delay: 0.1 }}
+        >
+          <Image
+            src={"/assets/logo.png"}
+            alt="Cruise"
+            width={150}
+            height={50}
+          />
+        </motion.div>
       </Link>
       {isAdmin && (
-        <nav className="flex justify-center items-center gap-5 text-white max-lg:gap-2 max-lg:text-[12px] max-sm:hidden">
+        <motion.nav
+          className="flex justify-center items-center gap-5 text-white max-lg:gap-2 max-lg:text-[12px] max-sm:hidden"
+          initial={{ opacity: 0, x: -100 }}
+          animate={{ opacity: 100, x: 0 }}
+          transition={{ duration: 0.3, delay: 0.2 }}
+        >
           <Link
             href={"/admin"}
             className={`${
@@ -59,10 +76,15 @@ const NavBar = ({ currentUser, isAdmin, isClient }: any) => {
           >
             {t("Accessibility.cruises")}
           </Link>
-        </nav>
+        </motion.nav>
       )}
       {isClient && (
-        <nav className="flex justify-center items-center gap-5 text-white max-lg:gap-2 max-lg:text-[12px] max-sm:hidden">
+        <motion.nav
+          className="flex justify-center items-center gap-5 text-white max-lg:gap-2 max-lg:text-[12px] max-sm:hidden"
+          initial={{ opacity: 0, x: -100 }}
+          animate={{ opacity: 100, x: 0 }}
+          transition={{ duration: 0.3, delay: 0.2 }}
+        >
           <Link
             href={"/"}
             className={`${
@@ -87,9 +109,14 @@ const NavBar = ({ currentUser, isAdmin, isClient }: any) => {
           >
             {t("NavItems.Car_rentals")}
           </Link>
-        </nav>
+        </motion.nav>
       )}
-      <div className="flex justify-between items-center gap-2">
+      <motion.div
+        className="flex justify-between items-center gap-2"
+        initial={{ opacity: 0, x: -100 }}
+        animate={{ opacity: 100, x: 0 }}
+        transition={{ duration: 0.3, delay: 0.3 }}
+      >
         <LanguageSelector />
         <div className="gap-2 flex max-md:hidden">
           {currentUser && (
@@ -148,7 +175,7 @@ const NavBar = ({ currentUser, isAdmin, isClient }: any) => {
             </>
           )}
         </div>
-      </div>
+      </motion.div>
       {isAdmin && (
         <MobileNav
           open={open}

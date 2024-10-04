@@ -1,10 +1,10 @@
 import React from "react";
 import AttractionsTable from "./attractionsTable";
-import { getAllAttractions } from "@/lib/actions/attraction.action";
+import { getAllAttractionsTable } from "@/lib/actions/attraction.action";
 import { getTranslations } from "next-intl/server";
 
 const page = async () => {
-  const attractions = await getAllAttractions();
+  const attractions = await getAllAttractionsTable();
   const t = await getTranslations();
   // console.log(attractions);
   return (

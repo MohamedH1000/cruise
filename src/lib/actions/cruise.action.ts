@@ -90,6 +90,18 @@ export async function getAllCruises(params: any) {
     console.log(error);
   }
 }
+export async function getAllCruisesTable() {
+  try {
+    const cruises = await prisma.cruise.findMany({
+      orderBy: {
+        createdAt: "desc",
+      },
+    });
+    return cruises;
+  } catch (error) {
+    console.log(error);
+  }
+}
 
 export async function getCruiseById(id: string) {
   try {
