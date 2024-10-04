@@ -23,10 +23,17 @@ export async function createAttraction(attractionData: any) {
   return cruise;
 }
 
-export async function getAllAttractions() {
+export async function getAllAttractions(params: any) {
+  const { page = 1, pageSize = 9 } = params;
+  const skipAmount = (page - 1) * pageSize;
   try {
-    const attractions = await prisma.attractions.findMany();
-    return attractions;
+    const attractions = await prisma.attractions.findMany({
+      skip: skipAmount,
+      take: pageSize,
+    });
+    const totalAttractions = await prisma.attractions.count();
+    const isNext = totalAttractions > skipAmount + attractions.length;
+    return { attractions, isNext, totalAttractions };
   } catch (error) {
     console.log(error);
   }

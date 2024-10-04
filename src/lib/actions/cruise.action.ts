@@ -67,14 +67,25 @@ export async function createCruiseByOwner(cruiseData: any) {
   return cruise;
 }
 
-export async function getAllCruises() {
+export async function getAllCruises(params: any) {
+  const { page = 1, pageSize = 9 } = params;
+  const skipAmount = (page - 1) * pageSize;
+
   try {
     const cruises = await prisma.cruise.findMany({
       orderBy: {
         createdAt: "desc",
       },
+      skip: skipAmount,
+      take: pageSize,
     });
-    return cruises;
+    const totalAllowedCruises = await prisma.cruise.count({
+      where: {
+        status: "active",
+      },
+    });
+    const isNext = totalAllowedCruises > skipAmount + cruises.length;
+    return { cruises, isNext, totalAllowedCruises };
   } catch (error) {
     console.log(error);
   }

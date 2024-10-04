@@ -1,21 +1,23 @@
 import DataPickNavbar from "@/components/NavBar/DataPickNavbar";
 import { getCurrentUser } from "@/lib/actions/user.action";
-import Image from "next/image";
+import Paginat from "./components/Paginat/Paginat";
 import { getAllCruises } from "@/lib/actions/cruise.action";
 import EmptyState from "@/components/EmptyState";
 import ListingCard from "@/components/ListingCard/ListingCard";
 import AddCruiseDialog from "../(dashboard)/admin/cruises/components/CruisesTable/addCruiseDialog";
 
-export default async function Home() {
+export default async function Home({ searchParams }: any) {
   const currentUser = await getCurrentUser();
-  const allCruises = await getAllCruises();
+  const allCruises = await getAllCruises({
+    page: searchParams?.page ? +searchParams.page : 1,
+  });
 
-  const allowedCruises = allCruises?.filter(
-    (cruise) => cruise.status === "active"
+  const allowedCruises = allCruises?.cruises?.filter(
+    (cruise: any) => cruise.status === "active"
   );
   // console.log(allCruises);
 
-  if (allCruises?.length === 0)
+  if (allowedCruises?.length === 0)
     return (
       <div>
         <DataPickNavbar />
@@ -51,6 +53,11 @@ md:px-[50px] max-sm:px-[10px] max-md:px-[50px]  max-md:mt-[100px]"
           );
         })}
       </div>
+      <Paginat
+        cruises={allowedCruises}
+        isNext={allCruises?.isNext}
+        totalCruises={allCruises?.totalAllowedCruises}
+      />
       <div className="flex justify-start items-center mt-6 flex-wrap"></div>
     </main>
   );
