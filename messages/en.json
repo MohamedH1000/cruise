@@ -59,7 +59,8 @@
     "controlpanel": "Dashboard",
     "myaccount": "My Account",
     "users": "Users",
-    "cruises": "Cruises"
+    "cruises": "Cruises",
+    "attractions": "Attractions"
   },
   "cruisesTable": {
     "name": "Name",
@@ -98,10 +99,14 @@
   "EmptyState": {
     "nocruises": "No cruises available now"
   },
+  "AttractionTable": {
+    "addNewAttraction": "Add new attraction"
+  },
   "translations": {
     "pernight": "per night",
     "price": "Price",
     "reservenow": "Reserve Now",
+    "showAttraction": "Show Attraction Details",
     "clickToUpload": "Click to upload"
   }
 }

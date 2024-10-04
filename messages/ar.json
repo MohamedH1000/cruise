@@ -59,7 +59,8 @@
     "controlpanel": "لوحة التحكم",
     "myaccount": "حسابي",
     "users": "المستخدمين",
-    "cruises": "اليخوت"
+    "cruises": "اليخوت",
+    "attractions": "المعالم السياحية"
   },
   "cruisesTable": {
     "name": "الاسم",
@@ -98,10 +99,14 @@
   "EmptyState": {
     "nocruises": "لا يوجد يخوت للعرض الان"
   },
+  "AttractionTable": {
+    "addNewAttraction": "اضف معلم سياحي جديد"
+  },
   "translations": {
     "pernight": "لكل ليلة",
     "price": "السعر",
     "reservenow": "قم بالحجز الان",
+    "showAttraction": "عرض تفاصيل المعلم السياحي",
     "clickToUpload": "انقر للرفع"
   }
 }

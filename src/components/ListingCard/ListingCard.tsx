@@ -13,7 +13,7 @@ import HeartButton from "./HeartButton";
 import { useLocale, useTranslations } from "next-intl";
 import { Link } from "@/i18n/routing";
 
-const ListingCard = ({ data, currentUser }: any) => {
+const ListingCard = ({ data, currentUser, attraction }: any) => {
   const locale = useLocale();
   const t = useTranslations();
   return (
@@ -67,22 +67,34 @@ const ListingCard = ({ data, currentUser }: any) => {
             <HeartButton listingId={data?.id} currentUser={currentUser} />
           </div>
         </div>
-        <div className="flex justify-center items-center font-bold text-[18px]">
-          {data?.title}
-        </div>
-        <div className="flex flex-row items-center gap-1 justify-between">
-          <div className="font-semibold">{t("translations.price")}</div>
-          <div className="font-light">
-            <span className="font-bold">{data.price} SAR</span>{" "}
-            {t("translations.pernight")}
-          </div>
-        </div>
-        <Link
-          href={`/reservation/${data?.id}`}
-          className="w-full text-center bg-[#003b95] text-white hover:border-[#003b95] hover:border-[1px] hover:bg-white hover:text-[#003b95] transition duration-300 p-2 rounded-md font-bold"
-        >
-          {t("translations.reservenow")}
-        </Link>
+        {!attraction && (
+          <>
+            <div className="flex justify-center items-center font-bold text-[18px]">
+              {data?.title}
+            </div>
+            <div className="flex flex-row items-center gap-1 justify-between">
+              <div className="font-semibold">{t("translations.price")}</div>
+              <div className="font-light">
+                <span className="font-bold">{data.price} SAR</span>{" "}
+                {t("translations.pernight")}
+              </div>
+            </div>
+            <Link
+              href={`/reservation/${data?.id}`}
+              className="w-full text-center bg-[#003b95] text-white hover:border-[#003b95] hover:border-[1px] hover:bg-white hover:text-[#003b95] transition duration-300 p-2 rounded-md font-bold"
+            >
+              {t("translations.reservenow")}
+            </Link>
+          </>
+        )}
+        {attraction && (
+          <Link
+            href={`/attractions/${data?.id}`}
+            className="w-full text-center bg-[#003b95] text-white hover:border-[#003b95] hover:border-[1px] hover:bg-white hover:text-[#003b95] transition duration-300 p-2 rounded-md font-bold"
+          >
+            {t("translations.showAttraction")}
+          </Link>
+        )}
       </div>
     </motion.div>
   );

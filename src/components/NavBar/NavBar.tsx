@@ -34,6 +34,14 @@ const NavBar = ({ currentUser, isAdmin, isClient }: any) => {
       {isAdmin && (
         <nav className="flex justify-center items-center gap-5 text-white max-lg:gap-2 max-lg:text-[12px] max-sm:hidden">
           <Link
+            href={"/admin"}
+            className={`${
+              pathname === "/admin" ? "border-[1.5px] bg-[#0b152592]" : ""
+            }  p-2 rounded-[7px] hover:bg-[#0b152592] transition duration-300`}
+          >
+            {t("Accessibility.attractions")}
+          </Link>
+          <Link
             href={"/admin/users"}
             className={`${
               pathname === "/admin/users" ? "border-[1.5px] bg-[#0b152592]" : ""
