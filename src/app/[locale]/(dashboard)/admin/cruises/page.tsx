@@ -1,16 +1,9 @@
 import React from "react";
-import { getAllCruises } from "@/lib/actions/cruise.action";
+import { getAllCruisesTable } from "@/lib/actions/cruise.action";
 import CruisesTable, { Payment } from "./components/CruisesTable/CruisesTable";
 
-async function getData(): Promise<Payment[]> {
-  // Fetch data from your API here.
-  return [
-    // ...
-  ];
-}
 const page = async () => {
-  const data = await getData();
-  const cruises = await getAllCruises();
+  const cruises = await getAllCruisesTable();
 
   // console.log(cruises);
 

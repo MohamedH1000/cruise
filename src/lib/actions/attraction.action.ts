@@ -38,6 +38,14 @@ export async function getAllAttractions(params: any) {
     console.log(error);
   }
 }
+export async function getAllAttractionsTable() {
+  try {
+    const attractions = await prisma.attractions.findMany();
+    return attractions;
+  } catch (error) {
+    console.log(error);
+  }
+}
 
 export async function getAttractionById(id: string) {
   try {
