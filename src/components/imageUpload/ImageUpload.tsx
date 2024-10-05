@@ -13,13 +13,22 @@ declare global {
 interface ImageUploadProps {
   onChange: (value: string[]) => void;
   value: string[];
+  profile?: any;
+  currentUser?: any;
 }
-const ImageUpload: React.FC<ImageUploadProps> = ({ onChange, value }) => {
+const ImageUpload: React.FC<ImageUploadProps> = ({
+  onChange,
+  value,
+  profile,
+  currentUser,
+}) => {
   const t = useTranslations();
   const handleUpload = useCallback(
     (result: any) => {
       // console.log(result);
-      onChange([...value, result?.info?.secure_url]);
+      profile
+        ? onChange(result?.info?.secure_url)
+        : onChange([...value, result?.info?.secure_url]);
     },
     [onChange]
   );
@@ -28,7 +37,7 @@ const ImageUpload: React.FC<ImageUploadProps> = ({ onChange, value }) => {
     <CldUploadWidget
       onUpload={handleUpload}
       uploadPreset="cruises"
-      options={{ maxFiles: 20 }}
+      options={{ maxFiles: profile ? 1 : 20 }}
     >
       {({ open }) => {
         return (
@@ -41,13 +50,13 @@ const ImageUpload: React.FC<ImageUploadProps> = ({ onChange, value }) => {
             <div className="font-semibold text-lg">
               {t("translations.clickToUpload")}
             </div>
-            {value[0] && (
+            {(value[0] || currentUser?.image || value || "") && (
               <div className="absolute inset-0 w-full h-full">
                 <Image
                   alt="Upload"
                   fill
                   style={{ objectFit: "cover" }} // Replace objectFit and layout with style
-                  src={value[0]}
+                  src={profile ? value || currentUser?.image || "" : value[0]}
                 />
               </div>
             )}

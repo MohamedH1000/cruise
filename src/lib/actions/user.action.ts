@@ -25,6 +25,40 @@ export async function createUser(userData: any) {
   }
 }
 
+export async function editUser(personalData: any) {
+  const currentUser = await getCurrentUser();
+  const id = currentUser?.id;
+  try {
+    const { name, email, phoneNumber, image, password, repeatPassword } =
+      personalData;
+    if (password !== repeatPassword && password) {
+      return Error("password and repeat password fields should match");
+    }
+
+    let hashedPassword;
+    if (password) {
+      hashedPassword = await bcrypt.hash(password, 12);
+    } else {
+      hashedPassword = currentUser?.hashedPassword;
+    }
+
+    const user = await prisma.user.update({
+      where: { id },
+      data: {
+        name,
+        email,
+        phoneNumber,
+        image,
+        hashedPassword,
+      },
+    });
+    return user;
+  } catch (error) {
+    console.log(error);
+    throw error;
+  }
+}
+
 export async function getAllUsers() {
   try {
     const users = await prisma.user.findMany({
