@@ -109,6 +109,8 @@
     "showAttraction": "Show Attraction Details",
     "clickToUpload": "Click to upload",
     "accountDetails": "Your account details",
-    "save": "Save"
+    "save": "Save",
+    "updatePersonalSuccess": "Personal data updated successfully",
+    "updatePersonalError": "Something went wrong during updating"
   }
 }

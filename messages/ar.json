@@ -109,6 +109,8 @@
     "showAttraction": "عرض تفاصيل المعلم السياحي",
     "clickToUpload": "انقر للرفع",
     "accountDetails": "بيانات حسابك",
-    "save": "حفظ"
+    "save": "حفظ",
+    "updatePersonalSuccess": "تم تحديث البيانات الشخصية بنجاح",
+    "updatePersonalError": "حدث خطأ اثناء تحديث البيانات"
   }
 }

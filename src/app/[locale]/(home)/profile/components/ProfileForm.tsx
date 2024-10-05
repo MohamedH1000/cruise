@@ -19,23 +19,39 @@ import { useTranslations } from "next-intl";
 import PhoneInputWithCountrySelect from "react-phone-number-input";
 
 import "react-phone-number-input/style.css";
+import ImageUpload from "@/components/imageUpload/ImageUpload";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { editUser } from "@/lib/actions/user.action";
+import toast from "react-hot-toast";
+import { useRouter } from "@/i18n/routing";
 
 const ProfileForm = ({ currentUser }: any) => {
   const t = useTranslations();
+  const [isLoading, setIsLoading] = useState(false);
+  const router = useRouter();
   const formSchema = z.object({
-    name: z.string().min(2).max(50),
-    email: z.string().email(),
-    phoneNumber: z.string().min(4).max(13),
+    name: z.string().min(2).max(50).optional(),
+    email: z.string().email().optional(),
+    phoneNumber: z.string().min(4).max(13).optional(),
+    accountRole: z.string().optional(),
     password: z
       .string()
-      .min(8, { message: `${t("SignUp.passwordValidationMin")}` })
-      .max(20, { message: `${t("SignUp.passwordValidationMax")}` }),
+      .max(20, { message: `${t("SignUp.passwordValidationMax")}` })
+      .optional(),
     confirmPassword: z
       .string()
       .refine((data) => data.password === data.confirmPassword, {
         message: "Passwords don't match",
         path: ["confirmPassword"], // path to field with error
-      }),
+      })
+      .optional(),
+    image: z.string(),
   });
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -45,20 +61,30 @@ const ProfileForm = ({ currentUser }: any) => {
       phoneNumber: currentUser?.phoneNumber || "",
       password: "",
       confirmPassword: "",
+      accountRole: currentUser?.role || "",
+      image: "",
     },
   });
   console.log(form.getValues());
   // 2. Define a submit handler.
-  function onSubmit(values: z.infer<typeof formSchema>) {
-    // Do something with the form values.
-    // ✅ This will be type-safe and validated.
-    console.log(values);
+  async function onSubmit(values: z.infer<typeof formSchema>) {
+    setIsLoading(true);
+    try {
+      await editUser(values);
+      toast.success(t("translations.updatePersonalSuccess"));
+    } catch (error) {
+      console.log(error);
+      toast.error(t("translations.updatePersonalError"));
+    } finally {
+      setIsLoading(false);
+      router.refresh();
+    }
   }
   return (
     <Form {...form}>
       <form
         onSubmit={form.handleSubmit(onSubmit)}
-        className="space-y-4 border-[1px] shadow-md p-4 rounded-md"
+        className="space-y-4 border-[1px] shadow-md p-4 rounded-md mb-10"
       >
         <h1 className="font-bold text-3xl">
           {t("translations.accountDetails")}
@@ -113,6 +139,43 @@ const ProfileForm = ({ currentUser }: any) => {
           />
           <FormField
             control={form.control}
+            name="accountRole"
+            render={({ field }) => (
+              <FormItem className="basis-[48%]">
+                <FormLabel className="text-xl">
+                  {t("SignUp.accountRole")}:
+                </FormLabel>{" "}
+                <FormControl>
+                  <Select
+                    value={field.value}
+                    onValueChange={(value) => field.onChange(value)}
+                    disabled={currentUser?.role === "admin"}
+                  >
+                    <SelectTrigger className="w-full rounded-[12px]">
+                      <SelectValue
+                        placeholder={`${t("SignUp.accountRole")}`}
+                        className="placeholder:opacity-30"
+                      />
+                    </SelectTrigger>
+                    <SelectContent className="bg-white cursor-pointer rounded-[12px] z-30">
+                      <SelectItem value="client" className="cursor-pointer">
+                        {t("chooseAccountType.client")}
+                      </SelectItem>
+                      <SelectItem
+                        value="cruiseOwner"
+                        className="cursor-pointer"
+                      >
+                        {t("chooseAccountType.cruiseOwner")}
+                      </SelectItem>
+                    </SelectContent>
+                  </Select>
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
             name="password"
             render={({ field }) => (
               <FormItem className="basis-[48%] max-md:basis-1">
@@ -137,8 +200,30 @@ const ProfileForm = ({ currentUser }: any) => {
               </FormItem>
             )}
           />
+          <FormField
+            control={form.control}
+            name="image"
+            render={({ field }) => (
+              <FormItem className="basis-[48%]">
+                <FormLabel>قم برفع او تغيير الصورة الشخصية</FormLabel>
+                <FormControl>
+                  <ImageUpload
+                    currentUser={currentUser}
+                    value={field.value}
+                    onChange={field.onChange}
+                    profile
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
         </div>
-        <Button type="submit" className="mt-20 font-bold text-md">
+        <Button
+          type="submit"
+          className="mt-20 font-bold text-md"
+          disabled={isLoading}
+        >
           {t("translations.save")}
         </Button>
       </form>
