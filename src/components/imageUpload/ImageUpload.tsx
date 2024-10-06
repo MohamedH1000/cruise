@@ -50,7 +50,7 @@ const ImageUpload: React.FC<ImageUploadProps> = ({
             <div className="font-semibold text-lg">
               {t("translations.clickToUpload")}
             </div>
-            {(value[0] || currentUser?.image || value || "") && (
+            {(profile ? value || currentUser?.image || "" : value[0]) && (
               <div className="absolute inset-0 w-full h-full">
                 <Image
                   alt="Upload"

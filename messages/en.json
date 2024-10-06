@@ -72,6 +72,7 @@
     "discount": "Discount",
     "status": "Status",
     "delete": "Delete Cruise",
+    "deleteAccount": "Delete Account",
     "cancel": "Cancel",
     "dialogTriggerDelete": "Delete",
     "dialogTriggerTitleDelete": "Are you sure you want to delete the cruise?",
@@ -90,6 +91,7 @@
     "columns": "Columns"
   },
   "chooseAccountType": {
+    "admin": "Admin",
     "client": "Client",
     "cruiseOwner": "Cruise Owner"
   },

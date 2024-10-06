@@ -2,6 +2,29 @@
 import React, { useState } from "react";
 
 import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+
+import {
+  ColumnDef,
+  getCoreRowModel,
+  useReactTable,
+  getPaginationRowModel,
+  SortingState,
+  getSortedRowModel,
+  ColumnFiltersState,
+  VisibilityState,
+  getFilteredRowModel,
+  flexRender,
+} from "@tanstack/react-table";
+
+import { Checkbox } from "@/components/ui/checkbox";
+import { useTranslations } from "next-intl";
+import {
   Table,
   TableBody,
   TableCell,
@@ -10,27 +33,26 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import {
-  ColumnDef,
-  flexRender,
-  getCoreRowModel,
-  useReactTable,
-  getPaginationRowModel,
-  SortingState,
-  getSortedRowModel,
-  ColumnFiltersState,
-  getFilteredRowModel,
-  VisibilityState,
-} from "@tanstack/react-table";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Checkbox } from "@/components/ui/checkbox";
-import {
   DropdownMenu,
-  DropdownMenuCheckboxItem,
-  DropdownMenuContent,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import { useTranslations } from "next-intl";
+  DropdownMenuContent,
+  DropdownMenuCheckboxItem,
+} from "@radix-ui/react-dropdown-menu";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import { deleteUserById, editAnyUserRole } from "@/lib/actions/user.action";
+import toast from "react-hot-toast";
+import { useRouter } from "@/i18n/routing";
+
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import { cn } from "@/lib/utils";
 
 export type Payment = {
   id: string;
@@ -50,10 +72,12 @@ interface DataTableProps<TData, TValue> {
 export function UsersTable<TData, TValue>({
   data,
 }: DataTableProps<TData, TValue>) {
+  const router = useRouter();
   const [sorting, setSorting] = useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
   const [rowSelection, setRowSelection] = useState({});
+  const [open, setOpen] = useState(false);
   const t = useTranslations();
 
   const columns: ColumnDef<TData, any>[] = [
@@ -98,6 +122,104 @@ export function UsersTable<TData, TValue>({
     {
       accessorKey: "role",
       header: `${t("cruisesTable.role")}`,
+      cell: ({ row }) => {
+        const user = row.original;
+        const handleChangeRole = async ({ id, value }: any) => {
+          try {
+            await editAnyUserRole({ id, role: value });
+            toast.success("تم تعديل صلاحية المستخدم بنجاح");
+          } catch (error) {
+            toast.success("حصل خطا اثناء التعديل");
+          } finally {
+            router.refresh();
+          }
+        };
+        return (
+          <Select
+            value={row.getValue("role")}
+            onValueChange={(value) => handleChangeRole({ id: user?.id, value })}
+            disabled={user?.email === "mohammedhisham115@gmail.com"}
+          >
+            <SelectTrigger className="w-full rounded-[12px]">
+              <SelectValue
+                placeholder={`${t("SignUp.accountRole")}`}
+                className="placeholder:opacity-30"
+              />
+            </SelectTrigger>
+            <SelectContent className="bg-white cursor-pointer rounded-[12px] z-30">
+              <SelectItem value="admin" className="cursor-pointer">
+                {t("chooseAccountType.admin")}
+              </SelectItem>
+              <SelectItem value="client" className="cursor-pointer">
+                {t("chooseAccountType.client")}
+              </SelectItem>
+              <SelectItem value="cruiseOwner" className="cursor-pointer">
+                {t("chooseAccountType.cruiseOwner")}
+              </SelectItem>
+            </SelectContent>
+          </Select>
+        );
+      },
+    },
+    {
+      accessorKey: "state",
+      header: `${t("cruisesTable.status")}`,
+    },
+    {
+      accessorKey: "deleteAccount",
+      header: `${t("cruisesTable.deleteAccount")}`,
+      cell: ({ row }) => {
+        const user = row.original; // Access the original row data
+        const disabled =
+          user?.email === "mohammedhisham115@gmail.com" ||
+          user?.role === "admin";
+        const handleDelete = async (id: string) => {
+          try {
+            await deleteUserById(id); // Call your backend function to update the status
+            toast.success(`User Deleted Successfully`);
+          } catch (error) {
+            toast.error("Error Deleting the User");
+          } finally {
+            router.refresh();
+          }
+        };
+
+        return (
+          <Dialog open={open} onOpenChange={setOpen}>
+            <DialogTrigger
+              className={cn("bg-[red] text-white p-2 rounded-md font-bold", {
+                "bg-red-400": disabled,
+              })}
+              disabled={disabled}
+            >
+              {t("cruisesTable.dialogTriggerDelete")}
+            </DialogTrigger>
+            <DialogContent>
+              <DialogHeader>
+                <DialogTitle>
+                  {" "}
+                  {t("cruisesTable.dialogTriggerTitleDelete")}
+                </DialogTitle>
+                <DialogDescription>
+                  {t("cruisesTable.dialogTriggerDescriptionDelete")}
+                </DialogDescription>
+              </DialogHeader>
+              <Button
+                className="bg-[red] text-white"
+                onClick={() => {
+                  handleDelete(user?.id);
+                  setOpen(false);
+                }}
+              >
+                {t("cruisesTable.dialogTriggerDelete")}
+              </Button>
+              <Button onClick={() => setOpen(false)}>
+                {t("cruisesTable.cancel")}
+              </Button>
+            </DialogContent>
+          </Dialog>
+        );
+      },
     },
   ];
   const table = useReactTable({
@@ -202,7 +324,7 @@ export function UsersTable<TData, TValue>({
                   {headerGroup.headers.map((header) => {
                     return (
                       <TableHead key={header.id}>
-                        {header.isPlaceholder
+                        {header?.isPlaceholder
                           ? null
                           : flexRender(
                               header.column.columnDef.header,
