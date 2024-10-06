@@ -8,7 +8,6 @@ import { Button } from "@/components/ui/button";
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -62,10 +61,10 @@ const ProfileForm = ({ currentUser }: any) => {
       password: "",
       confirmPassword: "",
       accountRole: currentUser?.role || "",
-      image: "",
+      image: currentUser?.image || "",
     },
   });
-  console.log(form.getValues());
+  // console.log(form.getValues());
   // 2. Define a submit handler.
   async function onSubmit(values: z.infer<typeof formSchema>) {
     setIsLoading(true);

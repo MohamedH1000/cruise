@@ -2,14 +2,7 @@ import React from "react";
 import UsersTable, { Payment } from "./UsersTable";
 import { getAllUsers } from "@/lib/actions/user.action";
 
-async function getData(): Promise<Payment[]> {
-  // Fetch data from your API here.
-  return [
-    // ...
-  ];
-}
 const Users = async () => {
-  // const data = getData();
   const users = await getAllUsers();
 
   return (

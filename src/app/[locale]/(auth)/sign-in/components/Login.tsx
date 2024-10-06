@@ -119,11 +119,9 @@ const Login = () => {
             </FormItem>
           )}
         />
-        <motion.button
+        <button
           type="submit"
-          className="w-full rounded-[12px] bg-[#003b95] mt-8 text-white h-[40px] hover:opacity-75 transition duration-300"
-          whileTap={{ scale: 0.9 }}
-          whileHover={{ scale: 1.025 }}
+          className="w-full rounded-[12px] bg-[#003b95] mt-8 text-white h-[40px] hover:opacity-75 transition duration-300 hover:scale-[1.025] active:scale-[0.95]"
           disabled={isLoading || googleLoading}
         >
           {isLoading ? (
@@ -133,9 +131,9 @@ const Login = () => {
           ) : (
             t("Login.LoginButton")
           )}
-        </motion.button>
+        </button>
         <Separator className="bg-[gray] mt-4" />
-        <motion.button
+        <button
           disabled={isLoading || googleLoading}
           className="flex justify-center items-center gap-3 w-full mt-4 shadow-md py-2 px-4 rounded-[12px]
     text-[18px] font-semibold border-[1px]"
@@ -144,7 +142,7 @@ const Login = () => {
         >
           <FcGoogle />
           {t("Login.logingoogle")}
-        </motion.button>
+        </button>
         <div className="mt-4 flex justify-center items-center gap-3">
           <p>{t("Login.noaccount")}</p>
           <Link href={"/sign-up"}>

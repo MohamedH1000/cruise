@@ -72,6 +72,7 @@
     "discount": "الخصم",
     "status": "الحالة",
     "delete": "حذف اليخت",
+    "deleteAccount": "حذف الحساب",
     "cancel": "الغاء",
     "dialogTriggerDelete": "حذف",
     "dialogTriggerTitleDelete": "هل انت متاكد من حذف اليخت ؟",
@@ -90,6 +91,7 @@
     "columns": "اعمدة الجدول المعروضة"
   },
   "chooseAccountType": {
+    "admin": "ادمن",
     "client": "عميل",
     "cruiseOwner": "مالك يخت"
   },

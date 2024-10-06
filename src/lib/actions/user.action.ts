@@ -29,8 +29,15 @@ export async function editUser(personalData: any) {
   const currentUser = await getCurrentUser();
   const id = currentUser?.id;
   try {
-    const { name, email, phoneNumber, image, password, repeatPassword } =
-      personalData;
+    const {
+      name,
+      email,
+      phoneNumber,
+      image,
+      accountRole,
+      password,
+      repeatPassword,
+    } = personalData;
     if (password !== repeatPassword && password) {
       return Error("password and repeat password fields should match");
     }
@@ -49,7 +56,22 @@ export async function editUser(personalData: any) {
         email,
         phoneNumber,
         image,
+        role: accountRole,
         hashedPassword,
+      },
+    });
+    return user;
+  } catch (error) {
+    console.log(error);
+    throw error;
+  }
+}
+export async function editAnyUserRole({ id, role }: any) {
+  try {
+    const user = await prisma.user.update({
+      where: { id },
+      data: {
+        role,
       },
     });
     return user;
@@ -94,5 +116,15 @@ export async function getCurrentUser() {
     return currentUser;
   } catch (error: any) {
     return null;
+  }
+}
+
+export async function deleteUserById(id: string) {
+  try {
+    await prisma.user.delete({
+      where: { id },
+    });
+  } catch (error) {
+    console.log(error);
   }
 }
