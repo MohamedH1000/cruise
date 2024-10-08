@@ -28,6 +28,7 @@ model User {
 
   account Account[]
   cruise Cruise[]
+  reservations Reservation[]
 }
 
 model Account {
@@ -65,6 +66,7 @@ model Cruise {
   choices String[] @default([])
   createdAt DateTime @default(now())
 
+  reservations Reservation[]
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
@@ -76,5 +78,24 @@ model Attractions {
     imageSrc String[] @default([])
     location Json?
     createdAt String?
+}
 
+model Reservation {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+  userId String? @db.ObjectId
+  cruiseId String @db.ObjectId
+  startDate DateTime
+  endDate DateTime
+  totalPrice Int
+  servicePrice Json?
+  restaurants String[] @default([])
+  attractions String[] @default([])
+  nameOfReserver String?
+  email String?
+  status String?
+  phoneNumber String?
+  createdAt DateTime @default(now())
+
+  user User? @relation(fields: [userId], references: [id], onDelete: Cascade)
+  cruise Cruise @relation(fields: [cruiseId], references: [id], onDelete: Cascade)
 }

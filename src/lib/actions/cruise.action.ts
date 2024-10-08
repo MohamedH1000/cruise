@@ -109,6 +109,9 @@ export async function getCruiseById(id: string) {
       where: {
         id,
       },
+      include: {
+        user: true,
+      },
     });
 
     return cruise;

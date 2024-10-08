@@ -198,10 +198,10 @@ export function UsersTable<TData, TValue>({
               <DialogHeader>
                 <DialogTitle>
                   {" "}
-                  {t("cruisesTable.dialogTriggerTitleDelete")}
+                  {t("translations.dialogTriggerUserTitleDelete")}
                 </DialogTitle>
                 <DialogDescription>
-                  {t("cruisesTable.dialogTriggerDescriptionDelete")}
+                  {t("translations.dialogTriggerUserDescriptionDelete")}
                 </DialogDescription>
               </DialogHeader>
               <Button
