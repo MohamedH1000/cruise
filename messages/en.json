@@ -113,6 +113,13 @@
     "accountDetails": "Your account details",
     "save": "Save",
     "updatePersonalSuccess": "Personal data updated successfully",
-    "updatePersonalError": "Something went wrong during updating"
+    "updatePersonalError": "Something went wrong during updating",
+    "dialogTriggerUserTitleDelete": "Are you sure you want to delete the user?",
+    "dialogTriggerUserDescriptionDelete": "This action cannot be undone. This will permanently delete the user and remove the data from our servers and every data related to this user.",
+    "createdBy": "Created by",
+    "userDetails": "User Details:",
+    "fullName": "Full Name",
+    "mandatory": "mandatory",
+    "total": "total"
   }
 }

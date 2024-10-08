@@ -113,6 +113,13 @@
     "accountDetails": "بيانات حسابك",
     "save": "حفظ",
     "updatePersonalSuccess": "تم تحديث البيانات الشخصية بنجاح",
-    "updatePersonalError": "حدث خطأ اثناء تحديث البيانات"
+    "updatePersonalError": "حدث خطأ اثناء تحديث البيانات",
+    "dialogTriggerUserTitleDelete": "هل انت متاكد من حذف المستخدم ؟",
+    "dialogTriggerUserDescriptionDelete": "هذا الاجراء لا يمكن الرجوع فيه. سيقوم بحذف جميع بيانات اليخت نهائيا وحذف البيانات من السيرفر الخاص بنا وجميع البيانات الاخرى المتعلفة بالمستخدم.",
+    "createdBy": "المالك",
+    "userDetails": "بيانات المستخدم:",
+    "fullName": "الاسم كامل",
+    "mandatory": "الزامي",
+    "total": "المجموع"
   }
 }

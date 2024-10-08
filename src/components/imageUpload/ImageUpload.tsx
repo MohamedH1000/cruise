@@ -5,6 +5,7 @@ import { useCallback } from "react";
 import { TbPhotoPlus } from "react-icons/tb";
 import Image from "next/image";
 import { useTranslations } from "next-intl";
+import { cn } from "@/lib/utils";
 
 declare global {
   var cloudinary: any;
@@ -43,8 +44,13 @@ const ImageUpload: React.FC<ImageUploadProps> = ({
         return (
           <div
             onClick={() => open?.()}
-            className="relative cursor-pointer hover:opacity-70 transition border-dashed border-2 p-20
-              border-neutral-300 flex flex-col justify-center items-center gap-4 text-neutral-600"
+            className={cn(
+              `relative cursor-pointer hover:opacity-70 transition border-dashed border-2 p-20
+            border-neutral-300 flex flex-col justify-center items-center gap-4 text-neutral-600`,
+              {
+                "rounded-md": profile,
+              }
+            )}
           >
             <TbPhotoPlus size={50} />
             <div className="font-semibold text-lg">
@@ -57,6 +63,7 @@ const ImageUpload: React.FC<ImageUploadProps> = ({
                   fill
                   style={{ objectFit: "cover" }} // Replace objectFit and layout with style
                   src={profile ? value || currentUser?.image || "" : value[0]}
+                  className={`${profile ? "rounded-md" : ""}`}
                 />
               </div>
             )}
