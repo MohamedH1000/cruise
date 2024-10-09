@@ -33,6 +33,8 @@ const ListingReservation = ({ reservations, currentUser, cruise }: any) => {
   const [phoneNumber, setPhoneNumber] = useState("");
   const [dateRange, setDateRange] = useState<Range>(initialDateRange);
   const [totalPrice, setTotalPrice] = useState<any>();
+  const [numberOfAttractions, setNumberOfAttractions] = useState<any>();
+  console.log(numberOfAttractions);
 
   useEffect(() => {
     if (dateRange.startDate && dateRange.endDate) {
@@ -48,13 +50,14 @@ const ListingReservation = ({ reservations, currentUser, cruise }: any) => {
       }
 
       setTotalPrice(newTotalPrice);
+      setNumberOfAttractions(dayCount + 1);
     }
   }, [dateRange, cruise?.price]);
 
   const disableDates = useMemo(() => {
     let dates: Date[] = [];
     reservations
-      .filter((res: any) => res.status !== "canceled")
+      ?.filter((res: any) => res.status !== "canceled")
       .forEach((reservations: any) => {
         const range = eachDayOfInterval({
           start: new Date(reservations.startDate),
@@ -66,7 +69,7 @@ const ListingReservation = ({ reservations, currentUser, cruise }: any) => {
   }, [reservations]);
   return (
     <motion.div
-      className="bg-white rounded-xl border-[1px] border-neutral-200 overflow-hidden mt-5"
+      className="bg-white rounded-xl border-[1px] border-neutral-200 overflow-hidden mt-5 w-full"
       initial={{ opacity: 0, y: 35 }}
       whileInView={{ opacity: 100, y: 0 }}
       transition={{ duration: 1, delay: 0.1 }}

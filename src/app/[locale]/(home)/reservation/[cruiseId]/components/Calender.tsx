@@ -14,7 +14,7 @@ const Calender: React.FC<CalenderProps> = ({
   disabledDates,
 }) => {
   return (
-    <div dir="ltr">
+    <div dir="ltr" className="w-full">
       <DateRange
         rangeColors={["#262626"]}
         ranges={[value]}
