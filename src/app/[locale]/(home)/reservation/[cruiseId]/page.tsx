@@ -38,9 +38,10 @@ const page = async ({ params }: any) => {
           <p className="font-semibold text-2xl opacity-85 my-10">
             {cruise?.description}
           </p>
+          <Separator className="mt-5" />
         </div>
         {/* second col */}
-        <div>
+        <div className="w-full">
           <ListingReservation
             reservations={reservations}
             currentUser={currentUser}
