@@ -11,6 +11,8 @@ import ImageUpload from "@/components/imageUpload/ImageUpload";
 import { Textarea } from "@/components/ui/textarea";
 import { createCruise, createCruiseByOwner } from "@/lib/actions/cruise.action";
 import { cn } from "@/lib/utils";
+import dynamic from "next/dynamic";
+const Map = dynamic(() => import("./Map"), { ssr: false });
 
 const AddCruiseDialog = ({ cruiseOwner, admin }: any) => {
   const t = useTranslations();
@@ -22,6 +24,7 @@ const AddCruiseDialog = ({ cruiseOwner, admin }: any) => {
     imageSrc: [],
     amenities: [],
     price: null,
+    location: {},
     numberOfGuests: null,
     discount: "",
   });
@@ -32,6 +35,7 @@ const AddCruiseDialog = ({ cruiseOwner, admin }: any) => {
       description: "",
       imageSrc: [],
       amenities: [],
+      location: {},
       price: null,
       numberOfGuests: null,
       discount: "",
@@ -177,6 +181,13 @@ const AddCruiseDialog = ({ cruiseOwner, admin }: any) => {
                       disabled={isLoading ? true : false}
                     />
                   </div>
+                  <h1 className="mt-5 text-[#1e4164] font-bold">
+                    {t("translations.locationTarget")}
+                  </h1>
+                  <Map
+                    setCruiseDetails={setCruiseDetails}
+                    cruiseDetails={cruiseDetails}
+                  />
                   <h1 className="mt-10">قم باضافة صورة:</h1>
                   <p className="opacity-60">أظهر لعملائك كيف يبدو المكان</p>
                   <ImageUpload

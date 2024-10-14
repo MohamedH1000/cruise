@@ -2,7 +2,6 @@
 import { Range } from "react-date-range";
 
 import React, { useEffect, useMemo, useState } from "react";
-import Calender from "./Calender";
 import { Separator } from "@/components/ui/separator";
 import { motion } from "framer-motion";
 import "react-phone-number-input/style.css";
@@ -11,6 +10,8 @@ import { differenceInCalendarDays, eachDayOfInterval } from "date-fns";
 import { useTranslations } from "next-intl";
 import { Button } from "@/components/ui/button";
 import DetailsForm from "./DetailsForm";
+import AttractionForm from "./AttractionForm";
+import RestaurantForm from "./RestaurantForm";
 const initialDateRange = {
   startDate: new Date(),
   endDate: new Date(),
@@ -22,11 +23,19 @@ enum STEPS {
   ATTRACTIONS = 1,
   RESTAURANTS = 2,
 }
-const ListingReservation = ({ reservations, currentUser, cruise }: any) => {
+const ListingReservation = ({
+  reservations,
+  currentUser,
+  cruise,
+  attractions,
+}: any) => {
+  const initialOptions = attractions.map((attraction: any) => attraction.name);
   const t = useTranslations();
   const [name, setName] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [email, setEmail] = useState("");
+  const [selectedOptions, setSelectedOptions] = useState([]);
+  const [availableOptions, setAvailableOptions] = useState(initialOptions);
   const [phoneNumber, setPhoneNumber] = useState("");
   const [dateRange, setDateRange] = useState<Range>(initialDateRange);
   const [totalPrice, setTotalPrice] = useState<any>();
@@ -119,6 +128,18 @@ const ListingReservation = ({ reservations, currentUser, cruise }: any) => {
           currentUser={currentUser}
         />
       )}
+
+      {steps === STEPS.ATTRACTIONS && (
+        <AttractionForm
+          numberOfAttractions={numberOfAttractions}
+          availableOptions={availableOptions}
+          setAvailableOptions={setAvailableOptions}
+          selectedOptions={selectedOptions}
+          setSelectedOptions={setSelectedOptions}
+        />
+      )}
+
+      {steps === STEPS.RESTAURANTS && <RestaurantForm />}
 
       <Separator />
       <div className="p-4 flex justify-center items-center gap-2">

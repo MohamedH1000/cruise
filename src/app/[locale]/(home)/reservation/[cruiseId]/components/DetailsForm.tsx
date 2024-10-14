@@ -5,6 +5,7 @@ import Calender from "./Calender";
 import PhoneInput from "react-phone-number-input";
 import { Input } from "@/components/ui/input";
 import { useTranslations } from "next-intl";
+import { addDays, differenceInDays } from "date-fns";
 
 const DetailsForm = ({
   name,
@@ -29,8 +30,21 @@ const DetailsForm = ({
       <Separator />
       <Calender
         value={dateRange}
-        onChange={(value) => {
-          setDateRange(value.selection);
+        onChange={(ranges) => {
+          const { startDate, endDate }: any = ranges.selection;
+
+          // Calculate the number of days selected
+          const daysDifference = differenceInDays(endDate, startDate);
+
+          if (daysDifference > 5) {
+            alert(t("translations.reserveLimit"));
+            setDateRange({
+              ...ranges.selection,
+              endDate: addDays(startDate, 5),
+            });
+          } else {
+            setDateRange(ranges.selection);
+          }
         }}
         disabledDates={disableDates}
       />
