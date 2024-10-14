@@ -15,6 +15,7 @@ export async function createCruise(cruiseData: any) {
     imageSrc = [],
     numberOfGuests,
     discount,
+    location,
     amenities = [],
     price,
   } = cruiseData;
@@ -27,6 +28,7 @@ export async function createCruise(cruiseData: any) {
       price: parseInt(price, 10),
       discount,
       amenities: [],
+      location,
       userId: currentUser.id,
       status: "active",
     },
@@ -47,6 +49,7 @@ export async function createCruiseByOwner(cruiseData: any) {
     imageSrc = [],
     numberOfGuests,
     discount,
+    location,
     amenities = [],
     price,
   } = cruiseData;
@@ -58,6 +61,7 @@ export async function createCruiseByOwner(cruiseData: any) {
       numberOfGuests: parseInt(numberOfGuests),
       price: parseInt(price, 10),
       discount,
+      location,
       amenities: [],
       userId: currentUser.id,
       status: "pending",

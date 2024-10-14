@@ -7,10 +7,16 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import ListingReservation from "./components/ListingReservation";
 import { getAllReservations } from "@/lib/actions/reservation.action";
 import { getCurrentUser } from "@/lib/actions/user.action";
+import { getAllAttractionsTable } from "@/lib/actions/attraction.action";
+import dynamic from "next/dynamic";
+const MapDisplay = dynamic(() => import("./components/MapDisplay"), {
+  ssr: false,
+});
 
 const page = async ({ params }: any) => {
   const cruise = await getCruiseById(params.cruiseId);
   const reservations = await getAllReservations();
+  const attractions = await getAllAttractionsTable();
   const currentUser = await getCurrentUser();
   const t = await getTranslations();
   //   console.log(cruise);
@@ -39,6 +45,10 @@ const page = async ({ params }: any) => {
             {cruise?.description}
           </p>
           <Separator className="mt-5" />
+          <h1 className="font-bold text-2xl mt-5">
+            {t("translations.location")}
+          </h1>
+          <MapDisplay cruise={cruise} />
         </div>
         {/* second col */}
         <div className="w-full">
@@ -46,6 +56,7 @@ const page = async ({ params }: any) => {
             reservations={reservations}
             currentUser={currentUser}
             cruise={cruise}
+            attractions={attractions}
           />
         </div>
       </div>

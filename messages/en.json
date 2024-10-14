@@ -123,6 +123,17 @@
     "total": "total",
     "completeData": "Please complete the data for reservation",
     "next": "Next",
-    "previous": "Previous"
+    "previous": "Previous",
+    "order": "Selected Options (Ordered by selection):",
+    "noOptions": "No option selected yet.",
+    "selectOrder": "Select attractions in the order you want to visit first:",
+    "limit": "You can select up to",
+    "options": "options",
+    "attractionKnow": "to know more about attractions",
+    "click": "click here",
+    "reserveLimit": "reservation is 6 nights maximum",
+    "locationTarget": "Specify the location of cruise in map",
+    "location": "Location of cruise in map",
+    "noLocation": "No location found for this cruise"
   }
 }
