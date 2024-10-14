@@ -120,6 +120,9 @@
     "userDetails": "User Details:",
     "fullName": "Full Name",
     "mandatory": "mandatory",
-    "total": "total"
+    "total": "total",
+    "completeData": "Please complete the data for reservation",
+    "next": "Next",
+    "previous": "Previous"
   }
 }

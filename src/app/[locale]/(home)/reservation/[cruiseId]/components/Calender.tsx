@@ -15,12 +15,14 @@ const Calender: React.FC<CalenderProps> = ({
 }) => {
   return (
     <div dir="ltr" className="w-full">
+      {" "}
+      {/* Responsive container */}
       <DateRange
         rangeColors={["#262626"]}
         ranges={[value]}
         date={new Date()}
         onChange={onChange}
-        direction="vertical"
+        direction="horizontal"
         className="w-full"
         showDateDisplay={false}
         minDate={new Date()}

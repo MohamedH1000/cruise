@@ -75,9 +75,13 @@ model Attractions {
     name String
     subtitle String?
     description String
+    reservationId String? @db.ObjectId
     imageSrc String[] @default([])
     location Json?
-    createdAt String?
+    createdAt DateTime? @default(now())
+    restaurants Restaurant[]
+
+    reservation Reservation? @relation(fields: [reservationId], references: [id])
 }
 
 model Reservation {
@@ -88,14 +92,24 @@ model Reservation {
   endDate DateTime
   totalPrice Int
   servicePrice Json?
-  restaurants String[] @default([])
-  attractions String[] @default([])
   nameOfReserver String?
   email String?
   status String?
   phoneNumber String?
   createdAt DateTime @default(now())
+  attractions Attractions[]
 
   user User? @relation(fields: [userId], references: [id], onDelete: Cascade)
   cruise Cruise @relation(fields: [cruiseId], references: [id], onDelete: Cascade)
+}
+
+model Restaurant {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+  attractionId String @db.ObjectId
+  name String
+  description String
+  imageSrc String[] @default([])
+  createdAt DateTime? @default(now())
+
+  attraction Attractions? @relation(fields: [attractionId], references: [id])
 }
