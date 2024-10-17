@@ -1,36 +1,22 @@
 "use client";
-import React from "react";
+import React, { useContext } from "react";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select";
+} from "./ui/select";
 import { useTranslations } from "next-intl";
-import { useRouter } from "next/navigation";
-import { useLocale } from "next-intl";
-import { useTransition } from "react";
-import { usePathname } from "next/navigation";
+import locale from "date-fns/locale/af";
+import { CurrencyContext } from "@/app/context/CurrencyContext";
 
-interface LanguageSelectorProps {
+interface CurrencySelectorProps {
   isMobile?: Boolean;
 }
-const LanguageSelector = ({ isMobile }: LanguageSelectorProps) => {
-  const pathname = usePathname();
-  const router = useRouter();
-  // const localeURL = pathname?.split("/")[1];
-  const remainingPath = pathname?.split("/").slice(2).join("/");
-  // console.log(remainingPath);
+const CurrencySelector = ({ isMobile }: CurrencySelectorProps) => {
   const t = useTranslations();
-  const [isPending] = useTransition();
-  const locale = useLocale();
-
-  const handleSelect = (value: any) => {
-    const current = value;
-    router.push(`/${current}/${remainingPath}`);
-  };
-
+  const { currency, setCurrency } = useContext(CurrencyContext);
   return (
     <>
       <div
@@ -43,20 +29,18 @@ const LanguageSelector = ({ isMobile }: LanguageSelectorProps) => {
             className={`${isMobile ? "text-black" : "text-white"}`}
             htmlFor="language"
           >
-            {t("chooselang.choose")}
+            {t("translations.chooseCurrency")}
           </label>
         )}
         <Select
-          name="language"
-          dir={locale === "ar" ? "rtl" : "ltr"}
-          onValueChange={handleSelect}
-          defaultValue={locale}
+          name="currency"
+          onValueChange={(value) => setCurrency(value)}
+          defaultValue={currency}
         >
           <SelectTrigger
             className={`${
               isMobile ? "text-black" : "text-white"
             } w-[150px] rounded-[10px]  max-md:w-[100px]`}
-            disabled={isPending}
           >
             <SelectValue placeholder={t("chooselang.choose")} />
           </SelectTrigger>
@@ -67,11 +51,17 @@ const LanguageSelector = ({ isMobile }: LanguageSelectorProps) => {
               ref.ontouchend = (e) => e.preventDefault();
             }}
           >
-            <SelectItem value="ar" className="border-b-2 cursor-pointer">
-              {t("chooselang.lang1")}
+            <SelectItem value="AED" className="border-b-2 cursor-pointer">
+              AED
             </SelectItem>
-            <SelectItem value="en" className="cursor-pointer">
-              {t("chooselang.lang2")}
+            <SelectItem value="USD" className="cursor-pointer border-b-2">
+              USD
+            </SelectItem>
+            <SelectItem value="SAR" className="cursor-pointer border-b-2">
+              SAR
+            </SelectItem>
+            <SelectItem value="EUR" className="cursor-pointer">
+              EUR
             </SelectItem>
           </SelectContent>
         </Select>
@@ -80,4 +70,4 @@ const LanguageSelector = ({ isMobile }: LanguageSelectorProps) => {
   );
 };
 
-export default LanguageSelector;
+export default CurrencySelector;

@@ -48,7 +48,23 @@ const page = async ({ params }: any) => {
           <h1 className="font-bold text-2xl mt-5">
             {t("translations.location")}
           </h1>
-          <MapDisplay cruise={cruise} />
+          {cruise?.location?.lat ? (
+            <iframe
+              width="550"
+              height="450"
+              style={{ border: 0 }}
+              loading="lazy"
+              allowFullScreen
+              className="rounded-md mt-5 w-full"
+              src={`https://www.google.com/maps?q=${cruise?.location?.lat},${cruise?.location?.lng}&hl=es;z=14&output=embed`}
+            ></iframe>
+          ) : (
+            <div className="mt-20">
+              <h1 className="font-bold text-xl">
+                {t("translations.noLocation")}
+              </h1>
+            </div>
+          )}
         </div>
         {/* second col */}
         <div className="w-full">

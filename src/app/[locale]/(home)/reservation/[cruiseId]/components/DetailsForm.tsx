@@ -37,10 +37,16 @@ const DetailsForm = ({
           const daysDifference = differenceInDays(endDate, startDate);
 
           if (daysDifference > 5) {
-            alert(t("translations.reserveLimit"));
+            alert(t("translations.reserveLimitMax"));
             setDateRange({
               ...ranges.selection,
               endDate: addDays(startDate, 5),
+            });
+          } else if (daysDifference < 2) {
+            alert(t("translations.reserveLimitMin"));
+            setDateRange({
+              ...ranges.selection,
+              endDate: addDays(startDate, 2),
             });
           } else {
             setDateRange(ranges.selection);

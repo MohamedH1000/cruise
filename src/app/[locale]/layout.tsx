@@ -3,6 +3,7 @@ import { getMessages } from "next-intl/server";
 import { NextIntlClientProvider } from "next-intl";
 import { Toaster } from "react-hot-toast";
 import { getLangDir } from "rtl-detect";
+import ContextProvider from "../context/ContextProvider";
 
 import "../globals.css";
 
@@ -30,12 +31,14 @@ export default async function RootLayout({
   return (
     <html lang={locale} dir={direction}>
       <NextIntlClientProvider messages={messages}>
-        <body
-          className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-        >
-          {children}
-          <Toaster position="bottom-right" reverseOrder={false} />
-        </body>
+        <ContextProvider>
+          <body
+            className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+          >
+            {children}
+            <Toaster position="bottom-right" reverseOrder={false} />
+          </body>
+        </ContextProvider>
       </NextIntlClientProvider>
     </html>
   );
