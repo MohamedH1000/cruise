@@ -8,6 +8,7 @@ import LanguageSelector from "../LanguageSelector";
 import { Button } from "../ui/button";
 import { signOut } from "next-auth/react";
 import toast from "react-hot-toast";
+import CurrencySelector from "../CurrencySelector";
 
 interface MobileNavProps {
   open: Boolean;
@@ -143,6 +144,10 @@ const MobileNav: React.FC<MobileNavProps> = ({
           )}
           <div className="z-[120] relative">
             <LanguageSelector isMobile />
+          </div>
+          <Separator className="bg-[gray] w-full h-[1px] sm:hidden" />
+          <div className="z-[120] relative">
+            <CurrencySelector isMobile />
           </div>
           <Separator className="bg-[gray] w-full h-[1px] sm:hidden" />
           {currentUser ? (

@@ -7,7 +7,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "./ui/select";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import locale from "date-fns/locale/af";
 import { CurrencyContext } from "@/app/context/CurrencyContext";
 
@@ -16,6 +16,8 @@ interface CurrencySelectorProps {
 }
 const CurrencySelector = ({ isMobile }: CurrencySelectorProps) => {
   const t = useTranslations();
+  const locale = useLocale();
+
   const { currency, setCurrency } = useContext(CurrencyContext);
   return (
     <>
@@ -35,6 +37,7 @@ const CurrencySelector = ({ isMobile }: CurrencySelectorProps) => {
         <Select
           name="currency"
           onValueChange={(value) => setCurrency(value)}
+          dir={locale === "ar" ? "rtl" : "ltr"}
           defaultValue={currency}
         >
           <SelectTrigger
