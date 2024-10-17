@@ -27,7 +27,7 @@ const NavBar = ({ currentUser, isAdmin, isClient }: any) => {
   const t = useTranslations();
   return (
     <header
-      className="h-[64px] bg-[#003b95] fixed top-0 z-[1000] w-full flex justify-between items-center lg:px-[180px]
+      className="h-[64px] bg-[#003b95] fixed top-0 z-[50] w-full flex justify-between items-center lg:px-[180px]
     md:px-[50px] max-sm:px-[10px] max-md:px-[50px]"
     >
       <Link href={"/"}>
