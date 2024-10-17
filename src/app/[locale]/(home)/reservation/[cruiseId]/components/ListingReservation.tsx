@@ -1,7 +1,7 @@
 "use client";
 import { Range } from "react-date-range";
 
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useContext, useEffect, useMemo, useState } from "react";
 import { Separator } from "@/components/ui/separator";
 import { motion } from "framer-motion";
 import "react-phone-number-input/style.css";
@@ -12,6 +12,7 @@ import { Button } from "@/components/ui/button";
 import DetailsForm from "./DetailsForm";
 import AttractionForm from "./AttractionForm";
 import RestaurantForm from "./RestaurantForm";
+import { CurrencyContext } from "@/app/context/CurrencyContext";
 const initialDateRange = {
   startDate: new Date(),
   endDate: new Date(),
@@ -41,7 +42,7 @@ const ListingReservation = ({
   const [totalPrice, setTotalPrice] = useState<any>();
   const [numberOfAttractions, setNumberOfAttractions] = useState<any>();
   const [steps, setSteps] = useState(STEPS.DATA);
-
+  const { convertCurrency, currency } = useContext(CurrencyContext);
   const onBack = () => {
     setSteps((value) => value - 1);
   };
@@ -97,7 +98,8 @@ const ListingReservation = ({
       });
     return dates;
   }, [reservations]);
-
+  const convertedTotalPrice = convertCurrency(totalPrice, "AED", currency);
+  const convertedPrice = convertCurrency(cruise?.price, "AED", currency);
   const onSubmit = async () => {};
   return (
     <motion.div
@@ -108,7 +110,9 @@ const ListingReservation = ({
       viewport={{ once: true }}
     >
       <div className="flex flex-row items-center gap-1 p-4">
-        <div className="text-2xl font-semibold">SAR {cruise?.price}</div>
+        <div className="text-2xl font-semibold">
+          {currency} {convertedPrice}
+        </div>
         <div className="font-light text-neutral-600">
           {t("translations.pernight")}
         </div>
@@ -169,7 +173,9 @@ const ListingReservation = ({
       </div>
       <div className="p-4 flex flex-row  items-center justify-between font-semibold text-lg">
         <div className="font-bold capitalize">{t("translations.total")}:</div>
-        <div>SAR {totalPrice}</div>
+        <div>
+          {currency} {convertedTotalPrice.toFixed(2)}
+        </div>
       </div>
     </motion.div>
   );

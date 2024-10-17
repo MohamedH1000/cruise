@@ -131,9 +131,11 @@
     "options": "options",
     "attractionKnow": "to know more about attractions",
     "click": "click here",
-    "reserveLimit": "reservation is 6 nights maximum",
+    "reserveLimitMax": "reservation is 6 nights maximum",
+    "reserveLimitMin": "reservation is 3 nights minimum",
     "locationTarget": "Specify the location of cruise in map",
     "location": "Location of cruise in map",
-    "noLocation": "No location found for this cruise"
+    "noLocation": "No location found for this cruise",
+    "chooseCurrency": "Choose currency"
   }
 }

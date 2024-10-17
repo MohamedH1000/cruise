@@ -19,6 +19,7 @@ import {
 import { signOut } from "next-auth/react";
 import toast from "react-hot-toast";
 import { motion } from "framer-motion";
+import CurrencySelector from "../CurrencySelector";
 
 const NavBar = ({ currentUser, isAdmin, isClient }: any) => {
   const [open, setOpen] = useState(false);
@@ -117,6 +118,7 @@ const NavBar = ({ currentUser, isAdmin, isClient }: any) => {
         animate={{ opacity: 100, x: 0 }}
         transition={{ duration: 0.3, delay: 0.3 }}
       >
+        <CurrencySelector />
         <LanguageSelector />
         <div className="gap-2 flex max-md:hidden">
           {currentUser && (
