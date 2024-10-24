@@ -17,6 +17,7 @@ export async function createCruise(cruiseData: any) {
     discount,
     location,
     amenities = [],
+    delivery,
     price,
   } = cruiseData;
   const cruise = await prisma.cruise.create({
@@ -27,6 +28,7 @@ export async function createCruise(cruiseData: any) {
       numberOfGuests: parseInt(numberOfGuests),
       price: parseInt(price, 10),
       discount,
+      delivery: parseInt(delivery, 10),
       amenities: [],
       location,
       userId: currentUser.id,
@@ -124,6 +126,50 @@ export async function getCruiseById(id: string) {
   }
 }
 
+export async function updateCruise(cruiseId: string, cruiseData: any) {
+  const currentUser = await getCurrentUser();
+
+  // Ensure the user is an admin
+  if (currentUser?.role !== "admin") {
+    throw new Error("You are not authorized to update this attraction");
+  }
+
+  const {
+    name,
+    description,
+    imageSrc = [],
+    numberOfGuests,
+    discount,
+    location,
+    amenities = [],
+    delivery,
+    price,
+  } = cruiseData;
+
+  // Step 1: Update the attraction's basic information
+  const updatedCruise = await prisma.cruise.update({
+    where: {
+      id: cruiseId,
+    },
+    data: {
+      name,
+      description,
+      imageSrc: { set: imageSrc },
+      numberOfGuests: parseInt(numberOfGuests),
+      price: parseInt(price, 10),
+      discount,
+      delivery: parseInt(delivery, 10),
+      amenities,
+      location,
+      userId: currentUser.id,
+    },
+  });
+
+  // Step 3: Revalidate the page to show the updated attraction
+  revalidatePath("/admin/cruises");
+
+  return updatedCruise;
+}
 export async function updateCruiseStatus({ id, newStatus }: any) {
   // console.log("Updating cruise status for:", id, newStatus); // Debugging
   try {

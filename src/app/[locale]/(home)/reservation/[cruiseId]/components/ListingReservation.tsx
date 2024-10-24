@@ -13,6 +13,9 @@ import DetailsForm from "./DetailsForm";
 import AttractionForm from "./AttractionForm";
 import RestaurantForm from "./RestaurantForm";
 import { CurrencyContext } from "@/app/context/CurrencyContext";
+import { fetchRestaurantsByAttractions } from "@/lib/actions/restaurant.action";
+import { loadStripe } from "@stripe/stripe-js";
+import { Restaurant } from "@prisma/client";
 const initialDateRange = {
   startDate: new Date(),
   endDate: new Date(),
@@ -42,7 +45,12 @@ const ListingReservation = ({
   const [totalPrice, setTotalPrice] = useState<any>();
   const [numberOfAttractions, setNumberOfAttractions] = useState<any>();
   const [steps, setSteps] = useState(STEPS.DATA);
+  const [relatedRestaurants, setRelatedRestaurants] = useState([]);
   const { convertCurrency, currency } = useContext(CurrencyContext);
+  // console.log(totalPrice);
+  const stripePromise = loadStripe(
+    process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!
+  );
   const onBack = () => {
     setSteps((value) => value - 1);
   };
@@ -85,6 +93,20 @@ const ListingReservation = ({
     }
   }, [dateRange, cruise?.price]);
 
+  useEffect(() => {
+    if (selectedOptions.length > 0) {
+      // Fetch related restaurants based on the selected attractions
+      const fetchRestaurants = async () => {
+        const restaurants: Restaurant[] = await fetchRestaurantsByAttractions(
+          selectedOptions
+        );
+        setRelatedRestaurants(restaurants);
+      };
+
+      fetchRestaurants();
+    }
+  }, [selectedOptions]);
+
   const disableDates = useMemo(() => {
     let dates: Date[] = [];
     reservations
@@ -98,9 +120,43 @@ const ListingReservation = ({
       });
     return dates;
   }, [reservations]);
+
   const convertedTotalPrice = convertCurrency(totalPrice, "AED", currency);
   const convertedPrice = convertCurrency(cruise?.price, "AED", currency);
-  const onSubmit = async () => {};
+
+  const onSubmit = async () => {
+    setIsLoading(true);
+    const stripe = await stripePromise;
+
+    try {
+      const response = await fetch("/api/create-checkout-session", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          amount: Math.round(convertedTotalPrice * 100), // Convert AED to smallest unit (fils)
+          currency: localStorage.getItem("currency") || "AED", // AED currency
+        }),
+      });
+
+      const session = await response.json();
+
+      if (session.id) {
+        const result = await stripe?.redirectToCheckout({
+          sessionId: session.id,
+        });
+
+        if (result?.error) {
+          console.error(result.error.message);
+        }
+      }
+    } catch (error) {
+      console.error("Error during checkout:", error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
   return (
     <motion.div
       className="bg-white rounded-xl border-[1px] border-neutral-200 overflow-hidden mt-5 w-full"
@@ -143,7 +199,12 @@ const ListingReservation = ({
         />
       )}
 
-      {steps === STEPS.RESTAURANTS && <RestaurantForm />}
+      {steps === STEPS.RESTAURANTS && (
+        <RestaurantForm
+          relatedRestaurants={relatedRestaurants}
+          setTotalPrice={setTotalPrice}
+        />
+      )}
 
       <Separator />
       <div className="p-4 flex justify-center items-center gap-2">

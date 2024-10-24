@@ -1,7 +1,7 @@
 "use client";
 import { Separator } from "@/components/ui/separator";
 import { Input } from "@/components/ui/input";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useTranslations } from "next-intl";
 import { Button } from "@/components/ui/button";
 import toast from "react-hot-toast";
@@ -9,19 +9,34 @@ import { motion, AnimatePresence } from "framer-motion";
 import Image from "next/image";
 import ImageUpload from "@/components/imageUpload/ImageUpload";
 import { Textarea } from "@/components/ui/textarea";
-import { createCruise, createCruiseByOwner } from "@/lib/actions/cruise.action";
 import { cn } from "@/lib/utils";
-import { createAttraction } from "@/lib/actions/attraction.action";
+import {
+  createAttraction,
+  updateAttraction,
+} from "@/lib/actions/attraction.action";
+import { fetchRestaurants } from "@/lib/actions/restaurant.action";
+import Select from "react-select";
 
-const AddAttractionDialog = ({ cruiseOwner, admin }: any) => {
+const AddAttractionDialog = ({
+  cruiseOwner,
+  admin,
+  edit,
+  attractionEditData,
+}: any) => {
   const t = useTranslations();
   const [open, setOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [restaurants, setRestaurants] = useState<any[]>([]);
   const [attractionData, setAttractionData] = useState<any>({
-    name: "",
-    description: "",
-    subtitle: "",
-    imageSrc: [],
+    name: attractionEditData?.name || "",
+    description: attractionEditData?.description || "",
+    subtitle: attractionEditData?.subtitle || "",
+    imageSrc: attractionEditData?.imageSrc || [],
+    restaurantIds:
+      attractionEditData?.restaurants?.map((r: any) => ({
+        value: r.id,
+        label: r.name,
+      })) || [],
   });
   // console.log("cruise details", cruiseDetails);
   const clear = () => {
@@ -30,26 +45,49 @@ const AddAttractionDialog = ({ cruiseOwner, admin }: any) => {
       description: "",
       subtitle: "",
       imageSrc: [],
+      restaurantIds: [],
     });
   };
 
   // console.log(cruiseDetails);
+  useEffect(() => {
+    const getRestaurants = async () => {
+      try {
+        const fetchedRestaurants: any = await fetchRestaurants(); // Fetch restaurants
+        setRestaurants(fetchedRestaurants);
+      } catch (error) {
+        console.error("Error fetching restaurants:", error);
+      }
+    };
+    if (open) {
+      getRestaurants();
+    }
+  }, [open]);
 
   const handleSubmit = async (e: any) => {
     e.preventDefault();
     setIsLoading(true);
-    if (admin) {
-      try {
+    try {
+      if (edit) {
+        // Update existing attraction
+        await updateAttraction(attractionEditData.id, attractionData); // Use update function with attraction ID
+        toast.success("تم تعديل المعلم السياحي بنجاح");
+      } else {
+        // Create new attraction
         await createAttraction(attractionData);
         toast.success("تم اضافه المعلم السياحي للنظام بنجاح");
-        clear();
-      } catch (error) {
-        console.log(error);
-        toast.error("حدثت مشكله اثناء اضافة المعلم السياحي");
-      } finally {
-        setIsLoading(false);
-        setOpen(false);
       }
+      clear();
+    } catch (error) {
+      console.log(error);
+      if (edit) {
+        toast.error("حدثت مشكله اثناء تعديل المعلم السياحي");
+      } else {
+        toast.error("حدثت مشكله اثناء اضافة المعلم السياحي");
+      }
+    } finally {
+      setIsLoading(false);
+      setOpen(false);
     }
   };
   return (
@@ -62,16 +100,19 @@ const AddAttractionDialog = ({ cruiseOwner, admin }: any) => {
       >
         <Button
           className={cn(
-            `mt-10  text-white rounded-[12px]
+            `  text-white rounded-[12px]
             transition duration-300 p-4 text-[14px] font-medium`,
             {
-              "bg-[#003b95]": cruiseOwner,
-              "bg-black": admin,
+              "bg-[#003b95] mt-10": cruiseOwner,
+              "bg-black mt-10": admin,
+              "bg-yellow-500": edit,
             }
           )}
           onClick={() => setOpen((prev: any) => !prev)}
         >
-          {t("AttractionTable.addNewAttraction")}
+          {edit
+            ? t("AttractionTable.edit")
+            : t("AttractionTable.addNewAttraction")}
         </Button>
       </motion.div>
       <AnimatePresence>
@@ -96,7 +137,9 @@ const AddAttractionDialog = ({ cruiseOwner, admin }: any) => {
             >
               <div className="flex justify-between items-center">
                 <h1 className="text-center font-bold text-[18px]">
-                  قم باضافة المعلم السياحي الجديد
+                  {edit
+                    ? "قم بتعديل المعلم السياحي الجديد"
+                    : "قم باضافة المعلم السياحي الجديد"}
                 </h1>
                 <Image
                   src={"/assets/close.png"}
@@ -156,6 +199,24 @@ const AddAttractionDialog = ({ cruiseOwner, admin }: any) => {
                     disabled={isLoading ? true : false}
                   />
                 </div>
+                <div className="mt-5">
+                  <p>اختر المطاعم</p>
+                  <Select
+                    isMulti
+                    options={restaurants.map((restaurant) => ({
+                      value: restaurant.id,
+                      label: restaurant.name,
+                    }))}
+                    value={attractionData.restaurantIds}
+                    className="rounded-md mt-3"
+                    onChange={(selected) =>
+                      setAttractionData({
+                        ...attractionData,
+                        restaurantIds: selected,
+                      })
+                    }
+                  />
+                </div>
                 <h1 className="mt-10">قم باضافة صورة:</h1>
                 <p className="opacity-60">أظهر لعملائك كيف يبدو المكان</p>
                 <ImageUpload
@@ -174,7 +235,11 @@ const AddAttractionDialog = ({ cruiseOwner, admin }: any) => {
                   onClick={handleSubmit}
                   disabled={isLoading ? true : false}
                 >
-                  {isLoading ? "برجاء الانتظار" : "قم باضافة المعلم السياحي"}
+                  {isLoading
+                    ? "برجاء الانتظار"
+                    : edit
+                    ? "قم بتعديل المعلم السياحي"
+                    : "قم باضافة المعلم السياحي"}
                 </Button>
                 <Button
                   onClick={clear}

@@ -63,6 +63,7 @@ model Cruise {
   numberOfGuests Int?
   discount String?
   price Int
+  delivery Int?
   choices String[] @default([])
   createdAt DateTime @default(now())
 
@@ -105,9 +106,9 @@ model Reservation {
 
 model Restaurant {
   id String @id @default(auto()) @map("_id") @db.ObjectId
-  attractionId String @db.ObjectId
+  attractionId String? @db.ObjectId
   name String
-  description String
+  description String?
   imageSrc String[] @default([])
   createdAt DateTime? @default(now())
 

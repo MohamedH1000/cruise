@@ -66,6 +66,7 @@
     "name": "Name",
     "email": "Email",
     "description": "Description",
+    "edit": "Edit",
     "amenities": "Amenities",
     "numberOfGuests": "Number of guests",
     "price": "Price",
@@ -78,6 +79,7 @@
     "dialogTriggerTitleDelete": "Are you sure you want to delete the cruise?",
     "dialogTriggerDescriptionDelete": "This action cannot be undone. This will permanently delete the cruise and remove the data from our servers.",
     "addNewCruise": "Add New Cruise",
+    "addNewRestaurant": "Add New Restaurant",
     "phonenumber": "Phone Number",
     "createdAt": "Created At",
     "role": "Role",
@@ -88,7 +90,8 @@
     "pending": "pending",
     "next": "Next",
     "previous": "Previous",
-    "columns": "Columns"
+    "columns": "Columns",
+    "restaurants": "Restaurants"
   },
   "chooseAccountType": {
     "admin": "Admin",
@@ -102,7 +105,16 @@
     "nocruises": "No cruises available now"
   },
   "AttractionTable": {
-    "addNewAttraction": "Add new attraction"
+    "addNewAttraction": "Add new attraction",
+    "edit": "Edit",
+    "delete": "Delete Attraction",
+    "dialogTriggerTitleDelete": "Are you sure you want to delete the attraction?",
+    "dialogTriggerDescriptionDelete": "This action cannot be undone. This will permanently delete the attraction and remove the data from our servers."
+  },
+  "RestaurantTable": {
+    "delete": "Delete Restaurant",
+    "dialogTriggerTitleDelete": "Are you sure you want to delete the restaurant?",
+    "dialogTriggerDescriptionDelete": "This action cannot be undone. This will permanently delete the restaurant and remove the data from our servers."
   },
   "translations": {
     "pernight": "per night",
@@ -136,6 +148,10 @@
     "locationTarget": "Specify the location of cruise in map",
     "location": "Location of cruise in map",
     "noLocation": "No location found for this cruise",
-    "chooseCurrency": "Choose currency"
+    "chooseCurrency": "Choose currency",
+    "restaurants": "restaurants",
+    "noRestaurant": "No restaurants",
+    "relatedRestaurant": "Available Restaurants(optional)",
+    "driveFees": "Do you want a service for drive to destination?"
   }
 }

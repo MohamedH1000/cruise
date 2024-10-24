@@ -77,6 +77,16 @@ const NavBar = ({ currentUser, isAdmin, isClient }: any) => {
           >
             {t("Accessibility.cruises")}
           </Link>
+          <Link
+            href={"/admin/restaurants"}
+            className={`${
+              pathname === "/admin/restaurants"
+                ? "border-[1.5px] bg-[#0b152592]"
+                : ""
+            }  p-2 rounded-[7px] hover:bg-[#0b152592] transition duration-300`}
+          >
+            {t("cruisesTable.restaurants")}
+          </Link>
         </motion.nav>
       )}
       {isClient && (

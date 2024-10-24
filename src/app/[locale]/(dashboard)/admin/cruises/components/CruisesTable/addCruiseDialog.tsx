@@ -9,26 +9,31 @@ import { motion, AnimatePresence } from "framer-motion";
 import Image from "next/image";
 import ImageUpload from "@/components/imageUpload/ImageUpload";
 import { Textarea } from "@/components/ui/textarea";
-import { createCruise, createCruiseByOwner } from "@/lib/actions/cruise.action";
+import {
+  createCruise,
+  createCruiseByOwner,
+  updateCruise,
+} from "@/lib/actions/cruise.action";
 import { cn } from "@/lib/utils";
 import dynamic from "next/dynamic";
 const Map = dynamic(() => import("./Map"), { ssr: false });
 
-const AddCruiseDialog = ({ cruiseOwner, admin }: any) => {
+const AddCruiseDialog = ({ cruiseOwner, admin, edit, cruiseEditData }: any) => {
   const t = useTranslations();
   const [open, setOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [cruiseDetails, setCruiseDetails] = useState<any>({
-    name: "",
-    description: "",
-    imageSrc: [],
-    amenities: [],
-    price: null,
-    location: {},
-    numberOfGuests: null,
-    discount: "",
+    name: cruiseEditData?.name || "",
+    description: cruiseEditData?.description || "",
+    imageSrc: cruiseEditData?.imageSrc || [],
+    amenities: cruiseEditData?.amenities || [],
+    price: cruiseEditData?.price || null,
+    location: cruiseEditData?.location || {},
+    numberOfGuests: cruiseEditData?.numberOfGuests || null,
+    discount: cruiseEditData?.discount || "",
+    delivery: cruiseEditData?.delivery || "",
   });
-  // console.log("cruise details", cruiseDetails);
+  // console.log("cruise details", cruiseEditData);
   const clear = () => {
     setCruiseDetails({
       name: "",
@@ -39,6 +44,7 @@ const AddCruiseDialog = ({ cruiseOwner, admin }: any) => {
       price: null,
       numberOfGuests: null,
       discount: "",
+      delivery: null,
     });
   };
 
@@ -47,28 +53,34 @@ const AddCruiseDialog = ({ cruiseOwner, admin }: any) => {
   const handleSubmit = async (e: any) => {
     e.preventDefault();
     setIsLoading(true);
+
+    // Explicitly check for admin === true
     if (admin) {
       try {
         await createCruise(cruiseDetails);
-        toast.success("تم اضافه اليخت للنظام بنجاح");
-        clear();
+        toast.success("Cruise created successfully");
       } catch (error) {
-        console.log(error);
-        toast.error("حدثت مشكله اثناء اضافة اليخت");
+        console.error("Error occurred:", error);
+        toast.error("There was an error adding the cruise.");
       } finally {
         setIsLoading(false);
         setOpen(false);
       }
-    } else if (cruiseOwner) {
+    } else if (edit) {
       try {
-        await createCruiseByOwner(cruiseDetails);
-        toast.success(
-          "تم اضافه اليخت للنظام بنجاح برجاء انتظار الادارة حتى الموافقة على اليخت وعرضه على الصفحة"
-        );
-        clear();
+        await updateCruise(cruiseEditData?.id, cruiseDetails);
+        toast.success("Cruise updated successfully");
       } catch (error) {
         console.log(error);
-        toast.error("حدثت مشكله اثناء اضافة اليخت");
+        toast.error("There was an error updating the cruise.");
+      }
+    } else {
+      try {
+        await createCruiseByOwner(cruiseDetails);
+        toast.success("Cruise added successfully, pending admin approval.");
+      } catch (error) {
+        console.error("Error occurred:", error);
+        toast.error("You are not authorized to create the cruise.");
       } finally {
         setIsLoading(false);
         setOpen(false);
@@ -86,16 +98,17 @@ const AddCruiseDialog = ({ cruiseOwner, admin }: any) => {
         >
           <Button
             className={cn(
-              `mt-10  text-white rounded-[12px]
+              `  text-white rounded-[12px]
             transition duration-300 p-4 text-[14px] font-medium`,
               {
-                "bg-[#003b95]": cruiseOwner,
-                "bg-black": admin,
+                "bg-[#003b95] mt-10": cruiseOwner,
+                "bg-black mt-10": admin,
+                "bg-yellow-500": edit,
               }
             )}
             onClick={() => setOpen((prev: any) => !prev)}
           >
-            {t("cruisesTable.addNewCruise")}
+            {edit ? t("cruisesTable.edit") : t("cruisesTable.addNewCruise")}
           </Button>
         </motion.div>
         <AnimatePresence>
@@ -120,7 +133,7 @@ const AddCruiseDialog = ({ cruiseOwner, admin }: any) => {
               >
                 <div className="flex justify-between items-center">
                   <h1 className="text-center font-bold text-[18px]">
-                    قم باضافة اليخت
+                    {edit ? "قم بتعديل اليخت" : "قم باضافة اليخت"}
                   </h1>
                   <Image
                     src={"/assets/close.png"}
@@ -199,6 +212,23 @@ const AddCruiseDialog = ({ cruiseOwner, admin }: any) => {
                       })
                     }
                   />
+                  <p className="opacity-85">
+                    كم سعر خدمة التوصيل لليخت ان وجدت ؟
+                  </p>
+                  <Input
+                    type="number"
+                    placeholder="سعر التوصيل"
+                    className="w-full rounded-[12px] placeholder:opacity-75 focus:placeholder:opacity-50"
+                    value={cruiseDetails?.delivery}
+                    onChange={(e) =>
+                      setCruiseDetails({
+                        ...cruiseDetails,
+                        delivery: e.target.value,
+                      })
+                    }
+                    required
+                    disabled={isLoading ? true : false}
+                  />
                   <h1 className="font-bold mt-5">الان, قم بتسعير اليخت</h1>
                   <p className="opacity-85">كم سعر اليخت بالليلة؟</p>
                   <Input
@@ -222,7 +252,11 @@ const AddCruiseDialog = ({ cruiseOwner, admin }: any) => {
                     onClick={handleSubmit}
                     disabled={isLoading ? true : false}
                   >
-                    {isLoading ? "برجاء الانتظار" : "قم باضافة اليخت"}
+                    {isLoading
+                      ? "برجاء الانتظار"
+                      : edit
+                      ? "تعديل اليخت"
+                      : "قم باضافة اليخت"}
                   </Button>
                   <Button
                     onClick={clear}

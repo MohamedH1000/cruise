@@ -75,7 +75,7 @@ const DetailsForm = ({
               placeholder={t("Login.email")}
               required
             />
-            <label htmlFor="phonenumber">{t("SignUp.phonenumber")}</label>
+            {/* <label htmlFor="phonenumber">{t("SignUp.phonenumber")}</label>
             <div dir="ltr">
               <PhoneInput
                 name="phoneNumber"
@@ -87,12 +87,12 @@ const DetailsForm = ({
                 required
                 className="border-[1px] border-[#003b95] p-3 rounded-md focus:outline-none !important"
               />
-            </div>
+            </div> */}
           </div>
         </>
       ) : (
         <div className="px-4 mb-5">
-          <label htmlFor="phonenumber">
+          {/* <label htmlFor="phonenumber">
             {t("SignUp.phonenumber")} ({t("translations.mandatory")})
           </label>
           <div dir="ltr" className="mt-2">
@@ -106,7 +106,7 @@ const DetailsForm = ({
               required
               className="border-[1px] border-[#003b95] p-3 rounded-md focus:outline-none !important"
             />
-          </div>
+          </div> */}
         </div>
       )}
     </>

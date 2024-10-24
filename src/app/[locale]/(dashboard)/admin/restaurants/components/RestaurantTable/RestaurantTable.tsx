@@ -1,14 +1,5 @@
 "use client";
 import React, { useState } from "react";
-
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
 import {
   ColumnDef,
   flexRender,
@@ -21,20 +12,22 @@ import {
   getFilteredRowModel,
   VisibilityState,
 } from "@tanstack/react-table";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Checkbox } from "@/components/ui/checkbox";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
 import {
   DropdownMenu,
   DropdownMenuCheckboxItem,
   DropdownMenuContent,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { useTranslations } from "next-intl";
-import AddAttractionDialog from "./components/addAttractionDialog";
-import { handleDeleteById } from "@/lib/actions/attraction.action";
-import toast from "react-hot-toast";
-import { useRouter } from "@/i18n/routing";
+import { Input } from "@/components/ui/input";
+import { Checkbox } from "@/components/ui/checkbox";
 import {
   Dialog,
   DialogContent,
@@ -43,35 +36,32 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
+import { useTranslations } from "next-intl";
+import { Button } from "@/components/ui/button";
+
+import toast from "react-hot-toast";
+import { useRouter } from "@/i18n/routing";
+import AddRestaurantDialog from "./addRestaurantDialog";
+import { handleDeleteById } from "@/lib/actions/restaurant.action";
 
 export type Payment = {
   id: string;
   name: string;
   description: string;
-  amenities: Array<string>;
-  numberOfGuests: number;
-  price: number;
-  discount: string;
-  status: string;
 };
 
 interface DataTableProps<TData, TValue> {
   data: TData[];
 }
 
-export function AttractionsTable<TData, TValue>({
+export function RestaurantTable<TData, TValue>({
   data,
 }: DataTableProps<TData, TValue>) {
   const [sorting, setSorting] = useState<SortingState>([]);
-  const [open, setOpen] = useState(false);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
   const [rowSelection, setRowSelection] = useState({});
+  const [open, setOpen] = useState(false);
   const router = useRouter();
   const t = useTranslations();
 
@@ -104,68 +94,20 @@ export function AttractionsTable<TData, TValue>({
     },
     {
       accessorKey: "description",
-      header: t("cruisesTable.description"),
-    },
-    {
-      accessorKey: "restaurants",
-      header: t("cruisesTable.restaurants"),
-      cell: ({ row }) => {
-        const restaurants = row.original.restaurants;
-        return (
-          <Popover>
-            <PopoverTrigger asChild>
-              <Button variant="link" className="text-blue-500">
-                {restaurants.length > 0
-                  ? `${restaurants.length} ${t("translations.restaurants")}`
-                  : t("translations.noRestaurant")}
-              </Button>
-            </PopoverTrigger>
-            <PopoverContent>
-              <div className="p-2 space-y-1">
-                {restaurants.length > 0 ? (
-                  <ol className="list-decimal pl-4">
-                    {" "}
-                    {/* list-decimal gives numbered list, pl-4 adds padding to indent */}
-                    {restaurants.map(
-                      (restaurant: { name: string }, index: number) => (
-                        <li key={restaurant.name} className="mb-1 font-bold">
-                          {" "}
-                          {/* mb-1 adds margin between items */}
-                          {restaurant.name}
-                        </li>
-                      )
-                    )}
-                  </ol>
-                ) : (
-                  <span>No restaurants</span>
-                )}
-              </div>
-            </PopoverContent>
-          </Popover>
-        );
-      },
-    },
-    {
-      accessorKey: "edit",
-      header: `${t("AttractionTable.edit")}`, // Add the "Edit" column header
-      cell: ({ row }) => {
-        const attraction = row.original; // Access the original row data
-
-        return <AddAttractionDialog edit attractionEditData={attraction} />;
-      },
+      header: `${t("cruisesTable.description")}`,
     },
     {
       accessorKey: "delete",
-      header: `${t("AttractionTable.delete")}`,
+      header: `${t("RestaurantTable.delete")}`,
       cell: ({ row }) => {
-        const attraction = row.original; // Access the original row data
+        const restaurant = row.original; // Access the original row data
 
         const handleDelete = async (id: string) => {
           try {
             await handleDeleteById(id); // Call your backend function to update the status
-            toast.success(`Attraction Deleted Successfully`);
+            toast.success(`Restaurant Deleted Successfully`);
           } catch (error) {
-            toast.error("Error Deleting the cruise");
+            toast.error("Error Deleting the restaurant");
           } finally {
             router.refresh();
           }
@@ -180,16 +122,16 @@ export function AttractionsTable<TData, TValue>({
               <DialogHeader>
                 <DialogTitle>
                   {" "}
-                  {t("AttractionTable.dialogTriggerTitleDelete")}
+                  {t("RestaurantTable.dialogTriggerTitleDelete")}
                 </DialogTitle>
                 <DialogDescription>
-                  {t("AttractionTable.dialogTriggerDescriptionDelete")}
+                  {t("RestaurantTable.dialogTriggerDescriptionDelete")}
                 </DialogDescription>
               </DialogHeader>
               <Button
                 className="bg-[red] text-white"
                 onClick={() => {
-                  handleDelete(attraction?.id);
+                  handleDelete(restaurant?.id);
                   setOpen(false);
                 }}
               >
@@ -225,9 +167,9 @@ export function AttractionsTable<TData, TValue>({
 
   return (
     <>
-      <AddAttractionDialog admin />
+      <AddRestaurantDialog admin />
       <div>
-        <div className="flex justify-start items-center gap-2">
+        <div className="flex items-center justify-start gap-2">
           <div className="flex items-center py-4">
             <Input
               placeholder="Filter names..."
@@ -240,7 +182,6 @@ export function AttractionsTable<TData, TValue>({
               className="max-w-sm"
             />
           </div>
-
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button variant="outline" className="ml-auto">
@@ -269,8 +210,8 @@ export function AttractionsTable<TData, TValue>({
           </DropdownMenu>
         </div>
         <div className="flex-1 text-sm text-muted-foreground">
-          {table?.getFilteredSelectedRowModel()?.rows?.length} of{" "}
-          {table?.getFilteredRowModel()?.rows?.length} row(s) selected.
+          {table?.getFilteredSelectedRowModel().rows.length} of{" "}
+          {table?.getFilteredRowModel().rows.length} row(s) selected.
         </div>
         <div className="rounded-[12px] border mt-3">
           <Table>
@@ -294,7 +235,7 @@ export function AttractionsTable<TData, TValue>({
             </TableHeader>
             <TableBody>
               {table?.getRowModel()?.rows?.length ? (
-                table?.getRowModel()?.rows?.map((row) => (
+                table?.getRowModel()?.rows.map((row) => (
                   <TableRow
                     key={row.id}
                     data-state={row.getIsSelected() && "selected"}
@@ -345,4 +286,4 @@ export function AttractionsTable<TData, TValue>({
   );
 }
 
-export default AttractionsTable;
+export default RestaurantTable;

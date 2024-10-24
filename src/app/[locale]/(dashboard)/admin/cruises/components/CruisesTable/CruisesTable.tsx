@@ -197,11 +197,19 @@ export function CruisesTable<TData, TValue>({
       },
     },
     {
-      accessorKey: "delete",
-      header: `${t("cruisesTable.delete")}`,
+      accessorKey: "edit",
+      header: `${t("AttractionTable.edit")}`, // Add the "Edit" column header
       cell: ({ row }) => {
         const cruise = row.original; // Access the original row data
 
+        return <AddCruiseDialog edit cruiseEditData={cruise} />;
+      },
+    },
+    {
+      accessorKey: "delete",
+      header: `${t("cruisesTable.delete")}`,
+      cell: ({ row }) => {
+        const cruiseId = row.original.id;
         const handleDelete = async (id: string) => {
           try {
             await handleDeleteById(id); // Call your backend function to update the status
@@ -231,7 +239,7 @@ export function CruisesTable<TData, TValue>({
               <Button
                 className="bg-[red] text-white"
                 onClick={() => {
-                  handleDelete(cruise?.id);
+                  handleDelete(cruiseId);
                   setOpen(false);
                 }}
               >

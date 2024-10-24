@@ -8,10 +8,6 @@ import ListingReservation from "./components/ListingReservation";
 import { getAllReservations } from "@/lib/actions/reservation.action";
 import { getCurrentUser } from "@/lib/actions/user.action";
 import { getAllAttractionsTable } from "@/lib/actions/attraction.action";
-import dynamic from "next/dynamic";
-const MapDisplay = dynamic(() => import("./components/MapDisplay"), {
-  ssr: false,
-});
 
 const page = async ({ params }: any) => {
   const cruise = await getCruiseById(params.cruiseId);

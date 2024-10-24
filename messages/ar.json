@@ -67,6 +67,7 @@
     "email": "الايميل",
     "description": "الوصف",
     "amenities": "وسائل الراحة",
+    "edit": "تعديل",
     "numberOfGuests": "عدد الضيوف",
     "price": "السعر",
     "discount": "الخصم",
@@ -78,6 +79,7 @@
     "dialogTriggerTitleDelete": "هل انت متاكد من حذف اليخت ؟",
     "dialogTriggerDescriptionDelete": "هذا الاجراء لا يمكن الرجوع فيه. سيقوم بحذف جميع بيانات اليخت نهائيا وحذف البيانات من السيرفر الخاص بنا.",
     "addNewCruise": "اضف يخت جديد",
+    "addNewRestaurant": "اضف مطعم جديد",
     "phonenumber": "رقم الهاتف",
     "createdAt": "سجل الحساب بتاريخ",
     "role": "نوع الحساب",
@@ -88,7 +90,8 @@
     "pending": "معلق",
     "next": "التالي",
     "previous": "السابق",
-    "columns": "اعمدة الجدول المعروضة"
+    "columns": "اعمدة الجدول المعروضة",
+    "restaurants": "المطاعم"
   },
   "chooseAccountType": {
     "admin": "ادمن",
@@ -102,7 +105,16 @@
     "nocruises": "لا يوجد يخوت للعرض الان"
   },
   "AttractionTable": {
-    "addNewAttraction": "اضف معلم سياحي جديد"
+    "addNewAttraction": "اضف معلم سياحي جديد",
+    "edit": "تعديل",
+    "delete": "حذف المعلم السياحي",
+    "dialogTriggerTitleDelete": "هل انت متاكد من حذف المعلم السياحي؟",
+    "dialogTriggerDescriptionDelete": "هذا الاجراء لا يمكن الرجوع فيه وسيتم حذف المعلم السياحي والبيانات المرتبطه به من قاعدة البيانات"
+  },
+  "RestaurantTable": {
+    "delete": "حذف المطعم",
+    "dialogTriggerTitleDelete": "هل انت متاكد من حذف المطعم",
+    "dialogTriggerDescriptionDelete": "هذا الاجراء لا يمكن الرجوع فيه وسيتم حذف المطعم والبيانات المرتبطه به من قاعدة البيانات"
   },
   "translations": {
     "pernight": "لكل ليلة",
@@ -136,6 +148,10 @@
     "locationTarget": "قم بتحديد مكان اليخت على الخريطة",
     "location": "موقع اليخت على الخريطة",
     "noLocation": "لم يتم تحديد مكان اليخت على الخريطة",
-    "chooseCurrency": "اختر العملة"
+    "chooseCurrency": "اختر العملة",
+    "restaurants": "مطاعم",
+    "noRestaurant": "لا يوجد مطاعم",
+    "relatedRestaurant": "المطاعم المتوفرة (اختياري)",
+    "driveFees": "هل ترغب في خدمة التوصيل للقارب؟"
   }
 }
