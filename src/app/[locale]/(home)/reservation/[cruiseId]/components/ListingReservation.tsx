@@ -16,6 +16,16 @@ import { CurrencyContext } from "@/app/context/CurrencyContext";
 import { fetchRestaurantsByAttractions } from "@/lib/actions/restaurant.action";
 import { loadStripe } from "@stripe/stripe-js";
 import { Restaurant } from "@prisma/client";
+import {
+  Dialog,
+  DialogContent,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import PhoneInputWithCountrySelect from "react-phone-number-input";
+import { Input } from "@/components/ui/input";
 const initialDateRange = {
   startDate: new Date(),
   endDate: new Date(),
@@ -35,9 +45,10 @@ const ListingReservation = ({
 }: any) => {
   const initialOptions = attractions.map((attraction: any) => attraction.name);
   const t = useTranslations();
-  const [name, setName] = useState("");
+  const [name, setName] = useState(currentUser?.name || "");
   const [isLoading, setIsLoading] = useState(false);
-  const [email, setEmail] = useState("");
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [email, setEmail] = useState(currentUser?.email || "");
   const [selectedOptions, setSelectedOptions] = useState([]);
   const [availableOptions, setAvailableOptions] = useState(initialOptions);
   const [phoneNumber, setPhoneNumber] = useState("");
@@ -48,6 +59,11 @@ const ListingReservation = ({
   const [relatedRestaurants, setRelatedRestaurants] = useState([]);
   const { convertCurrency, currency } = useContext(CurrencyContext);
   // console.log(totalPrice);
+
+  const openDialog = () => setIsDialogOpen(true);
+
+  const closeDialog = () => setIsDialogOpen(false);
+
   const stripePromise = loadStripe(
     process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!
   );
@@ -125,38 +141,75 @@ const ListingReservation = ({
   const convertedPrice = convertCurrency(cruise?.price, "AED", currency);
 
   const onSubmit = async () => {
+    if (!name || !phoneNumber) {
+      alert("Please fill out all required fields");
+      return;
+    }
     setIsLoading(true);
     const stripe = await stripePromise;
 
     try {
-      const response = await fetch("/api/create-checkout-session", {
+      // Step 1: Create reservation with "pending" status
+      const response = await fetch("/api/reservation", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          amount: Math.round(convertedTotalPrice * 100), // Convert AED to smallest unit (fils)
-          currency: localStorage.getItem("currency") || "AED", // AED currency
+          name,
+          email,
+          phoneNumber,
+          dateRange,
+          status: "pending",
+          totalPrice: Math.round(convertedTotalPrice * 100),
+          currency: localStorage.getItem("currency") || "AED",
+          cruiseId: cruise?.id,
+          userId: currentUser?.id,
+          attractions: selectedOptions,
         }),
       });
 
-      const session = await response.json();
+      const reservation = await response.json();
 
-      if (session.id) {
-        const result = await stripe?.redirectToCheckout({
-          sessionId: session.id,
+      if (reservation?.id) {
+        // Step 2: Initiate Stripe checkout session with reservation ID
+        const response = await fetch("/api/create-checkout-session", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            amount: reservation.totalPrice, // total price in smallest unit
+            currency: reservation.currency,
+            reservationId: reservation.id, // Pass reservation ID to session
+          }),
         });
 
-        if (result?.error) {
-          console.error(result.error.message);
+        const session = await response.json();
+
+        if (session.id) {
+          const result = await stripe?.redirectToCheckout({
+            sessionId: session.id,
+          });
+
+          if (result?.error) {
+            console.error(result.error.message);
+            // Optionally, update reservation status to "failed" on error
+          }
         }
       }
     } catch (error) {
       console.error("Error during checkout:", error);
     } finally {
       setIsLoading(false);
+      closeDialog();
     }
   };
+
+  const onPreSubmit = () => {
+    openDialog();
+  };
+
   return (
     <motion.div
       className="bg-white rounded-xl border-[1px] border-neutral-200 overflow-hidden mt-5 w-full"
@@ -222,7 +275,9 @@ const ListingReservation = ({
         )}
 
         <Button
-          onClick={actionLabel === t("translations.next") ? onNext : onSubmit}
+          onClick={
+            actionLabel === t("translations.next") ? onNext : onPreSubmit
+          }
           disabled={isLoading ? true : false}
           className="w-full rounded-md bg-[#003b95]
         text-white border-[#003b95] hover:border-[1px] hover:bg-white 
@@ -231,6 +286,69 @@ const ListingReservation = ({
           {actionLabel}
           {/* {isLoading ? "برجاء الانتظار" : "قم بالحجز"} */}
         </Button>
+        <Dialog open={isDialogOpen}>
+          <DialogContent>
+            <DialogHeader>
+              <DialogTitle>{t("translations.enterDetails")}</DialogTitle>
+            </DialogHeader>
+            {!currentUser ? (
+              <div className="flex flex-col">
+                <Input
+                  name="name"
+                  onChange={(e) => setName(e.target.value)}
+                  placeholder={t("translations.fullName")}
+                  required
+                />
+                <Input
+                  name="email"
+                  onChange={(e) => setEmail(e.target.value)}
+                  placeholder={t("Login.email")}
+                  required
+                />
+                <label htmlFor="phonenumber">
+                  {t("SignUp.phonenumber")} ({t("translations.mandatory")})
+                </label>
+                <div dir="ltr" className="mt-2">
+                  <PhoneInputWithCountrySelect
+                    name="phoneNumber"
+                    defaultCountry="US"
+                    international
+                    withCountryCallingCode
+                    onChange={(value: any) => setPhoneNumber(value)}
+                    placeholder={t("SignUp.phonenumber")}
+                    required
+                    className="border-[1px] border-[#003b95] p-3 rounded-md focus:outline-none !important"
+                  />
+                </div>
+              </div>
+            ) : (
+              <div className="flex flex-col">
+                <label htmlFor="phonenumber">
+                  {t("SignUp.phonenumber")} ({t("translations.mandatory")})
+                </label>
+                <div dir="ltr" className="mt-2">
+                  <PhoneInputWithCountrySelect
+                    name="phoneNumber"
+                    defaultCountry="US"
+                    international
+                    withCountryCallingCode
+                    onChange={(value: any) => setPhoneNumber(value)}
+                    placeholder={t("SignUp.phonenumber")}
+                    required
+                    className="border-[1px] border-[#003b95] p-3 rounded-md focus:outline-none !important"
+                  />
+                </div>
+              </div>
+            )}
+
+            <DialogFooter className="flex gap-3 items-center justify-end">
+              <Button onClick={onSubmit} disabled={isLoading}>
+                {t("translations.checkout")}
+              </Button>
+              <Button onClick={closeDialog}>{t("cruisesTable.cancel")}</Button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
       </div>
       <div className="p-4 flex flex-row  items-center justify-between font-semibold text-lg">
         <div className="font-bold capitalize">{t("translations.total")}:</div>

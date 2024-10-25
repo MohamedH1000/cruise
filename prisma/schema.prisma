@@ -94,6 +94,7 @@ model Reservation {
   totalPrice Int
   servicePrice Json?
   nameOfReserver String?
+  currency String?
   email String?
   status String?
   phoneNumber String?

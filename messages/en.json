@@ -152,6 +152,8 @@
     "restaurants": "restaurants",
     "noRestaurant": "No restaurants",
     "relatedRestaurant": "Available Restaurants(optional)",
-    "driveFees": "Do you want a service for drive to destination?"
+    "driveFees": "Do you want a service for drive to destination?",
+    "enterDetails": "Enter Details",
+    "checkout": "Checkout"
   }
 }
