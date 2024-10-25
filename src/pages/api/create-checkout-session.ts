@@ -11,7 +11,7 @@ export default async function handler(
   res: NextApiResponse
 ) {
   if (req.method === "POST") {
-    const { amount, currency } = req.body; // Fetch amount and currency from request
+    const { reservationId, amount, currency } = req.body; // Fetch amount and currency from request
 
     try {
       // Create a Checkout Session
@@ -32,6 +32,9 @@ export default async function handler(
         mode: "payment",
         success_url: `${req.headers.origin}/success?session_id={CHECKOUT_SESSION_ID}`,
         cancel_url: `${req.headers.origin}/cancel`,
+        metadata: {
+          reservationId: reservationId, // Add your reservation ID here
+        },
       });
 
       res.status(200).json({ id: session.id });

@@ -51,11 +51,11 @@ export async function POST(req: NextRequest) {
 
 export async function PATCH(req: NextRequest) {
   try {
-    const { reservationId, status } = await req.json();
+    const { reservId, status } = await req.json();
 
     // Update reservation with the given ID and new status
     const updatedReservation = await prisma.reservation.update({
-      where: { id: reservationId },
+      where: { id: reservId },
       data: { status },
     });
 
