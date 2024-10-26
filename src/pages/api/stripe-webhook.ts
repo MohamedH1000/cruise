@@ -1,65 +1,61 @@
-// src/pages/api/stripe-webhook.ts
+import Stripe from "stripe";
 import { NextApiRequest, NextApiResponse } from "next";
-import { buffer } from "micro"; // Import `buffer` from `micro` for raw request body handling
-import prisma from "@/lib/prisma";
-import { stripe } from "@/lib/stripe"; // Your Stripe instance setup
 
-// Disable Next.js automatic body parsing for this route
+const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
+  apiVersion: "2022-11-15",
+});
+
 export const config = {
   api: {
-    bodyParser: false,
+    bodyParser: false, // Disable Next.js's default body parsing
   },
 };
 
-async function handler(req: NextApiRequest, res: NextApiResponse) {
+// Middleware to handle raw request body
+function getRawBody(req: NextApiRequest): Promise<Buffer> {
+  return new Promise((resolve, reject) => {
+    let data = "";
+    req.on("data", (chunk) => {
+      data += chunk;
+    });
+    req.on("end", () => {
+      resolve(Buffer.from(data));
+    });
+    req.on("error", (err) => {
+      reject(err);
+    });
+  });
+}
+
+export default async function handler(
+  req: NextApiRequest,
+  res: NextApiResponse
+) {
   if (req.method !== "POST") {
     res.setHeader("Allow", "POST");
-    return res.status(405).end("Method Not Allowed");
+    res.status(405).end("Method Not Allowed");
+    return;
   }
 
-  let event;
+  const buf = await getRawBody(req);
+  const signature = req.headers["stripe-signature"] as string;
 
   try {
-    // Get the raw body for Stripe signature verification
-    const buf = await buffer(req);
-    const signature = req.headers["stripe-signature"] as string;
-
-    event = stripe.webhooks.constructEvent(
-      buf, // Raw request body
-      signature, // Stripe signature from headers
-      process.env.STRIPE_WEBHOOK_SECRET! // Your webhook secret
+    const event = stripe.webhooks.constructEvent(
+      buf,
+      signature,
+      process.env.STRIPE_WEBHOOK_SECRET!
     );
 
-    console.log("Stripe event received:", event);
-
-    // Process the event
+    // Handle the event
     if (event.type === "checkout.session.completed") {
-      const session = event.data.object as any;
-      const reservationId = session.metadata.reservationId;
-
-      await prisma.reservation.update({
-        where: { id: reservationId },
-        data: { status: "active" },
-      });
-
-      console.log(`Reservation ${reservationId} set to active.`);
-    } else if (event.type === "checkout.session.expired") {
-      const session = event.data.object as any;
-      const reservationId = session.metadata.reservationId;
-
-      await prisma.reservation.update({
-        where: { id: reservationId },
-        data: { status: "failed" },
-      });
-
-      console.log(`Reservation ${reservationId} set to failed.`);
+      const session = event.data.object;
+      console.log("Checkout Session completed:", session);
     }
 
-    res.json({ received: true });
+    res.status(200).json({ received: true });
   } catch (err) {
-    console.error("Error processing webhook:", err);
+    console.error(`Error verifying webhook: ${err}`);
     res.status(400).send(`Webhook Error: ${err.message}`);
   }
 }
-
-export default handler;
