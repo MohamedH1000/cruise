@@ -1,16 +1,20 @@
 import { NextRequest, NextResponse } from "next/server";
-import { buffer } from "micro";
 import prisma from "@/lib/prisma";
 import { stripe } from "@/lib/stripe";
+import getRawBody from "raw-body";
+
+export const config = {
+  api: { bodyParser: false },
+};
 
 export async function POST(req: NextRequest) {
   console.log("stripe webhook received");
 
-  // Retrieve raw data from NextRequest
-  const buf = Buffer.from(await req.arrayBuffer());
-  const signature = req.headers.get("stripe-signature");
-
   try {
+    // Retrieve the raw body
+    const buf = await getRawBody(req.body as any); // Assuming req.body is correctly interpreted as ReadableStream
+    const signature = req.headers.get("stripe-signature");
+
     const event = stripe.webhooks.constructEvent(
       buf,
       signature!,
