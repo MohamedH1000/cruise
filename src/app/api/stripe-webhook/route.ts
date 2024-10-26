@@ -8,6 +8,8 @@ export async function POST(req: NextRequest) {
   try {
     // Retrieve the raw body as an ArrayBuffer and convert to Buffer
     const buf = Buffer.from(await req.arrayBuffer());
+    console.log("Raw body received:", buf.toString());
+    console.log("Headers received:", req.headers);
     const signature = req.headers.get("stripe-signature");
 
     // Construct the event using the buffer and signature
