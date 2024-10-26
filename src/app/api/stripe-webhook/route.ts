@@ -6,12 +6,13 @@ export async function POST(req: NextRequest) {
   console.log("Stripe webhook received");
 
   try {
-    // Retrieve the raw body as an ArrayBuffer
-    const buf = await req.arrayBuffer();
+    // Retrieve the raw body as an ArrayBuffer and convert to Buffer
+    const buf = Buffer.from(await req.arrayBuffer());
     const signature = req.headers.get("stripe-signature");
 
+    // Construct the event using the buffer and signature
     const event = stripe.webhooks.constructEvent(
-      Buffer.from(buf),
+      buf,
       signature!,
       process.env.STRIPE_WEBHOOK_SECRET!
     );
