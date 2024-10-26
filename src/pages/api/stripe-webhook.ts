@@ -7,24 +7,17 @@ const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
 
 export const config = {
   api: {
-    bodyParser: false, // Disable Next.js's default body parsing
+    bodyParser: false, // Important: disable automatic body parsing
   },
 };
 
-// Middleware to handle raw request body
-function getRawBody(req: NextApiRequest): Promise<Buffer> {
-  return new Promise((resolve, reject) => {
-    let data = "";
-    req.on("data", (chunk) => {
-      data += chunk;
-    });
-    req.on("end", () => {
-      resolve(Buffer.from(data));
-    });
-    req.on("error", (err) => {
-      reject(err);
-    });
-  });
+// Helper function to retrieve raw buffer
+async function buffer(req: NextApiRequest): Promise<Buffer> {
+  const chunks: Uint8Array[] = [];
+  for await (const chunk of req) {
+    chunks.push(typeof chunk === "string" ? Buffer.from(chunk) : chunk);
+  }
+  return Buffer.concat(chunks);
 }
 
 export default async function handler(
@@ -33,11 +26,10 @@ export default async function handler(
 ) {
   if (req.method !== "POST") {
     res.setHeader("Allow", "POST");
-    res.status(405).end("Method Not Allowed");
-    return;
+    return res.status(405).end("Method Not Allowed");
   }
 
-  const buf = await getRawBody(req);
+  const buf = await buffer(req);
   const signature = req.headers["stripe-signature"] as string;
 
   try {
@@ -47,7 +39,7 @@ export default async function handler(
       process.env.STRIPE_WEBHOOK_SECRET!
     );
 
-    // Handle the event
+    // Handle specific event type
     if (event.type === "checkout.session.completed") {
       const session = event.data.object;
       console.log("Checkout Session completed:", session);
@@ -55,7 +47,7 @@ export default async function handler(
 
     res.status(200).json({ received: true });
   } catch (err) {
-    console.error(`Error verifying webhook: ${err}`);
+    console.error("Webhook signature verification failed:", err);
     res.status(400).send(`Webhook Error: ${err.message}`);
   }
 }
