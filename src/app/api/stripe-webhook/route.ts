@@ -3,13 +3,11 @@ import { buffer } from "micro";
 import prisma from "@/lib/prisma";
 import { stripe } from "@/lib/stripe";
 
-export const config = {
-  api: { bodyParser: false },
-};
-
 export async function POST(req: NextRequest) {
   console.log("stripe webhook received");
-  const buf = await buffer(req);
+
+  // Retrieve raw data from NextRequest
+  const buf = Buffer.from(await req.arrayBuffer());
   const signature = req.headers.get("stripe-signature");
 
   try {
