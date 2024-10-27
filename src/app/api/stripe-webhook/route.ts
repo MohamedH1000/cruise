@@ -2,18 +2,18 @@ import { NextRequest, NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
 import { stripe } from "@/lib/stripe";
 
+// Middleware to read the raw body
 export async function POST(req: NextRequest) {
   console.log("stripe webhook received");
 
-  // Get the raw body
-  const body = await req.arrayBuffer(); // Fetch the raw body as ArrayBuffer
-  const buf = Buffer.from(body); // Convert ArrayBuffer to Buffer
+  // Get the raw body as text
+  const body = await req.text();
   const sig = req.headers.get("stripe-signature");
 
   try {
     // Attempt to construct the event from the raw body and signature
     const event = stripe.webhooks.constructEvent(
-      buf,
+      body,
       sig!,
       process.env.STRIPE_WEBHOOK_SECRET!
     );
