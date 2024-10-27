@@ -1,7 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
 import { stripe } from "@/lib/stripe";
-import { headers } from "next/headers";
 
 export async function POST(req: NextRequest) {
   console.log("stripe webhook received");
@@ -9,14 +8,13 @@ export async function POST(req: NextRequest) {
   // Get the raw body
   const body = await req.text();
 
-  const signature = headers().get("Stripe-Signature");
-  console.log("Stripe signature received:", signature); // Log the received signature
+  const sig = req.headers.get("stripe-signature");
 
   try {
     // Attempt to construct the event from the raw body and signature
     const event = stripe.webhooks.constructEvent(
       body,
-      signature!,
+      sig!,
       process.env.STRIPE_WEBHOOK_SECRET!
     );
 
