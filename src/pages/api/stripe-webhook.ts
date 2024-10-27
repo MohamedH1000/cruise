@@ -1,69 +1,53 @@
-import { NextApiRequest, NextApiResponse } from "next";
+import { NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
 import { stripe } from "@/lib/stripe";
 
 export const config = {
   api: {
-    bodyParser: false, // Disable Next.js body parsing to access raw body
+    bodyParser: false, // Disables automatic body parsing
   },
 };
 
-const buffer = async (readable: any) => {
-  const chunks = [];
-  for await (const chunk of readable) {
-    chunks.push(typeof chunk === "string" ? Buffer.from(chunk) : chunk);
-  }
-  return Buffer.concat(chunks);
-};
+export async function POST(req: any) {
+  const sig = req.headers.get("stripe-signature");
 
-export default async function handler(
-  req: NextApiRequest,
-  res: NextApiResponse
-) {
-  if (req.method === "POST") {
-    const sig = req.headers["stripe-signature"];
+  try {
+    // Read raw body as a buffer to maintain its integrity
+    const rawBody = await req.arrayBuffer();
+    const bodyBuffer = Buffer.from(rawBody);
 
-    // Retrieve the raw body
-    const rawBody = await buffer(req);
+    // Verify signature and construct event
+    const event = stripe.webhooks.constructEvent(
+      bodyBuffer,
+      sig!,
+      process.env.STRIPE_WEBHOOK_SECRET!
+    );
 
-    try {
-      // Construct the Stripe event
-      const event = stripe.webhooks.constructEvent(
-        rawBody,
-        sig,
-        process.env.STRIPE_WEBHOOK_SECRET!
-      );
+    // Process Stripe event
+    if (event.type === "checkout.session.completed") {
+      const session = event.data.object;
+      const reservId = session.metadata?.reservationId;
 
-      console.log("Event constructed:", event);
+      await prisma.reservation.update({
+        where: { id: reservId },
+        data: { status: "active" },
+      });
+    } else if (event.type === "checkout.session.expired") {
+      const session = event.data.object;
+      const reservId = session.metadata?.reservationId;
 
-      // Handle event types
-      if (event.type === "checkout.session.completed") {
-        const session = event.data.object;
-        const reservId = session?.metadata?.reservationId;
-
-        await prisma.reservation.update({
-          where: { id: reservId },
-          data: { status: "active" },
-        });
-        console.log(`Reservation ${reservId} set to active.`);
-      } else if (event.type === "checkout.session.expired") {
-        const session = event.data.object;
-        const reservId = session?.metadata?.reservationId;
-
-        await prisma.reservation.update({
-          where: { id: reservId },
-          data: { status: "failed" },
-        });
-        console.log(`Reservation ${reservId} set to failed.`);
-      }
-
-      return res.status(200).json({ received: true });
-    } catch (err: any) {
-      console.error("Webhook Error:", err.message);
-      return res.status(400).send(`Webhook Error: ${err.message}`);
+      await prisma.reservation.update({
+        where: { id: reservId },
+        data: { status: "failed" },
+      });
     }
-  } else {
-    res.setHeader("Allow", "POST");
-    res.status(405).end("Method Not Allowed");
+
+    return NextResponse.json({ received: true });
+  } catch (err: any) {
+    console.error("Webhook Error:", err.message);
+    return NextResponse.json(
+      { error: `Webhook Error: ${err.message}` },
+      { status: 400 }
+    );
   }
 }
