@@ -6,7 +6,7 @@ export async function POST(req: any) {
   console.log("Incoming request URL:", req.url);
 
   // Access the raw body set by the middleware
-  const rawBody = req.rawBody; // This should now be populated
+  const rawBody = req["rawBody"]; // Accessing the raw body
   const sig = req.headers.get("stripe-signature");
 
   if (!rawBody) {
@@ -21,7 +21,7 @@ export async function POST(req: any) {
     const event = stripe.webhooks.constructEvent(
       rawBody,
       sig,
-      process.env.STRIPE_WEBHOOK_SECRET
+      process.env.STRIPE_WEBHOOK_SECRET!
     );
 
     console.log("Event constructed:", event); // Log the constructed event

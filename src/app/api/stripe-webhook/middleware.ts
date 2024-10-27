@@ -1,12 +1,18 @@
 import { NextResponse } from "next/server";
 
 export async function middleware(req: any) {
+  // Only handle POST requests for the webhook
   if (req.method === "POST") {
-    const rawBody = await req.text(); // Read the raw body as text
-    req.rawBody = rawBody; // Attach the raw body to the request
+    // Read the raw body as text
+    const rawBody = await req.text();
 
-    // Return the modified request
+    // Store the raw body in a property
+    req["rawBody"] = rawBody;
+
+    // Continue to the next middleware or route
     return NextResponse.next();
   }
-  return NextResponse.next(); // For other methods, just continue
+
+  // Continue for non-POST requests
+  return NextResponse.next();
 }
