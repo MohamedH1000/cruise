@@ -21,5 +21,20 @@
         }
       ]
     }
+  ],
+  "routes": [
+    {
+      "src": "/api/stripe-webhook",
+      "dest": "/api/stripe-webhook",
+      "methods": ["POST"],
+      "headers": {
+        "content-type": "application/json"
+      },
+      "config": {
+        "bodyParser": {
+          "enabled": false
+        }
+      }
+    }
   ]
 }

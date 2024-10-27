@@ -2,10 +2,6 @@ import { NextRequest, NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
 import { stripe } from "@/lib/stripe";
 
-export const config = {
-  api: { bodyParser: false }, // Only needed in /pages/api
-};
-
 export async function POST(req: NextRequest) {
   console.log("stripe webhook received");
 
