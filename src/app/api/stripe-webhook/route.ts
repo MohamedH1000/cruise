@@ -4,7 +4,7 @@ import { stripe } from "@/lib/stripe";
 
 // Middleware to read the raw body
 export async function POST(req: NextRequest) {
-  console.log("stripe webhook received");
+  console.log("Incoming request URL:", req.url);
 
   // Get the raw body as text
   const buf = await req.arrayBuffer();

@@ -5,5 +5,5 @@ export default createMiddleware(routing);
 
 export const config = {
   // Match only internationalized pathnames
-  matcher: ["/", "/(ar|en)/:path*", "/api/stripe-webhook"],
+  matcher: ["/", "/(ar|en)/:path*", "/((?!api/stripe-webhook).)*"], // This matches all other API routes if needed],
 };
