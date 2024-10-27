@@ -1,20 +1,25 @@
-import { NextRequest, NextResponse } from "next/server";
+import { NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
 import { stripe } from "@/lib/stripe";
 
 // Middleware to read the raw body
-export async function POST(req: NextRequest) {
+export async function POST(req: any) {
   console.log("Incoming request URL:", req.url);
 
   // Get the raw body as text
-  const buf = await req.arrayBuffer();
-  const body = Buffer.from(buf).toString();
-  const sig = req.headers.get("stripe-signature");
 
+  const rawBody = req.rawBody;
+  const sig = req.headers.get("stripe-signature");
+  if (rawBody) {
+    return NextResponse.json(
+      { error: "No raw body available for signature verification" },
+      { status: 400 }
+    );
+  }
   try {
     // Attempt to construct the event from the raw body and signature
     const event = stripe.webhooks.constructEvent(
-      body,
+      rawBody,
       sig!,
       process.env.STRIPE_WEBHOOK_SECRET!
     );
@@ -50,4 +55,10 @@ export async function POST(req: NextRequest) {
       { status: 400 }
     );
   }
+}
+
+export async function GET() {
+  return NextResponse.json({
+    message: "This endpoint is for POST requests only.",
+  });
 }
