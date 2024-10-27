@@ -7,7 +7,8 @@ export async function POST(req: NextRequest) {
   console.log("stripe webhook received");
 
   // Get the raw body as text
-  const body = await req.text();
+  const buf = await req.arrayBuffer();
+  const body = Buffer.from(buf).toString();
   const sig = req.headers.get("stripe-signature");
 
   try {
