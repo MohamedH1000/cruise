@@ -10,7 +10,7 @@ export async function POST(req: any) {
 
   const rawBody = req.rawBody;
   const sig = req.headers.get("stripe-signature");
-  if (rawBody) {
+  if (!rawBody) {
     return NextResponse.json(
       { error: "No raw body available for signature verification" },
       { status: 400 }
