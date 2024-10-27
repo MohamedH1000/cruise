@@ -2,31 +2,30 @@ import { NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
 import { stripe } from "@/lib/stripe";
 
-export async function POST(req: any) {
-  console.log("Incoming request URL:", req.url);
-
-  // Access the raw body set by the middleware
-  const rawBody = req["rawBody"]; // Accessing the raw body
+export async function POST(req: Request) {
   const sig = req.headers.get("stripe-signature");
 
-  if (!rawBody) {
+  // Read the raw body as text to use it directly in `constructEvent`
+  const rawBody = await req.text();
+
+  if (!sig || !rawBody) {
     return NextResponse.json(
-      { error: "No raw body available for signature verification" },
+      { error: "No raw body or signature available for verification" },
       { status: 400 }
     );
   }
 
   try {
-    // Construct the event from the raw body and signature
+    // Construct the Stripe event using raw body and signature
     const event = stripe.webhooks.constructEvent(
       rawBody,
       sig,
       process.env.STRIPE_WEBHOOK_SECRET!
     );
 
-    console.log("Event constructed:", event); // Log the constructed event
+    console.log("Event constructed:", event);
 
-    // Handle the event as needed
+    // Handle specific event types
     if (event.type === "checkout.session.completed") {
       const session = event.data.object;
       const reservId = session?.metadata?.reservationId;
