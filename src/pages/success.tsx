@@ -4,17 +4,25 @@ import { useEffect, useState } from "react";
 
 const SuccessPage = () => {
   const router = useRouter();
-  const { reservationId } = router.query;
+  const { session_id } = router.query; // Updated to use `session_id`
   const [reservation, setReservation] = useState(null);
 
   useEffect(() => {
-    if (router.isReady && reservationId) {
-      fetch(`/api/reservation/${reservationId}`)
-        .then((res) => res.json())
-        .then(setReservation)
-        .catch((error) => console.error("Error fetching reservation:", error));
-    }
-  }, [router.isReady, reservationId]);
+    const fetchReservation = async () => {
+      try {
+        if (router.isReady && session_id) {
+          // Make an API call to get reservation details using `session_id`
+          const res = await fetch(`/api/reservation?session_id=${session_id}`);
+          const reservationData = await res.json();
+          setReservation(reservationData);
+        }
+      } catch (error) {
+        console.error("Error fetching reservation:", error);
+      }
+    };
+
+    fetchReservation();
+  }, [router.isReady, session_id]);
 
   return reservation ? (
     <div className="success-container">
