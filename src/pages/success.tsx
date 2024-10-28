@@ -1,3 +1,4 @@
+import "./success.css";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 
@@ -7,22 +8,47 @@ const SuccessPage = () => {
   const [reservation, setReservation] = useState(null);
 
   useEffect(() => {
-    const { session_id } = router.query;
-
-    if (router.isReady && session_id) {
-      fetch(`/api/reservation?session_id=${session_id}`)
+    if (router.isReady && reservationId) {
+      fetch(`/api/reservation/${reservationId}`)
         .then((res) => res.json())
         .then(setReservation)
         .catch((error) => console.error("Error fetching reservation:", error));
     }
-  }, [router.isReady, router.query.session_id]);
+  }, [router.isReady, reservationId]);
 
   return reservation ? (
-    <div>
-      <h1>Reservation Success</h1>
-      <p>Reservation ID: {reservation?.id}</p>
-      <p>Status: {reservation?.status}</p>
-      {/* Display additional reservation details */}
+    <div className="success-container">
+      <h1>🎉 Reservation Confirmed!</h1>
+      <div className="reservation-info">
+        <p>
+          <strong>Reservation ID:</strong> {reservation?.id}
+        </p>
+        <p>
+          <strong>Name:</strong> {reservation?.nameOfReserver}
+        </p>
+        <p>
+          <strong>Email:</strong> {reservation?.email}
+        </p>
+        <p>
+          <strong>Phone Number:</strong> {reservation?.phoneNumber}
+        </p>
+        <p>
+          <strong>Status:</strong> {reservation?.status}
+        </p>
+        <p>
+          <strong>Start Date:</strong>{" "}
+          {new Date(reservation?.startDate).toLocaleDateString()}
+        </p>
+        <p>
+          <strong>End Date:</strong>{" "}
+          {new Date(reservation?.endDate).toLocaleDateString()}
+        </p>
+        <p>
+          <strong>Total Price:</strong> {reservation?.totalPrice / 100}{" "}
+          {reservation?.currency}
+        </p>
+      </div>
+      <button onClick={() => router.push("/")}>Go to Home</button>
     </div>
   ) : (
     <p>Loading...</p>
