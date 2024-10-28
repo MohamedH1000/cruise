@@ -8,7 +8,7 @@ const SuccessPage = () => {
 
   useEffect(() => {
     if (router.isReady && reservationId) {
-      fetch(`/api/reservation/${reservationId}`)
+      fetch(`/api/reservation?reservationId=${reservationId}`)
         .then((res) => res.json())
         .then(setReservation)
         .catch((error) => console.error("Error fetching reservation:", error));

@@ -1,6 +1,40 @@
 import { NextRequest, NextResponse } from "next/server";
 import prisma from "@/lib/prisma"; // adjust path to Prisma client if needed
 
+export async function GET(req: NextRequest) {
+  const { searchParams } = new URL(req.url);
+  const reservationId = searchParams.get("reservationId");
+
+  if (!reservationId) {
+    return NextResponse.json(
+      { error: "Reservation ID is required" },
+      { status: 400 }
+    );
+  }
+
+  try {
+    const reservation = await prisma.reservation.findUnique({
+      where: { id: reservationId },
+      include: { attractions: true }, // Adjust fields as needed
+    });
+
+    if (!reservation) {
+      return NextResponse.json(
+        { error: "Reservation not found" },
+        { status: 404 }
+      );
+    }
+
+    return NextResponse.json(reservation, { status: 200 });
+  } catch (error) {
+    console.error("Error fetching reservation:", error);
+    return NextResponse.json(
+      { error: "Error fetching reservation" },
+      { status: 500 }
+    );
+  }
+}
+
 export async function POST(req: NextRequest) {
   try {
     const {
