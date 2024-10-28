@@ -3,19 +3,19 @@ import prisma from "@/lib/prisma"; // adjust path to Prisma client if needed
 
 export async function GET(req: NextRequest) {
   const { searchParams } = new URL(req.url);
-  const reservationId = searchParams.get("reservationId");
+  const sessionId = searchParams.get("session_id");
 
-  if (!reservationId) {
+  if (!sessionId) {
     return NextResponse.json(
-      { error: "Reservation ID is required" },
+      { error: "Session ID is required" },
       { status: 400 }
     );
   }
 
   try {
-    const reservation = await prisma.reservation.findUnique({
-      where: { id: reservationId },
-      include: { attractions: true }, // Adjust fields as needed
+    const reservation = await prisma.reservation.findFirst({
+      where: { sessionId },
+      include: { attractions: true },
     });
 
     if (!reservation) {
@@ -48,6 +48,7 @@ export async function POST(req: NextRequest) {
       cruiseId,
       userId,
       attractions,
+      sessionId,
     } = await req.json();
     const attractionIds = await prisma.attractions.findMany({
       where: { name: { in: attractions } },
@@ -70,6 +71,7 @@ export async function POST(req: NextRequest) {
         cruiseId,
         userId,
         attractions: { connect: attractionConnectData }, // assuming `attractions` is a relation
+        sessionId,
       },
     });
 

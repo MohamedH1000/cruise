@@ -7,13 +7,15 @@ const SuccessPage = () => {
   const [reservation, setReservation] = useState(null);
 
   useEffect(() => {
-    if (router.isReady && reservationId) {
-      fetch(`/api/reservation?reservationId=${reservationId}`)
+    const { session_id } = router.query;
+
+    if (router.isReady && session_id) {
+      fetch(`/api/reservation?session_id=${session_id}`)
         .then((res) => res.json())
         .then(setReservation)
         .catch((error) => console.error("Error fetching reservation:", error));
     }
-  }, [router.isReady, reservationId]);
+  }, [router.isReady, router.query.session_id]);
 
   return reservation ? (
     <div>

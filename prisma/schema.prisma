@@ -100,7 +100,8 @@ model Reservation {
   phoneNumber String?
   createdAt DateTime @default(now())
   attractions Attractions[]
-
+  sessionId String?
+ 
   user User? @relation(fields: [userId], references: [id], onDelete: Cascade)
   cruise Cruise @relation(fields: [cruiseId], references: [id], onDelete: Cascade)
 }

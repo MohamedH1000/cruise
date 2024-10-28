@@ -188,6 +188,16 @@ const ListingReservation = ({
         const session = await response.json();
 
         if (session.id) {
+          await fetch(`/api/reservation`, {
+            method: "PATCH",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              reservId: reservation.id,
+              sessionId: session.id, // Attach the session ID
+            }),
+          });
           const result = await stripe?.redirectToCheckout({
             sessionId: session.id,
           });
