@@ -1,29 +1,32 @@
-import { NextResponse } from "next/server";
+import { NextApiRequest, NextApiResponse } from "next";
 import prisma from "@/lib/prisma";
 import { stripe } from "@/lib/stripe";
 
 export const config = {
   api: {
-    bodyParser: false, // Disables automatic body parsing
+    bodyParser: false,
   },
 };
 
-export async function POST(req: any) {
-  const sig = req.headers.get("stripe-signature");
+export default async function handler(
+  req: NextApiRequest,
+  res: NextApiResponse
+) {
+  if (req.method !== "POST") {
+    res.setHeader("Allow", "POST");
+    return res.status(405).end("Method Not Allowed");
+  }
+
+  const sig = req.headers["stripe-signature"];
 
   try {
-    // Read raw body as a buffer to maintain its integrity
-    const rawBody = await req.arrayBuffer();
-    const bodyBuffer = Buffer.from(rawBody);
-
-    // Verify signature and construct event
+    const rawBody = await buffer(req);
     const event = stripe.webhooks.constructEvent(
-      bodyBuffer,
+      rawBody,
       sig!,
       process.env.STRIPE_WEBHOOK_SECRET!
     );
 
-    // Process Stripe event
     if (event.type === "checkout.session.completed") {
       const session = event.data.object;
       const reservId = session.metadata?.reservationId;
@@ -42,12 +45,20 @@ export async function POST(req: any) {
       });
     }
 
-    return NextResponse.json({ received: true });
-  } catch (err: any) {
+    res.json({ received: true });
+  } catch (err) {
     console.error("Webhook Error:", err.message);
-    return NextResponse.json(
-      { error: `Webhook Error: ${err.message}` },
-      { status: 400 }
-    );
+    res.status(400).send(`Webhook Error: ${err.message}`);
   }
+}
+
+// Helper function to read the raw body as a buffer
+import { Readable } from "stream";
+function buffer(readable: Readable) {
+  return new Promise<Buffer>((resolve, reject) => {
+    const chunks: any[] = [];
+    readable.on("data", (chunk) => chunks.push(chunk));
+    readable.on("end", () => resolve(Buffer.concat(chunks)));
+    readable.on("error", reject);
+  });
 }
