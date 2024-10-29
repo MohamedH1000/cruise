@@ -6,7 +6,7 @@ const SuccessPage = () => {
   const router = useRouter();
   const { session_id } = router.query; // Updated to use `session_id`
   const [reservation, setReservation] = useState(null);
-
+  console.log(reservation);
   useEffect(() => {
     const fetchReservation = async () => {
       try {
@@ -25,38 +25,40 @@ const SuccessPage = () => {
   }, [router.isReady, session_id]);
 
   return reservation ? (
-    <div className="success-container">
-      <h1>🎉 Reservation Confirmed!</h1>
-      <div className="reservation-info">
-        <p>
-          <strong>Reservation ID:</strong> {reservation?.id}
-        </p>
-        <p>
-          <strong>Name:</strong> {reservation?.nameOfReserver}
-        </p>
-        <p>
-          <strong>Email:</strong> {reservation?.email}
-        </p>
-        <p>
-          <strong>Phone Number:</strong> {reservation?.phoneNumber}
-        </p>
-        <p>
-          <strong>Status:</strong> {reservation?.status}
-        </p>
-        <p>
-          <strong>Start Date:</strong>{" "}
-          {new Date(reservation?.startDate).toLocaleDateString()}
-        </p>
-        <p>
-          <strong>End Date:</strong>{" "}
-          {new Date(reservation?.endDate).toLocaleDateString()}
-        </p>
-        <p>
-          <strong>Total Price:</strong> {reservation?.totalPrice / 100}{" "}
-          {reservation?.currency}
-        </p>
+    <div className="flex justify-center items-center">
+      <div className="success-container">
+        <h1>🎉 Reservation Confirmed!</h1>
+        <div className="reservation-info">
+          <p>
+            <strong>Reservation ID:</strong> {reservation?.id}
+          </p>
+          <p>
+            <strong>Name:</strong> {reservation?.nameOfReserver}
+          </p>
+          <p>
+            <strong>Email:</strong> {reservation?.email}
+          </p>
+          <p>
+            <strong>Phone Number:</strong> {reservation?.phoneNumber}
+          </p>
+          <p>
+            <strong>Status:</strong> {reservation?.status}
+          </p>
+          <p>
+            <strong>Start Date:</strong>{" "}
+            {new Date(reservation?.startDate).toLocaleDateString()}
+          </p>
+          <p>
+            <strong>End Date:</strong>{" "}
+            {new Date(reservation?.endDate).toLocaleDateString()}
+          </p>
+          <p>
+            <strong>Total Price:</strong> {reservation?.totalPrice / 100}{" "}
+            {reservation?.currency}
+          </p>
+        </div>
+        <button onClick={() => router.push("/")}>Go to Home</button>
       </div>
-      <button onClick={() => router.push("/")}>Go to Home</button>
     </div>
   ) : (
     <p>Loading...</p>

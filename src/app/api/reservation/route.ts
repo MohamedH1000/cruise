@@ -3,19 +3,16 @@ import prisma from "@/lib/prisma"; // adjust path to Prisma client if needed
 
 export async function GET(req: NextRequest) {
   const { searchParams } = new URL(req.url);
-  const sessionId = searchParams.get("session_id");
+  const session_id = searchParams.get("session_id");
 
-  if (!sessionId) {
-    return NextResponse.json(
-      { error: "Session ID is required" },
-      { status: 400 }
-    );
+  if (!session_id) {
+    return NextResponse.json({ error: "Session ID required" }, { status: 400 });
   }
 
   try {
-    const reservation = await prisma.reservation.findFirst({
-      where: { sessionId },
-      include: { attractions: true },
+    // Look up the reservation by session ID
+    const reservation = await prisma.reservation.findUnique({
+      where: { sessionId: session_id },
     });
 
     if (!reservation) {
@@ -28,10 +25,7 @@ export async function GET(req: NextRequest) {
     return NextResponse.json(reservation, { status: 200 });
   } catch (error) {
     console.error("Error fetching reservation:", error);
-    return NextResponse.json(
-      { error: "Error fetching reservation" },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: "Server error" }, { status: 500 });
   }
 }
 
@@ -87,12 +81,14 @@ export async function POST(req: NextRequest) {
 
 export async function PATCH(req: NextRequest) {
   try {
-    const { reservId, status } = await req.json();
-
+    const { reservId, status, sessionId } = await req.json();
+    const updatedData: any = {};
+    if (status) updatedData.status = status;
+    if (sessionId) updatedData.sessionId = sessionId;
     // Update reservation with the given ID and new status
     const updatedReservation = await prisma.reservation.update({
       where: { id: reservId },
-      data: { status },
+      data: { status, sessionId },
     });
 
     return NextResponse.json(updatedReservation, { status: 200 });
