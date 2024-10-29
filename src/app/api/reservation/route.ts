@@ -5,26 +5,33 @@ export async function GET(req: NextRequest) {
   const { searchParams } = new URL(req.url);
   const session_id = searchParams.get("session_id");
 
-  if (!session_id) {
-    return NextResponse.json({ error: "Session ID required" }, { status: 400 });
-  }
-
   try {
-    // Look up the reservation by session ID
-    const reservation = await prisma.reservation.findUnique({
-      where: { sessionId: session_id },
-    });
+    if (session_id) {
+      // Look up the reservation by session ID
+      const reservation = await prisma.reservation.findUnique({
+        where: { sessionId: session_id },
+      });
 
-    if (!reservation) {
-      return NextResponse.json(
-        { error: "Reservation not found" },
-        { status: 404 }
-      );
+      if (!reservation) {
+        return NextResponse.json(
+          { error: "Reservation not found" },
+          { status: 404 }
+        );
+      }
+
+      return NextResponse.json(reservation, { status: 200 });
+    } else {
+      // Fetch all reservations if no session ID is provided
+      const reservations = await prisma.reservation.findMany({
+        include: {
+          user: true,
+          cruise: true,
+        },
+      });
+      return NextResponse.json(reservations, { status: 200 });
     }
-
-    return NextResponse.json(reservation, { status: 200 });
   } catch (error) {
-    console.error("Error fetching reservation:", error);
+    console.error("Error fetching reservations:", error);
     return NextResponse.json({ error: "Server error" }, { status: 500 });
   }
 }

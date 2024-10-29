@@ -91,7 +91,8 @@
     "next": "Next",
     "previous": "Previous",
     "columns": "Columns",
-    "restaurants": "Restaurants"
+    "restaurants": "Restaurants",
+    "reservations": "Reservations"
   },
   "chooseAccountType": {
     "admin": "Admin",
@@ -154,6 +155,14 @@
     "relatedRestaurant": "Available Restaurants(optional)",
     "driveFees": "Do you want a service for drive to destination?",
     "enterDetails": "Enter Details",
-    "checkout": "Checkout"
+    "checkout": "Checkout",
+    "username": "Username",
+    "cruisename": "Cruise name",
+    "startdate": "Start date",
+    "enddate": "End date",
+    "totalPrice": "Total price",
+    "phonenumber": "Phone Number",
+    "createdAt": "Created At",
+    "status": "Status"
   }
 }

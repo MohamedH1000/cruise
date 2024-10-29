@@ -53,7 +53,7 @@ const SuccessPage = () => {
             {new Date(reservation?.endDate).toLocaleDateString()}
           </p>
           <p>
-            <strong>Total Price:</strong> {reservation?.totalPrice / 100}{" "}
+            <strong>Total Price:</strong> {reservation?.totalPrice}{" "}
             {reservation?.currency}
           </p>
         </div>

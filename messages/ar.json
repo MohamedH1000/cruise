@@ -91,7 +91,8 @@
     "next": "التالي",
     "previous": "السابق",
     "columns": "اعمدة الجدول المعروضة",
-    "restaurants": "المطاعم"
+    "restaurants": "المطاعم",
+    "reservations": "الحجوزات"
   },
   "chooseAccountType": {
     "admin": "ادمن",
@@ -154,6 +155,14 @@
     "relatedRestaurant": "المطاعم المتوفرة (اختياري)",
     "driveFees": "هل ترغب في خدمة التوصيل للقارب؟",
     "enterDetails": "اضف بياناتك",
-    "checkout": "التحويل لصفحة الدفع"
+    "checkout": "التحويل لصفحة الدفع",
+    "username": "اسم المستخدم",
+    "cruisename": "اسم اليخت",
+    "startdate": "تاريخ الوصول",
+    "enddate": "تاريخ المغادرة",
+    "totalPrice": "السعر الكلي",
+    "phonenumber": "رقم الهاتف",
+    "createdAt": "تاريخ الانشاء",
+    "status": "الحالة"
   }
 }

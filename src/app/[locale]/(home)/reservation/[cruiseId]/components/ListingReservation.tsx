@@ -161,7 +161,7 @@ const ListingReservation = ({
           phoneNumber,
           dateRange,
           status: "pending",
-          totalPrice: Math.round(convertedTotalPrice * 100),
+          totalPrice: Math.round(convertedTotalPrice),
           currency: localStorage.getItem("currency") || "AED",
           cruiseId: cruise?.id,
           userId: currentUser?.id,
