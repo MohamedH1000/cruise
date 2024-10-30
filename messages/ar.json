@@ -163,6 +163,7 @@
     "totalPrice": "السعر الكلي",
     "phonenumber": "رقم الهاتف",
     "createdAt": "تاريخ الانشاء",
-    "status": "الحالة"
+    "status": "الحالة",
+    "currency": "العملة"
   }
 }

@@ -91,7 +91,7 @@ model Reservation {
   cruiseId String @db.ObjectId
   startDate DateTime
   endDate DateTime
-  totalPrice Int
+  totalPrice String
   servicePrice Json?
   nameOfReserver String?
   currency String?

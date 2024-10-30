@@ -29,14 +29,23 @@ const MobileNav: React.FC<MobileNavProps> = ({
   return (
     <div className="md:hidden">
       {open ? (
-        <Image
-          src={"/assets/icons/close.png"}
-          alt="close"
-          height={50}
-          width={20}
-          className="absolute top-[100px] z-[60] right-[40px]"
+        <svg
           onClick={() => setOpen((prev: any) => !prev)}
-        />
+          className="absolute top-[20px] z-[60] right-[20px] text-white cursor-pointer"
+          width="24"
+          height="24"
+          viewBox="0 0 24 24"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            d="M6 18L18 6M6 6l12 12"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          />
+        </svg>
       ) : (
         <Image
           src={"/assets/icons/hamburger.svg"}

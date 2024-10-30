@@ -81,6 +81,10 @@ export function ReservationTable({ data }: ReservationTableProps) {
       header: `${t("translations.totalPrice")}`,
     },
     {
+      accessorKey: "currency",
+      header: `${t("translations.totalPrice")}`,
+    },
+    {
       accessorKey: "phoneNumber",
       header: `${t("translations.phonenumber")}`,
     },

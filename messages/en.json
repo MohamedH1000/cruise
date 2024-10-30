@@ -163,6 +163,7 @@
     "totalPrice": "Total price",
     "phonenumber": "Phone Number",
     "createdAt": "Created At",
-    "status": "Status"
+    "status": "Status",
+    "currency": "currency"
   }
 }

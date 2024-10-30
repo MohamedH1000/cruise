@@ -161,7 +161,7 @@ const ListingReservation = ({
           phoneNumber,
           dateRange,
           status: "pending",
-          totalPrice: Math.round(convertedTotalPrice),
+          totalPrice: convertedTotalPrice.toFixed(2),
           currency: localStorage.getItem("currency") || "AED",
           cruiseId: cruise?.id,
           userId: currentUser?.id,
@@ -179,7 +179,7 @@ const ListingReservation = ({
             "Content-Type": "application/json",
           },
           body: JSON.stringify({
-            amount: reservation.totalPrice, // total price in smallest unit
+            amount: reservation.totalPrice * 100, // total price in smallest unit
             currency: reservation.currency,
             reservationId: reservation.id, // Pass reservation ID to session
           }),
@@ -197,6 +197,7 @@ const ListingReservation = ({
             body: JSON.stringify({
               reservId: reservation.id, // Ensure this ID is passed to locate the reservation
               sessionId: session.id,
+              status: "active",
             }),
           });
           const result = await stripe?.redirectToCheckout({
@@ -205,6 +206,16 @@ const ListingReservation = ({
 
           if (result?.error) {
             console.error(result.error.message);
+            await fetch(`/api/reservation/`, {
+              method: "PATCH",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify({
+                reservId: reservation.id,
+                status: "failed", // Set status to "failed"
+              }),
+            });
             // Optionally, update reservation status to "failed" on error
           }
         }
