@@ -2,7 +2,7 @@ import { Link, usePathname } from "@/i18n/routing";
 import Image from "next/image";
 import React from "react";
 import { motion } from "framer-motion";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import { Separator } from "../ui/separator";
 import LanguageSelector from "../LanguageSelector";
 import { Button } from "../ui/button";
@@ -26,12 +26,17 @@ const MobileNav: React.FC<MobileNavProps> = ({
 }) => {
   const pathname = usePathname();
   const t = useTranslations();
+  const locale = useLocale();
   return (
     <div className="md:hidden">
       {open ? (
         <svg
           onClick={() => setOpen((prev: any) => !prev)}
-          className="absolute top-[20px] z-[60] right-[20px] text-white cursor-pointer"
+          className={
+            locale === "ar"
+              ? "absolute top-[20px] z-[60] left-[20px] text-white cursor-pointer"
+              : "absolute top-[20px] z-[60] right-[20px] text-white cursor-pointer"
+          }
           width="24"
           height="24"
           viewBox="0 0 24 24"
