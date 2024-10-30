@@ -8,14 +8,8 @@ import { Button } from "../ui/button";
 import { usePathname } from "@/i18n/routing";
 import MobileNav from "./MobileNav";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import {
-  Menubar,
-  MenubarContent,
-  MenubarItem,
-  MenubarMenu,
-  MenubarSeparator,
-  MenubarTrigger,
-} from "@/components/ui/menubar";
+import * as DropdownMenu from "@radix-ui/react-dropdown-menu";
+
 import { signOut } from "next-auth/react";
 import toast from "react-hot-toast";
 import { motion } from "framer-motion";
@@ -142,45 +136,60 @@ const NavBar = ({ currentUser, isAdmin, isClient }: any) => {
         <LanguageSelector />
         <div className="gap-2 flex max-md:hidden">
           {currentUser && (
-            <Menubar className="border-none" dir="rtl">
-              <MenubarMenu>
-                <MenubarTrigger className="cursor-pointer">
-                  <Avatar>
-                    <AvatarImage src={currentUser?.image} />
-                    <AvatarFallback>
-                      {currentUser?.name.slice(0, 2)}
-                    </AvatarFallback>
-                  </Avatar>
-                </MenubarTrigger>
-                <MenubarContent className="bg-white">
-                  <Link href={"/profile"}>
-                    <MenubarItem className="cursor-pointer">
-                      {t("Accessibility.myaccount")}
-                    </MenubarItem>
-                  </Link>
-                  <MenubarSeparator className="bg-[gray]" />
-                  {currentUser.role === "admin" && (
-                    <>
-                      <Link href={"/admin"}>
-                        <MenubarItem className="cursor-pointer">
-                          {t("Accessibility.controlpanel")}
-                        </MenubarItem>
-                      </Link>
-                      <MenubarSeparator className="bg-[gray]" />
-                    </>
-                  )}
-                  <MenubarItem
-                    className="cursor-pointer"
-                    onClick={() => {
-                      signOut();
-                      toast.success("تم تسجيل الخروج بنجاح");
-                    }}
+            <DropdownMenu.Root>
+              <DropdownMenu.Trigger asChild>
+                <Avatar className="w-10 h-10 cursor-pointer bg-transparent">
+                  <AvatarImage
+                    src={currentUser?.image}
+                    className="rounded-full"
+                  />
+                  <AvatarFallback className="bg-transparent">
+                    {currentUser?.name.slice(0, 2)}
+                  </AvatarFallback>
+                </Avatar>
+              </DropdownMenu.Trigger>
+
+              <DropdownMenu.Content
+                className="bg-white rounded-md shadow-lg p-2 space-y-2 transition-all duration-200"
+                align="end"
+                sideOffset={5}
+                style={{
+                  animationDuration: "200ms",
+                  animationFillMode: "forwards",
+                }}
+                data-state-open="fadeIn"
+                data-state-closed="fadeOut"
+              >
+                <DropdownMenu.Item>
+                  <Link
+                    href="/profile"
+                    className="block px-2 py-1 text-sm text-gray-700"
                   >
-                    {t("Login.logout")}
-                  </MenubarItem>
-                </MenubarContent>
-              </MenubarMenu>
-            </Menubar>
+                    {t("Accessibility.myaccount")}
+                  </Link>
+                </DropdownMenu.Item>
+                {currentUser.role === "admin" && (
+                  <DropdownMenu.Item>
+                    <Link
+                      href="/admin"
+                      className="block px-2 py-1 text-sm text-gray-700"
+                    >
+                      {t("Accessibility.controlpanel")}
+                    </Link>
+                  </DropdownMenu.Item>
+                )}
+                <DropdownMenu.Separator className="h-px bg-gray-200 my-1" />
+                <DropdownMenu.Item
+                  className="cursor-pointer px-2 py-1 text-sm text-gray-700"
+                  onClick={() => {
+                    signOut();
+                    toast.success("تم تسجيل الخروج بنجاح");
+                  }}
+                >
+                  {t("Login.logout")}
+                </DropdownMenu.Item>
+              </DropdownMenu.Content>
+            </DropdownMenu.Root>
           )}
           {!currentUser && (
             <>
