@@ -1,7 +1,14 @@
 "use client";
 import { Range } from "react-date-range";
 
-import React, { useContext, useEffect, useMemo, useState } from "react";
+import React, {
+  Dispatch,
+  SetStateAction,
+  useContext,
+  useEffect,
+  useMemo,
+  useState,
+} from "react";
 import { Separator } from "@/components/ui/separator";
 import { motion } from "framer-motion";
 import "react-phone-number-input/style.css";
@@ -56,7 +63,7 @@ const ListingReservation = ({
   const [totalPrice, setTotalPrice] = useState<any>();
   const [numberOfAttractions, setNumberOfAttractions] = useState<any>();
   const [steps, setSteps] = useState(STEPS.DATA);
-  const [relatedRestaurants, setRelatedRestaurants] = useState([]);
+  const [relatedRestaurants, setRelatedRestaurants] = useState<any>([]);
   const { convertCurrency, currency } = useContext(CurrencyContext);
   // console.log(totalPrice);
 
@@ -126,7 +133,7 @@ const ListingReservation = ({
   const disableDates = useMemo(() => {
     let dates: Date[] = [];
     reservations
-      ?.filter((res: any) => res.status !== "canceled")
+      ?.filter((res: any) => res.status === "active")
       .forEach((reservations: any) => {
         const range = eachDayOfInterval({
           start: new Date(reservations.startDate),
@@ -179,7 +186,7 @@ const ListingReservation = ({
             "Content-Type": "application/json",
           },
           body: JSON.stringify({
-            amount: reservation.totalPrice * 100, // total price in smallest unit
+            amount: Math.round(reservation.totalPrice * 100), // total price in smallest unit
             currency: reservation.currency,
             reservationId: reservation.id, // Pass reservation ID to session
           }),
@@ -197,7 +204,6 @@ const ListingReservation = ({
             body: JSON.stringify({
               reservId: reservation.id, // Ensure this ID is passed to locate the reservation
               sessionId: session.id,
-              status: "active",
             }),
           });
           const result = await stripe?.redirectToCheckout({
@@ -213,7 +219,6 @@ const ListingReservation = ({
               },
               body: JSON.stringify({
                 reservId: reservation.id,
-                status: "failed", // Set status to "failed"
               }),
             });
             // Optionally, update reservation status to "failed" on error

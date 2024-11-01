@@ -164,6 +164,10 @@
     "phonenumber": "Phone Number",
     "createdAt": "Created At",
     "status": "Status",
-    "currency": "currency"
+    "currency": "currency",
+    "resDelSuccess": "Reservation Deleted Successfully",
+    "resDelError": "An error happened while deleting the reservation",
+    "resDelTitle": "Are you sure you want to delete the reservation?",
+    "resDelDescription": "This action cannot be undone. This will permanently delete the reservation and remove the data from our servers and every data related to this reservation."
   }
 }

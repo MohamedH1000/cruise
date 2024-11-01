@@ -1,6 +1,7 @@
 "use client";
+import { CurrencyContext } from "@/app/context/CurrencyContext";
 import { useLocale, useTranslations } from "next-intl";
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 
 const RestaurantForm = ({
   relatedRestaurants,
@@ -9,10 +10,11 @@ const RestaurantForm = ({
   relatedRestaurants: any[];
   setTotalPrice: any;
 }) => {
+  const { rates } = useContext(CurrencyContext);
   const t = useTranslations();
   const [selectedRestaurants, setSelectedRestaurants] = useState<any[]>([]);
   const locale = useLocale();
-  const pricePerRestaurant = 48.9; // Fixed price of 50 SAR for each restaurant
+  const pricePerRestaurant = 50 / rates.SAR; // Fixed price of 50 SAR for each restaurant
 
   // Handle selection/deselection of restaurants
   const handleSelectRestaurant = (restaurant: any) => {

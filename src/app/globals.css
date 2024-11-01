@@ -68,3 +68,11 @@
     font-feature-settings: "rlig" 1, "calt" 1;
   }
 }
+
+.rdrCalendarWrapper {
+  width: 100% !important;
+}
+
+.rdrMonths {
+  width: 100% !important;
+}

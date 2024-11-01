@@ -1,6 +1,7 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import prisma from "@/lib/prisma";
 import { stripe } from "@/lib/stripe";
+import { sendSuccessEmail } from "@/lib/utils/sendEmail";
 
 export const config = {
   api: {
@@ -29,12 +30,16 @@ export default async function handler(
 
     if (event.type === "checkout.session.completed") {
       const session = event.data.object;
-      const reservId = session.metadata?.reservationId;
+      const reservId = session.metadata?.reservationId as any;
 
       await prisma.reservation.update({
         where: { id: reservId },
         data: { status: "active" },
       });
+      const customerEmail =
+        session.customer_email || "mohammedhisham115@yahoo.com";
+
+      await sendSuccessEmail(customerEmail, reservId);
     } else if (event.type === "checkout.session.expired") {
       const session = event.data.object;
       const reservId = session.metadata?.reservationId;

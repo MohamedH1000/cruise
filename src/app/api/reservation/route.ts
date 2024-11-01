@@ -107,3 +107,25 @@ export async function PATCH(req: NextRequest) {
     );
   }
 }
+
+export async function DELETE(req: NextRequest) {
+  try {
+    const { reservId } = await req.json();
+
+    // Delete reservation with the given ID
+    await prisma.reservation.delete({
+      where: { id: reservId },
+    });
+
+    return NextResponse.json(
+      { message: "Reservation deleted successfully" },
+      { status: 200 }
+    );
+  } catch (error) {
+    console.error("Error deleting reservation:", error);
+    return NextResponse.json(
+      { error: "Error deleting reservation" },
+      { status: 500 }
+    );
+  }
+}

@@ -20,6 +20,16 @@ import { Button } from "@/components/ui/button";
 import { useRouter } from "@/i18n/routing";
 import { useTranslations } from "next-intl";
 import { format } from "date-fns";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import { handleDeleteById } from "@/lib/actions/attraction.action";
+import toast from "react-hot-toast";
 
 export type Reservation = {
   id: string;
@@ -40,6 +50,7 @@ interface ReservationTableProps {
 
 export function ReservationTable({ data }: ReservationTableProps) {
   const [sorting, setSorting] = useState<SortingState>([]);
+  const [open, setOpen] = useState(false);
   const router = useRouter();
   const t = useTranslations();
 
@@ -105,6 +116,62 @@ export function ReservationTable({ data }: ReservationTableProps) {
         if (status === "pending") statusColor = "text-gray-500";
 
         return <span className={`font-bold ${statusColor}`}>{status}</span>;
+      },
+    },
+    {
+      accessorKey: "delete",
+      header: `${t("cruisesTable.delete")}`,
+      cell: ({ row }) => {
+        const reservationId = row.original.id;
+        const handleDelete = async (id: string) => {
+          try {
+            const response = await fetch("/api/reservation", {
+              method: "DELETE",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify({ reservId: id }),
+            });
+
+            if (response.ok) {
+              toast.success(`${t("translations.resDelSuccess")}`);
+              router.refresh(); // Refresh data if the deletion was successful
+            } else {
+              toast.error(`${t("translations.resDelError")}`);
+              console.error("Failed to delete reservation");
+            }
+          } catch (error) {
+            console.error("Error:", error);
+          }
+        };
+
+        return (
+          <Dialog open={open} onOpenChange={setOpen}>
+            <DialogTrigger className="bg-[red] text-white p-2 rounded-md font-bold">
+              {t("cruisesTable.dialogTriggerDelete")}
+            </DialogTrigger>
+            <DialogContent>
+              <DialogHeader>
+                <DialogTitle> {t("translations.resDelTitle")}</DialogTitle>
+                <DialogDescription>
+                  {t("translations.resDelDescription")}
+                </DialogDescription>
+              </DialogHeader>
+              <Button
+                className="bg-[red] text-white"
+                onClick={() => {
+                  handleDelete(reservationId);
+                  setOpen(false);
+                }}
+              >
+                {t("cruisesTable.dialogTriggerDelete")}
+              </Button>
+              <Button onClick={() => setOpen(false)}>
+                {t("cruisesTable.cancel")}
+              </Button>
+            </DialogContent>
+          </Dialog>
+        );
       },
     },
   ];
