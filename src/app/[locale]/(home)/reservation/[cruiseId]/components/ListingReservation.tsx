@@ -7,6 +7,7 @@ import React, {
   useContext,
   useEffect,
   useMemo,
+  useRef,
   useState,
 } from "react";
 import { Separator } from "@/components/ui/separator";
@@ -57,6 +58,7 @@ const ListingReservation = ({
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [email, setEmail] = useState(currentUser?.email || "");
   const [selectedOptions, setSelectedOptions] = useState([]);
+  // console.log("here is the selected options", selectedOptions);
   const [availableOptions, setAvailableOptions] = useState(initialOptions);
   const [phoneNumber, setPhoneNumber] = useState("");
   const [dateRange, setDateRange] = useState<Range>(initialDateRange);
@@ -65,6 +67,8 @@ const ListingReservation = ({
   const [steps, setSteps] = useState(STEPS.DATA);
   const [relatedRestaurants, setRelatedRestaurants] = useState<any>([]);
   const { convertCurrency, currency } = useContext(CurrencyContext);
+  const debounceTimeout = useRef<number | any>(null); // Debounce timeout
+  const prevSelectedOptions = useRef<string[]>([]); // Store previous selected options
   // console.log(totalPrice);
 
   const openDialog = () => setIsDialogOpen(true);
@@ -117,17 +121,44 @@ const ListingReservation = ({
   }, [dateRange, cruise?.price]);
 
   useEffect(() => {
-    if (selectedOptions.length > 0) {
-      // Fetch related restaurants based on the selected attractions
-      const fetchRestaurants = async () => {
-        const restaurants: Restaurant[] = await fetchRestaurantsByAttractions(
-          selectedOptions
-        );
-        setRelatedRestaurants(restaurants);
-      };
-
-      fetchRestaurants();
+    if (debounceTimeout.current) {
+      clearTimeout(debounceTimeout.current);
     }
+
+    debounceTimeout.current = setTimeout(() => {
+      // Check if selectedOptions has actually changed
+      if (
+        selectedOptions.length > 0 &&
+        JSON.stringify(prevSelectedOptions.current) !==
+          JSON.stringify(selectedOptions)
+      ) {
+        // Update the previous options ref
+        prevSelectedOptions.current = [...selectedOptions];
+        const validAttractions = selectedOptions.filter(
+          (option) => option !== null
+        );
+        // Fetch related restaurants based on the selected attractions
+        const fetchRestaurants = async () => {
+          try {
+            const restaurants = await fetchRestaurantsByAttractions(
+              validAttractions
+            );
+            setRelatedRestaurants(restaurants);
+          } catch (error) {
+            console.error("Error fetching restaurants:", error);
+          }
+        };
+
+        fetchRestaurants();
+      }
+    }, 500); // Adjust debounce delay as needed
+
+    // Cleanup function for the timeout
+    return () => {
+      if (debounceTimeout.current) {
+        clearTimeout(debounceTimeout.current);
+      }
+    };
   }, [selectedOptions]);
 
   const disableDates = useMemo(() => {

@@ -55,16 +55,18 @@ export const fetchRestaurantsByAttractions = async (
   selectedAttractions: string[]
 ) => {
   try {
+    console.log("Fetching restaurants for attractions:", selectedAttractions);
+
     const restaurants = await prisma.restaurant.findMany({
       where: {
         attraction: {
           name: {
-            in: selectedAttractions, // Match attractions by their names
+            in: selectedAttractions,
           },
         },
       },
       include: {
-        attraction: true, // Optionally include the attraction data
+        attraction: true,
       },
     });
 
