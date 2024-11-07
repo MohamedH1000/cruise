@@ -71,19 +71,7 @@ model Cruise {
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
-model Attractions {
-    id String @id @default(auto()) @map("_id") @db.ObjectId
-    name String
-    subtitle String?
-    description String
-    reservationId String? @db.ObjectId
-    imageSrc String[] @default([])
-    location Json?
-    createdAt DateTime? @default(now())
-    restaurants Restaurant[]
 
-    reservation Reservation? @relation(fields: [reservationId], references: [id])
-}
 
 model Reservation {
   id String @id @default(auto()) @map("_id") @db.ObjectId
@@ -98,7 +86,7 @@ model Reservation {
   email String?
   status String?
   phoneNumber String?
-  isDelivery Boolean
+  isDelivery Boolean?
   createdAt DateTime @default(now())
   attractions Attractions[]
   sessionId       String?    @unique
@@ -107,13 +95,37 @@ model Reservation {
   cruise Cruise @relation(fields: [cruiseId], references: [id], onDelete: Cascade)
 }
 
-model Restaurant {
-  id String @id @default(auto()) @map("_id") @db.ObjectId
-  attractionId String? @db.ObjectId
-  name String
-  description String?
-  imageSrc String[] @default([])
-  createdAt DateTime? @default(now())
+model Attractions {
+  id            String                 @id @default(auto()) @map("_id") @db.ObjectId
+  name          String
+  subtitle      String?
+  description   String
+  reservationId String?                @db.ObjectId
+  imageSrc      String[]               @default([])
+  location      Json?
+  createdAt     DateTime?              @default(now())
+  restaurants   AttractionRestaurant[] // Many-to-many relationship
 
-  attraction Attractions? @relation(fields: [attractionId], references: [id])
+  reservation   Reservation?           @relation(fields: [reservationId], references: [id])
+}
+
+model Restaurant {
+  id          String                 @id @default(auto()) @map("_id") @db.ObjectId
+  name        String
+  description String?
+  imageSrc    String[]               @default([])
+  createdAt   DateTime?              @default(now())
+  attractions AttractionRestaurant[] // Many-to-many relationship
+}
+
+// Join model to enable the many-to-many relationship
+model AttractionRestaurant {
+  id            String       @id @default(auto()) @map("_id") @db.ObjectId
+  attractionId  String       @db.ObjectId
+  restaurantId  String       @db.ObjectId
+
+  attraction    Attractions  @relation(fields: [attractionId], references: [id])
+  restaurant    Restaurant   @relation(fields: [restaurantId], references: [id])
+
+  @@unique([attractionId, restaurantId]) // Ensure unique pairs of attraction and restaurant
 }

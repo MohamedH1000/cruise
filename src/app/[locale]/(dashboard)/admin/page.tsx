@@ -5,6 +5,7 @@ import { getTranslations } from "next-intl/server";
 
 const page = async () => {
   const attractions = await getAllAttractionsTable();
+
   const t = await getTranslations();
   // console.log(attractions);
   return (

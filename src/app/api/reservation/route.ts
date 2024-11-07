@@ -58,6 +58,7 @@ export async function POST(req: NextRequest) {
     const attractionConnectData = attractionIds.map((attraction) => ({
       id: attraction.id,
     }));
+    let isDelivery = true;
     // Create a new reservation in the database using Prisma
     const reservation = await prisma.reservation.create({
       data: {
@@ -70,6 +71,7 @@ export async function POST(req: NextRequest) {
         totalPrice,
         currency,
         cruiseId,
+        isDelivery,
         userId,
         attractions: { connect: attractionConnectData }, // assuming `attractions` is a relation
         sessionId,

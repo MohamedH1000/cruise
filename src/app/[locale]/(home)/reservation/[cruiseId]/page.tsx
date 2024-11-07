@@ -7,12 +7,16 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import ListingReservation from "./components/ListingReservation";
 import { getAllReservations } from "@/lib/actions/reservation.action";
 import { getCurrentUser } from "@/lib/actions/user.action";
-import { getAllAttractionsTable } from "@/lib/actions/attraction.action";
+import {
+  getAllAttractionsTable,
+  getCombinedAttractionsByRestaurantArray,
+} from "@/lib/actions/attraction.action";
 
 const page = async ({ params }: any) => {
   const cruise = await getCruiseById(params.cruiseId);
   const reservations = await getAllReservations();
   const attractions = await getAllAttractionsTable();
+  const combinedAttractions = await getCombinedAttractionsByRestaurantArray();
   const currentUser = await getCurrentUser();
   const t = await getTranslations();
   //   console.log(cruise);
@@ -69,6 +73,7 @@ const page = async ({ params }: any) => {
             currentUser={currentUser}
             cruise={cruise}
             attractions={attractions}
+            combAttractions={combinedAttractions}
           />
         </div>
       </div>

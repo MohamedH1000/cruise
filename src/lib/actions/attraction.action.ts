@@ -54,19 +54,27 @@ export async function updateAttraction(
       imageSrc: { set: imageSrc }, // Update imageSrc if changed
     },
   });
-
   // Step 2: Update the restaurant associations if restaurantIds are provided
   if (restaurantIds?.length > 0) {
-    // Clear previous relationships by setting `attractionId` to null for current associated restaurants
-    await prisma.restaurant.updateMany({
+    // Remove old associations for this attraction
+    await prisma.attractionRestaurant.deleteMany({
       where: { attractionId: attractionId },
-      data: { attractionId: null },
     });
 
-    // Update the restaurants with the new attractionId
-    await prisma.restaurant.updateMany({
-      where: { id: { in: restaurantIds.map((res) => res.value) } },
-      data: { attractionId: attractionId },
+    // Add new associations in the join table
+    const restaurantConnections = restaurantIds.map((res) => ({
+      attractionId: attractionId,
+      restaurantId: res.value,
+    }));
+
+    await prisma.attractionRestaurant.createMany({
+      data: restaurantConnections,
+    });
+  }
+
+  if (restaurantIds.length === 0) {
+    await prisma.attractionRestaurant.deleteMany({
+      where: { attractionId: attractionId },
     });
   }
 
@@ -98,12 +106,78 @@ export async function getAllAttractionsTable() {
         createdAt: "desc",
       },
       include: {
-        restaurants: true,
+        restaurants: {
+          select: {
+            restaurant: true, // Only select restaurant data
+          },
+        },
       },
     });
     return attractions;
   } catch (error) {
     console.log(error);
+  }
+}
+
+export async function getCombinedAttractionsByRestaurantArray() {
+  try {
+    // Fetch attractions with restaurant data
+    const attractions = await prisma.attractions.findMany({
+      orderBy: {
+        createdAt: "desc",
+      },
+      include: {
+        restaurants: {
+          include: {
+            restaurant: true, // This ensures you get the actual restaurant data, not just the relation
+          },
+        },
+      },
+    });
+
+    console.log("Fetched attractions:", attractions); // Debug log
+
+    const restaurantArrayMap: any = {};
+
+    attractions.forEach((attraction) => {
+      // Sort and stringify restaurant IDs to form a unique key for each combination
+      const restaurantIdsKey = attraction.restaurants
+        .map((res) => res.restaurant.id)
+        .sort() // Ensure consistent ordering
+        .join(",");
+
+      // Initialize the entry if it doesn't exist
+      if (!restaurantArrayMap[restaurantIdsKey]) {
+        restaurantArrayMap[restaurantIdsKey] = {
+          restaurantNames: attraction.restaurants.map(
+            (res) => res.restaurant.name
+          ),
+          attractionNames: [],
+        };
+      }
+
+      // Add the attraction name to the grouped list
+      restaurantArrayMap[restaurantIdsKey].attractionNames.push(
+        attraction.name
+      );
+    });
+
+    console.log("Grouped restaurantArrayMap:", restaurantArrayMap); // Debug log
+
+    // Convert the map to an array with combined attraction names
+    const combinedAttractions = Object.values(restaurantArrayMap).map(
+      ({ restaurantNames, attractionNames }: any) => ({
+        restaurants: restaurantNames.join(", "), // Combine restaurant names
+        attractions: attractionNames.join(", "), // Combine attraction names
+      })
+    );
+
+    console.log("Combined attractions:", combinedAttractions); // Final output log
+
+    return combinedAttractions;
+  } catch (error) {
+    console.log("Error fetching combined attractions:", error);
+    throw error;
   }
 }
 

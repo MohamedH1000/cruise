@@ -126,15 +126,13 @@ export function AttractionsTable<TData, TValue>({
                   <ol className="list-decimal pl-4">
                     {" "}
                     {/* list-decimal gives numbered list, pl-4 adds padding to indent */}
-                    {restaurants.map(
-                      (restaurant: { name: string }, index: number) => (
-                        <li key={restaurant.name} className="mb-1 font-bold">
-                          {" "}
-                          {/* mb-1 adds margin between items */}
-                          {restaurant.name}
-                        </li>
-                      )
-                    )}
+                    {restaurants.map((res: { name: string }, index: number) => (
+                      <li key={res.restaurant.name} className="mb-1 font-bold">
+                        {" "}
+                        {/* mb-1 adds margin between items */}
+                        {res.restaurant.name}
+                      </li>
+                    ))}
                   </ol>
                 ) : (
                   <span>No restaurants</span>

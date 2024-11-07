@@ -24,6 +24,7 @@ const AddAttractionDialog = ({
   attractionEditData,
 }: any) => {
   const t = useTranslations();
+  // console.log(attractionEditData);
   const [open, setOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [restaurants, setRestaurants] = useState<any[]>([]);
@@ -34,8 +35,8 @@ const AddAttractionDialog = ({
     imageSrc: attractionEditData?.imageSrc || [],
     restaurantIds:
       attractionEditData?.restaurants?.map((r: any) => ({
-        value: r.id,
-        label: r.name,
+        value: r.restaurant.id,
+        label: r.restaurant.name,
       })) || [],
   });
   // console.log("cruise details", cruiseDetails);

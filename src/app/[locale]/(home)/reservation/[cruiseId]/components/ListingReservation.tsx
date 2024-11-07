@@ -50,8 +50,20 @@ const ListingReservation = ({
   currentUser,
   cruise,
   attractions,
+  combAttractions,
 }: any) => {
-  const initialOptions = attractions.map((attraction: any) => attraction.name);
+  // console.log("here is the combined attractions", combAttractions);
+  // const attractionsData = attractions.map((attraction: any) => {
+  //   return {
+  //     id: attraction.id,
+  //     name: attraction.name,
+  //     restaurantId: attraction.restaurants.id, // Adjust this according to your actual property structure
+  //   };
+  // });
+  const attractionNames = combAttractions.map(
+    (attraction) => attraction.attractions
+  );
+  // console.log(initialOptions);
   const t = useTranslations();
   const [name, setName] = useState(currentUser?.name || "");
   const [isLoading, setIsLoading] = useState(false);
@@ -59,7 +71,6 @@ const ListingReservation = ({
   const [email, setEmail] = useState(currentUser?.email || "");
   const [selectedOptions, setSelectedOptions] = useState([]);
   // console.log("here is the selected options", selectedOptions);
-  const [availableOptions, setAvailableOptions] = useState(initialOptions);
   const [phoneNumber, setPhoneNumber] = useState("");
   const [dateRange, setDateRange] = useState<Range>(initialDateRange);
   const [totalPrice, setTotalPrice] = useState<any>();
@@ -68,6 +79,8 @@ const ListingReservation = ({
   const [relatedRestaurants, setRelatedRestaurants] = useState<any>([]);
   const { convertCurrency, currency } = useContext(CurrencyContext);
   const debounceTimeout = useRef<number | any>(null); // Debounce timeout
+  const [combinedAttractions, setCombinedAttractions] = useState([]);
+  const [availableOptions, setAvailableOptions] = useState(attractionNames);
   const prevSelectedOptions = useRef<string[]>([]); // Store previous selected options
   // console.log(totalPrice);
 
@@ -137,6 +150,7 @@ const ListingReservation = ({
         const validAttractions = selectedOptions.filter(
           (option) => option !== null
         );
+        // console.log("here is the valid attractions", validAttractions);
         // Fetch related restaurants based on the selected attractions
         const fetchRestaurants = async () => {
           try {

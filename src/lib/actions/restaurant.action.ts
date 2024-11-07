@@ -55,24 +55,40 @@ export const fetchRestaurantsByAttractions = async (
   selectedAttractions: string[]
 ) => {
   try {
-    console.log("Fetching restaurants for attractions:", selectedAttractions);
+    // Clean the attraction names
+    const attractions = selectedAttractions.map((name) => name.trim());
 
+    // Log the attractions to ensure they are correct
+    // console.log("Selected Attractions:", attractions);
+
+    // Fetch restaurants related to the attractions through the join table
     const restaurants = await prisma.restaurant.findMany({
       where: {
-        attraction: {
-          name: {
-            in: selectedAttractions,
+        attractions: {
+          some: {
+            attraction: {
+              name: {
+                in: attractions, // This queries the 'name' field on the Attraction model
+              },
+            },
           },
         },
       },
       include: {
-        attraction: true,
+        attractions: {
+          include: {
+            attraction: true, // Including the related attraction data
+          },
+        },
       },
     });
 
     return restaurants;
   } catch (error) {
     console.error("Error fetching restaurants by attractions:", error);
+    if (error instanceof Error) {
+      console.error(error.stack); // Log the stack trace for deeper insight
+    }
     throw new Error("Failed to fetch restaurants");
   }
 };
