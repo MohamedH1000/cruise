@@ -18,10 +18,26 @@ export async function createAttraction(attractionData: any) {
     },
   });
 
-  if (restaurantIds.length > 0) {
-    await prisma.restaurant.updateMany({
-      where: { id: { in: restaurantIds?.map((res) => res.value) } },
-      data: { attractionId: attraction.id },
+  if (restaurantIds?.length > 0) {
+    // Remove old associations for this attraction
+    await prisma.attractionRestaurant.deleteMany({
+      where: { attractionId: attraction.id },
+    });
+
+    // Add new associations in the join table
+    const restaurantConnections = restaurantIds.map((res) => ({
+      attractionId: attraction.id,
+      restaurantId: res.value,
+    }));
+
+    await prisma.attractionRestaurant.createMany({
+      data: restaurantConnections,
+    });
+  }
+
+  if (restaurantIds.length === 0) {
+    await prisma.attractionRestaurant.deleteMany({
+      where: { attractionId: attraction.id },
     });
   }
 
@@ -135,7 +151,7 @@ export async function getCombinedAttractionsByRestaurantArray() {
       },
     });
 
-    console.log("Fetched attractions:", attractions); // Debug log
+    // console.log("Fetched attractions:", attractions); // Debug log
 
     const restaurantArrayMap: any = {};
 
@@ -162,7 +178,7 @@ export async function getCombinedAttractionsByRestaurantArray() {
       );
     });
 
-    console.log("Grouped restaurantArrayMap:", restaurantArrayMap); // Debug log
+    // console.log("Grouped restaurantArrayMap:", restaurantArrayMap); // Debug log
 
     // Convert the map to an array with combined attraction names
     const combinedAttractions = Object.values(restaurantArrayMap).map(
@@ -172,7 +188,7 @@ export async function getCombinedAttractionsByRestaurantArray() {
       })
     );
 
-    console.log("Combined attractions:", combinedAttractions); // Final output log
+    // console.log("Combined attractions:", combinedAttractions); // Final output log
 
     return combinedAttractions;
   } catch (error) {

@@ -38,22 +38,28 @@ const ListingCard = ({ data, currentUser, attraction }: any) => {
               }}
               orientation="horizontal"
             >
-              <CarouselContent
-                className={`${
-                  locale === "ar" ? "flex-row-reverse" : "flex-row"
-                }`}
-              >
-                {data.imageSrc?.map((image: string, index: number) => (
-                  <CarouselItem key={index} className="relative aspect-square">
-                    <Image
-                      src={image}
-                      alt={`Listing Image ${index + 1}`}
-                      className="object-cover group-hover:scale-110 transition"
-                      fill
-                    />
-                  </CarouselItem>
-                ))}
-              </CarouselContent>
+              <Link href={`/attractions/${data?.id}`}>
+                <CarouselContent
+                  className={`${
+                    locale === "ar" ? "flex-row-reverse" : "flex-row"
+                  }`}
+                >
+                  {data.imageSrc?.map((image: string, index: number) => (
+                    <CarouselItem
+                      key={index}
+                      className="relative aspect-square"
+                    >
+                      <Image
+                        src={image}
+                        alt={`Listing Image ${index + 1}`}
+                        className="object-cover group-hover:scale-110 transition"
+                        fill
+                      />
+                    </CarouselItem>
+                  ))}
+                </CarouselContent>
+              </Link>
+
               {data?.imageSrc?.length > 1 && (
                 <>
                   <CarouselPrevious className="absolute top-1/2 left-3 transform -translate-y-1/2 -z-1 bg-white p-2 rounded-full shadow-md cursor-pointer" />
@@ -88,12 +94,14 @@ const ListingCard = ({ data, currentUser, attraction }: any) => {
           </>
         )}
         {attraction && (
-          <Link
-            href={`/attractions/${data?.id}`}
-            className="w-full text-center bg-[#003b95] text-white hover:border-[#003b95] hover:border-[1px] hover:bg-white hover:text-[#003b95] transition duration-300 p-2 rounded-md font-bold"
-          >
-            {t("translations.showAttraction")}
-          </Link>
+          <>
+            <Link
+              href={`/attractions/${data?.id}`}
+              className="w-full text-center bg-[#003b95] text-white hover:border-[#003b95] hover:border-[1px] hover:bg-white hover:text-[#003b95] transition duration-300 p-2 rounded-md font-bold"
+            >
+              {data.name}
+            </Link>
+          </>
         )}
       </div>
     </motion.div>

@@ -99,7 +99,7 @@ model Attractions {
   id            String                 @id @default(auto()) @map("_id") @db.ObjectId
   name          String
   subtitle      String?
-  description   String
+  description   String?
   reservationId String?                @db.ObjectId
   imageSrc      String[]               @default([])
   location      Json?
