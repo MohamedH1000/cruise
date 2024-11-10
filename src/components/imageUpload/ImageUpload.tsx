@@ -38,7 +38,7 @@ const ImageUpload: React.FC<ImageUploadProps> = ({
     <CldUploadWidget
       onUpload={handleUpload}
       uploadPreset="cruises"
-      options={{ maxFiles: profile ? 1 : 20 }}
+      options={{ maxFiles: profile ? 1 : 40 }}
     >
       {({ open }) => {
         return (

@@ -57,7 +57,13 @@ export async function updateAttraction(
     throw new Error("You are not authorized to update this attraction");
   }
 
-  const { name, description, imageSrc = [], restaurantIds } = attractionData;
+  const {
+    name,
+    description,
+    imageSrc = [],
+    restaurantIds,
+    subtitle,
+  } = attractionData;
 
   // Step 1: Update the attraction's basic information
   const updatedAttraction = await prisma.attractions.update({
@@ -67,7 +73,8 @@ export async function updateAttraction(
     data: {
       name,
       description,
-      imageSrc: { set: imageSrc }, // Update imageSrc if changed
+      imageSrc: { set: imageSrc },
+      subtitle, // Update imageSrc if changed
     },
   });
   // Step 2: Update the restaurant associations if restaurantIds are provided
