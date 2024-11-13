@@ -1,6 +1,8 @@
+"use client";
 import { useTranslations } from "next-intl";
 import React from "react";
 import DataPicker from "./DataPicker";
+import { motion } from "framer-motion";
 
 const DataPickNavbar = () => {
   const t = useTranslations();
@@ -10,12 +12,24 @@ const DataPickNavbar = () => {
     md:px-[50px] max-sm:px-[10px] max-md:px-[50px] py-5"
     >
       <div className="h-full flex flex-col items-center justify-center">
-        <h1 className="font-bold text-5xl text-center hover:animate-pulse">
+        <motion.h1
+          className="font-bold text-5xl text-center hover:animate-pulse"
+          initial={{ opacity: 0, y: 50 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6 }}
+          viewport={{ once: true }}
+        >
           {t("NavItems.CruiseSearch")}
-        </h1>
-        <p className="mt-5 text-2xl text-center">
+        </motion.h1>
+        <motion.p
+          className="mt-5 text-2xl text-center"
+          initial={{ opacity: 0, y: 50 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.4, delay: 0.5 }}
+          viewport={{ once: true }}
+        >
           {t("NavItems.cruiseDescription")}
-        </p>
+        </motion.p>
       </div>
       <iframe
         width="600"
