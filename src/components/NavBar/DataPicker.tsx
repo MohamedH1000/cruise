@@ -1,7 +1,7 @@
 "use client";
 import React, { useState } from "react";
 import { CalendarIcon } from "@radix-ui/react-icons";
-import { addDays, format } from "date-fns";
+import { format } from "date-fns";
 import { DateRange } from "react-day-picker";
 
 import { cn } from "@/lib/utils";
@@ -15,11 +15,13 @@ import {
 import { useTranslations } from "next-intl";
 import AdultCounter from "./AdultCounter";
 import KidCounter from "./KidCounter";
+import RoomCounter from "./RoomCounter";
 
 const DataPicker = () => {
   const [date, setDate] = useState<DateRange | undefined>();
   const [adults, setAdults] = useState(0);
   const [kids, setKids] = useState(0);
+  const [rooms, setRooms] = useState(0);
   const t = useTranslations();
   return (
     <div className="text-black w-[90%] max-w-[1000px] bg-[#ffb700] h-[62px] rounded-[12px] p-1 flex gap-2 max-md:flex-col max-md:h-auto">
@@ -79,8 +81,10 @@ const DataPicker = () => {
             <span className="font-bold truncate">
               {adults + " "}
               {t("NavItems.adults")}
-              {" " + kids + " "}
+              {" ," + kids + " "}
               {t("NavItems.kids")}
+              {" ," + rooms + " "}
+              {t("NavItems.rooms")}
             </span>
           </Button>
         </PopoverTrigger>
@@ -95,6 +99,10 @@ const DataPicker = () => {
           <div className="flex justify-between items-center mt-5">
             <p>{t("PopoverContent.kids")}</p>
             <KidCounter kids={kids} setKids={setKids} />
+          </div>
+          <div className="flex justify-between items-center mt-5">
+            <p>{t("PopoverContent.rooms")}</p>
+            <RoomCounter rooms={rooms} setRooms={setRooms} />
           </div>
         </PopoverContent>
       </Popover>

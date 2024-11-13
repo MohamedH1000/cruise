@@ -6,14 +6,17 @@
     "main": "Main",
     "attractions": "Attractions",
     "Car_rentals": "Car rentals",
-    "CruiseSearch": "Find your next cruise",
+    "CruiseSearch": "Private cruise for you in dubai",
+    "cruiseDescription": "Cruise trips are designed for anyone who wants to enjoy an exceptional overnight stay and visit the sights and markets on the back of a private hotel boat",
     "PickDate": "Pick a date: Check-in Date - Check-out Date",
     "adults": "adults",
-    "kids": "kids"
+    "kids": "kids",
+    "rooms": "Rooms number"
   },
   "PopoverContent": {
     "adults": "adults",
-    "kids": "kids"
+    "kids": "kids",
+    "rooms": "Rooms number"
   },
   "chooselang": {
     "choose": "Choose language:",
@@ -172,6 +175,12 @@
     "orderNumber": "no. of allowed attractions",
     "selectedOption": "Selected Options",
     "delete": "delete",
-    "selectOption": "Click the attractios you want to visit first to be added to your selection below this table"
+    "selectOption": "Click the attractios you want to visit first to be added to your selection below this table",
+    "aboutus": "About us",
+    "contactus": "Contact Us",
+    "discover": "Discover new destinations daily",
+    "cruiseDesign": "Design cruise especially for you",
+    "enjoySea": "Enjoy the sea views",
+    "bookCruise": "Book your cruise and then choose the attractions - cruises start from 3 nights to 7 nights"
   }
 }

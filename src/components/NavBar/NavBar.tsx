@@ -30,12 +30,13 @@ const NavBar = ({ currentUser, isAdmin, isClient }: any) => {
           animate={{ opacity: 100, x: 0 }}
           transition={{ duration: 0.3, delay: 0.1 }}
         >
-          <Image
+          {/* <Image
             src={"/assets/logo.png"}
             alt="Cruise"
             width={150}
             height={50}
-          />
+          /> */}
+          <p className="font-bold text-3xl text-[white]">Private Cruise</p>
         </motion.div>
       </Link>
       {isAdmin && (
@@ -109,6 +110,14 @@ const NavBar = ({ currentUser, isAdmin, isClient }: any) => {
             {t("NavItems.main")}
           </Link>
           <Link
+            href={"/about-us"}
+            className={`${
+              pathname === "/about-us" ? "border-[1.5px] bg-[#0b152592]" : ""
+            }  p-2 rounded-[7px] hover:bg-[#0b152592] transition duration-300`}
+          >
+            {t("translations.aboutus")}
+          </Link>
+          <Link
             href={"/attractions"}
             className={`${
               pathname === "/attractions" ? "border-[1.5px] bg-[#0b152592]" : ""
@@ -117,13 +126,21 @@ const NavBar = ({ currentUser, isAdmin, isClient }: any) => {
             {t("NavItems.attractions")}
           </Link>
           <Link
+            href={"/contact-us"}
+            className={`${
+              pathname === "/contact-us" ? "border-[1.5px] bg-[#0b152592]" : ""
+            }  p-2 rounded-[7px] hover:bg-[#0b152592] transition duration-300`}
+          >
+            {t("translations.contactus")}
+          </Link>
+          {/* <Link
             href={"/car-rentals"}
             className={`${
               pathname === "/car-rentals" ? "border-[1.5px] bg-[#0b152592]" : ""
             }  p-2 rounded-[7px] hover:bg-[#0b152592] transition duration-300`}
           >
             {t("NavItems.Car_rentals")}
-          </Link>
+          </Link> */}
         </motion.nav>
       )}
       <motion.div
