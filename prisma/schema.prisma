@@ -61,6 +61,7 @@ model Cruise {
   type String?
   status String?
   numberOfGuests Int?
+  rating Int?
   discount String?
   price Int
   delivery Int?

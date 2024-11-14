@@ -36,7 +36,7 @@ const NavBar = ({ currentUser, isAdmin, isClient }: any) => {
             width={150}
             height={50}
           /> */}
-          <p className="font-bold text-3xl text-[white]">Private Cruise</p>
+          <p className="font-bold text-2xl text-[white]">Private Cruise</p>
         </motion.div>
       </Link>
       {isAdmin && (

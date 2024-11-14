@@ -16,15 +16,35 @@ import { useTranslations } from "next-intl";
 import AdultCounter from "./AdultCounter";
 import KidCounter from "./KidCounter";
 import RoomCounter from "./RoomCounter";
+import { useRouter } from "@/i18n/routing";
 
-const DataPicker = () => {
+const DataPicker = ({ searchPage }: any) => {
+  const router = useRouter();
   const [date, setDate] = useState<DateRange | undefined>();
   const [adults, setAdults] = useState(0);
   const [kids, setKids] = useState(0);
   const [rooms, setRooms] = useState(0);
   const t = useTranslations();
+
+  const handleSearch = () => {
+    // Construct the query parameters
+    const query = new URLSearchParams();
+
+    if (date?.from) query.append("from", format(date.from, "yyyy-MM-dd"));
+    if (date?.to) query.append("to", format(date.to, "yyyy-MM-dd"));
+    if (adults) query.append("adults", adults.toString());
+    if (kids) query.append("kids", kids.toString());
+    if (rooms) query.append("rooms", rooms.toString());
+
+    // Navigate to /search with the constructed query string
+    router.push(`/search?${query.toString()}`);
+  };
   return (
-    <div className="text-black w-[90%] max-w-[1000px] bg-[#ffb700] h-[62px] rounded-[12px] p-1 flex gap-2 max-md:flex-col max-md:h-auto">
+    <div
+      className={`${
+        searchPage ? "max-w-[650px]" : "max-w-[1000px]"
+      } text-black w-[90%]  bg-[#ffb700] h-[62px] rounded-[12px] p-1 flex gap-2 max-md:flex-col max-md:h-auto`}
+    >
       <Popover>
         <PopoverTrigger
           asChild
@@ -106,7 +126,10 @@ const DataPicker = () => {
           </div>
         </PopoverContent>
       </Popover>
-      <Button className="h-full rounded-[12px] ml-auto w-[100px] max-md:w-full">
+      <Button
+        className="h-full rounded-[12px] ml-auto w-[100px] max-md:w-full"
+        onClick={handleSearch}
+      >
         {t("Buttons.search")}
       </Button>
     </div>
