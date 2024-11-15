@@ -79,17 +79,86 @@ export async function getAllCruises(params: any) {
 
   try {
     const cruises = await prisma.cruise.findMany({
+      where: {
+        status: "active",
+        // Assuming these fields are present in the cruise model:
+        // adults: adults ? { gte: adults } : undefined,
+        // kids: kids ? { gte: kids } : undefined,
+        // rooms: rooms ? { gte: rooms } : undefined,
+      },
       orderBy: {
         createdAt: "desc",
       },
       skip: skipAmount,
       take: pageSize,
     });
+
     const totalAllowedCruises = await prisma.cruise.count({
       where: {
         status: "active",
       },
     });
+
+    const isNext = totalAllowedCruises > skipAmount + cruises.length;
+    return { cruises, isNext, totalAllowedCruises };
+  } catch (error) {
+    console.log(error);
+  }
+}
+export async function getAllCruisesBySearch(params: any) {
+  const { page = 1, pageSize = 9, date, startDate, endDate } = params;
+  const skipAmount = (page - 1) * pageSize;
+
+  try {
+    const cruises = await prisma.cruise.findMany({
+      where: {
+        status: "active",
+        // Assuming these fields are present in the cruise model:
+        // adults: adults ? { gte: adults } : undefined,
+        // kids: kids ? { gte: kids } : undefined,
+        // rooms: rooms ? { gte: rooms } : undefined,
+        reservations: {
+          none: {
+            OR: [
+              {
+                startDate: {
+                  lte: new Date(endDate), // Reservation starts before or on the end date
+                },
+                endDate: {
+                  gte: new Date(startDate), // Reservation ends after or on the start date
+                },
+              },
+            ],
+          },
+        },
+      },
+      orderBy: {
+        createdAt: "desc",
+      },
+      skip: skipAmount,
+      take: pageSize,
+    });
+
+    const totalAllowedCruises = await prisma.cruise.count({
+      where: {
+        status: "active",
+        reservations: {
+          none: {
+            OR: [
+              {
+                startDate: {
+                  lte: new Date(endDate),
+                },
+                endDate: {
+                  gte: new Date(startDate),
+                },
+              },
+            ],
+          },
+        },
+      },
+    });
+
     const isNext = totalAllowedCruises > skipAmount + cruises.length;
     return { cruises, isNext, totalAllowedCruises };
   } catch (error) {

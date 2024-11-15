@@ -1,15 +1,18 @@
 import EmptyState from "@/components/EmptyState";
 import React from "react";
 import DataPicker from "@/components/NavBar/DataPicker";
-import { getAllCruises } from "@/lib/actions/cruise.action";
+import { getAllCruisesBySearch } from "@/lib/actions/cruise.action";
 import ListingCard from "@/components/ListingCard/ListingCard";
 import Paginat from "../components/Paginat/Paginat";
 import { getCurrentUser } from "@/lib/actions/user.action";
 
 const page = async ({ searchParams }: any) => {
   const currentUser = await getCurrentUser();
-  const allCruises = await getAllCruises({
+  const { adults, kids, rooms, from, to } = searchParams;
+  const allCruises = await getAllCruisesBySearch({
     page: searchParams?.page ? +searchParams.page : 1,
+    startDate: from || null,
+    endDate: to || null,
   });
 
   const allowedCruises = allCruises?.cruises?.filter(
