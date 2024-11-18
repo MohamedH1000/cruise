@@ -5,9 +5,13 @@ import { getAllCruisesBySearch } from "@/lib/actions/cruise.action";
 import ListingCard from "@/components/ListingCard/ListingCard";
 import Paginat from "../components/Paginat/Paginat";
 import { getCurrentUser } from "@/lib/actions/user.action";
+import { getTranslations } from "next-intl/server";
+import Filters from "./components/Filters";
+import Outputs from "./components/Outputs";
 
 const page = async ({ searchParams }: any) => {
   const currentUser = await getCurrentUser();
+  const t = await getTranslations();
   const { adults, kids, rooms, from, to } = searchParams;
   const allCruises = await getAllCruisesBySearch({
     page: searchParams?.page ? +searchParams.page : 1,
@@ -23,7 +27,7 @@ const page = async ({ searchParams }: any) => {
       className="lg:px-[180px] w-full
     md:px-[50px] max-sm:px-[10px] max-md:px-[50px]"
     >
-      <div className="mt-20 flex justify-between items-center max-lg:flex-col gap-5">
+      <div className="mt-20 flex justify-between items-center flex-col gap-5">
         <DataPicker searchPage />
         <iframe
           width="550"
@@ -43,12 +47,14 @@ const page = async ({ searchParams }: any) => {
         <>
           <div className="flex justify-between gap-3 max-sm:flex-col">
             {/* first col */}
-            <div className="w-full"></div>
+            <Filters />
+
             {/* second col (filters)*/}
-            <div className="w-full">
+            <div className="w-full my-10">
+              <Outputs />
               <div
                 className="mt-10 grid gap-8 w-full lg:grid-cols-2
-max-md:grid-cols-1 max-sm:grid-cols-1 md:grid-cols-1 mb-10"
+max-md:grid-cols-1 max-sm:grid-cols-1 md:grid-cols-1 mb-10 my-10"
               >
                 {allowedCruises?.map((cruise: any) => {
                   return (

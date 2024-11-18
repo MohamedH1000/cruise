@@ -39,11 +39,12 @@ const DataPicker = ({ searchPage }: any) => {
     // Navigate to /search with the constructed query string
     router.push(`/search?${query.toString()}`);
   };
+  // ${
+  //   searchPage ? "max-w-[650px]" : "max-w-[1000px]"
+  // }
   return (
     <div
-      className={`${
-        searchPage ? "max-w-[650px]" : "max-w-[1000px]"
-      } text-black w-[90%]  bg-[#ffb700] h-[62px] rounded-[12px] p-1 flex gap-2 max-md:flex-col max-md:h-auto`}
+      className={`max-w-[1000px] text-black w-[90%]  bg-[#ffb700] h-[62px] rounded-[12px] p-1 flex gap-2 max-md:flex-col max-md:h-auto`}
     >
       <Popover>
         <PopoverTrigger
