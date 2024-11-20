@@ -2,9 +2,7 @@
 import { useTranslations } from "next-intl";
 import React, { useState } from "react";
 
-const Outputs = () => {
-  const [highPrice, setHighPrice] = useState("");
-  const [lowPrice, setLowPrice] = useState("");
+const Outputs = ({ highPrice, lowPrice }: any) => {
   const [lowRate, setLowRate] = useState("");
   const [highRate, setHighRate] = useState("");
   const t = useTranslations();

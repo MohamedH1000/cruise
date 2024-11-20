@@ -204,6 +204,8 @@
     "highRate": "التقييم الاعلى",
     "lowRate": "التقييم الاقل",
     "highPrice": "السعر الاعلى",
-    "lowPrice": "السعر الاقل"
+    "lowPrice": "السعر الاقل",
+    "cruiseLocation": "موقع القارب",
+    "cruiseDesc": "مواصفات القارب"
   }
 }

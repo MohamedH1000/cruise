@@ -123,7 +123,7 @@
   "translations": {
     "pernight": "per night",
     "price": "Price",
-    "reservenow": "Reserve Now",
+    "reservenow": "Book Now",
     "showAttraction": "Show Attraction Details",
     "clickToUpload": "Click to upload",
     "accountDetails": "Your account details",
@@ -147,8 +147,8 @@
     "options": "options",
     "attractionKnow": "to know more about attractions",
     "click": "click here",
-    "reserveLimitMax": "reservation is 6 nights maximum",
-    "reserveLimitMin": "reservation is 3 nights minimum",
+    "reserveLimitMax": "Booking is 6 nights maximum",
+    "reserveLimitMin": "Booking is 3 nights minimum",
     "locationTarget": "Specify the location of cruise in map",
     "location": "Location of cruise in map",
     "noLocation": "No location found for this cruise",
@@ -204,6 +204,8 @@
     "highRate": "High Rate",
     "lowRate": "Low Rate",
     "highPrice": "High Price",
-    "lowPrice": "Low Price"
+    "lowPrice": "Low Price",
+    "cruiseLocation": "Cruise Location",
+    "cruiseDesc": "Cruise description"
   }
 }

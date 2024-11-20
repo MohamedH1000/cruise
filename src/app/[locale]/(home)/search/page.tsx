@@ -8,6 +8,7 @@ import { getCurrentUser } from "@/lib/actions/user.action";
 import { getTranslations } from "next-intl/server";
 import Filters from "./components/Filters";
 import Outputs from "./components/Outputs";
+import ListingCardSearch from "./components/ListingCardSearch";
 
 const page = async ({ searchParams }: any) => {
   const currentUser = await getCurrentUser();
@@ -22,6 +23,20 @@ const page = async ({ searchParams }: any) => {
   const allowedCruises = allCruises?.cruises?.filter(
     (cruise: any) => cruise.status === "active"
   );
+
+  let highestPrice = null;
+  let lowestPrice = null;
+
+  if (allowedCruises && allowedCruises.length > 0) {
+    // Extract prices
+    const prices = allowedCruises.map((cruise: any) => cruise.price);
+
+    // Get the highest and lowest prices
+    highestPrice = Math.max(...prices);
+    lowestPrice = Math.min(...prices);
+  } else {
+    console.log("No active cruises available.");
+  }
   return (
     <div
       className="lg:px-[180px] w-full
@@ -51,14 +66,14 @@ const page = async ({ searchParams }: any) => {
 
             {/* second col (filters)*/}
             <div className="w-full my-10">
-              <Outputs />
+              <Outputs highPrice={highestPrice} lowPrice={lowestPrice} />
               <div
-                className="mt-10 grid gap-8 w-full lg:grid-cols-2
+                className="mt-10 grid gap-8 w-full lg:grid-cols-1
 max-md:grid-cols-1 max-sm:grid-cols-1 md:grid-cols-1 mb-10 my-10"
               >
                 {allowedCruises?.map((cruise: any) => {
                   return (
-                    <ListingCard
+                    <ListingCardSearch
                       data={cruise}
                       key={cruise?.id}
                       currentUser={currentUser}
