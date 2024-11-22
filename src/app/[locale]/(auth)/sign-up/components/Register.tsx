@@ -97,6 +97,16 @@ const Register = () => {
       setIsLoading(false);
     }
   }
+  const signUpGoogle = () => {
+    if (googleLoading) return;
+
+    setGoogleLoading(true);
+    try {
+      signIn("google").finally(() => setGoogleLoading(false));
+    } catch (error) {
+      console.log(error);
+    }
+  };
   return (
     <Form {...form}>
       <form
@@ -256,6 +266,7 @@ const Register = () => {
         </motion.button>
         <Separator className="bg-[gray] mt-8" />
         <motion.button
+          onClick={signUpGoogle}
           disabled={isLoading || googleLoading}
           className="flex justify-center items-center gap-3 w-full mt-6 shadow-md py-2 px-4 rounded-[12px]
     text-[18px] font-semibold border-[1px]"

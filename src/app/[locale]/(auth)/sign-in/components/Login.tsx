@@ -73,6 +73,18 @@ const Login = () => {
     }
     // console.log(values);
   }
+
+  const signInGoogle = (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault();
+    setGoogleLoading(true);
+    try {
+      signIn("google").finally(() => {
+        setGoogleLoading(false);
+      });
+    } catch (error: any) {
+      console.log(error);
+    }
+  };
   return (
     <Form {...form}>
       <form
@@ -134,6 +146,7 @@ const Login = () => {
         </button>
         <Separator className="bg-[gray] mt-4" />
         <button
+          onClick={signInGoogle}
           disabled={isLoading || googleLoading}
           className="flex justify-center items-center gap-3 w-full mt-4 shadow-md py-2 px-4 rounded-[12px]
     text-[18px] font-semibold border-[1px]"
