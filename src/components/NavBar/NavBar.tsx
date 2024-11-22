@@ -160,7 +160,7 @@ const NavBar = ({ currentUser, isAdmin, isClient }: any) => {
                     src={currentUser?.image}
                     className="rounded-full"
                   />
-                  <AvatarFallback className="bg-transparent">
+                  <AvatarFallback className="bg-transparent text-[white] border-[1px] border-[white]">
                     {currentUser?.name.slice(0, 2)}
                   </AvatarFallback>
                 </Avatar>
