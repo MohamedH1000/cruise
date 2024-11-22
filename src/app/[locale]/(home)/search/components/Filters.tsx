@@ -8,7 +8,7 @@ import React, { useState } from "react";
 const Filters = () => {
   const [selectedRate, setSelectedRate] = useState(null);
 
-  const handleRateClick = (rate) => {
+  const handleRateClick = (rate: any) => {
     // Toggle selection: if the same rate is clicked, deselect it
     if (selectedRate === rate) {
       setSelectedRate(null); // Deselect
@@ -20,7 +20,7 @@ const Filters = () => {
   return (
     <div className="w-full my-10">
       {" "}
-      <h1 className="font-bold text-xl">{t("translations.filters")}</h1>
+      <h1 className="font-bold text-3xl">{t("translations.filters")}</h1>
       <div className="w-full border-[1px] border-[black]  rounded-md p-4 mt-3">
         <div className="flex justify-center items-center gap-5">
           <p className="font-bold">{t("cruisesTable.price")}</p>
