@@ -122,10 +122,10 @@ const ListingReservation = ({
 
       let newTotalPrice: number = 0;
 
-      if (dayCount && cruise.price) {
+      if (dayCount && cruise?.price) {
         newTotalPrice = dayCount * cruise?.price;
       } else {
-        newTotalPrice = cruise.price;
+        newTotalPrice = cruise?.price;
       }
 
       setTotalPrice(newTotalPrice);

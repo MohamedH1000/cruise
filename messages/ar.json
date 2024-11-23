@@ -95,7 +95,9 @@
     "previous": "السابق",
     "columns": "اعمدة الجدول المعروضة",
     "restaurants": "المطاعم",
-    "reservations": "الحجوزات"
+    "reservations": "الحجوزات",
+    "view": "عرض",
+    "viewDetails": "عرض اليخت"
   },
   "chooseAccountType": {
     "admin": "ادمن",
@@ -206,6 +208,7 @@
     "highPrice": "السعر الاعلى",
     "lowPrice": "السعر الاقل",
     "cruiseLocation": "موقع القارب",
-    "cruiseDesc": "مواصفات القارب"
+    "cruiseDesc": "مواصفات القارب",
+    "deleteReservation": "حذف الحجز"
   }
 }

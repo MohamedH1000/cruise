@@ -84,6 +84,7 @@ const AddCruiseDialog = ({ cruiseOwner, admin, edit, cruiseEditData }: any) => {
       } finally {
         setIsLoading(false);
         setOpen(false);
+        clear();
       }
     }
   };

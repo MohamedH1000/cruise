@@ -120,7 +120,7 @@ export function ReservationTable({ data }: ReservationTableProps) {
     },
     {
       accessorKey: "delete",
-      header: `${t("cruisesTable.delete")}`,
+      header: `${t("translations.deleteReservation")}`,
       cell: ({ row }) => {
         const reservationId = row.original.id;
         const handleDelete = async (id: string) => {

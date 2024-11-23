@@ -45,7 +45,7 @@ import {
   updateCruiseStatus,
 } from "@/lib/actions/cruise.action";
 import toast from "react-hot-toast";
-import { useRouter } from "@/i18n/routing";
+import { Link, useRouter } from "@/i18n/routing";
 
 export type Payment = {
   id: string;
@@ -111,6 +111,23 @@ export function CruisesTable<TData, TValue>({
     {
       accessorKey: "numberOfGuests",
       header: `${t("cruisesTable.numberOfGuests")}`,
+    },
+    {
+      accessorKey: "view",
+      header: `${t("cruisesTable.view")}`, // Add the "View" column header
+      cell: ({ row }) => {
+        const cruise = row.original; // Access the original row data
+        const reservationId = cruise?.id; // Replace this with the actual ID you want to pass
+
+        return (
+          <Link
+            href={`/reservation/${reservationId}`}
+            className="bg-blue-500 text-white px-3 py-2 rounded-md hover:bg-blue-600 transition duration-200"
+          >
+            {t("cruisesTable.viewDetails")}
+          </Link>
+        );
+      },
     },
     {
       accessorKey: "price",

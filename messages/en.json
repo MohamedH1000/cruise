@@ -95,7 +95,9 @@
     "previous": "Previous",
     "columns": "Columns",
     "restaurants": "Restaurants",
-    "reservations": "Reservations"
+    "reservations": "Reservations",
+    "view": "View",
+    "viewDetails": "View"
   },
   "chooseAccountType": {
     "admin": "Admin",
@@ -206,6 +208,7 @@
     "highPrice": "High Price",
     "lowPrice": "Low Price",
     "cruiseLocation": "Cruise Location",
-    "cruiseDesc": "Cruise description"
+    "cruiseDesc": "Cruise description",
+    "deleteReservation": "Delete Reservation"
   }
 }

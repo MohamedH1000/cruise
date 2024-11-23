@@ -19,7 +19,7 @@ const page = async ({ params }: any) => {
   const combinedAttractions = await getCombinedAttractionsByRestaurantArray();
   const currentUser = await getCurrentUser();
   const t = await getTranslations();
-  //   console.log(cruise);
+  // console.log(cruise);
   return (
     <div
       className="mt-[130px] lg:px-[180px]
