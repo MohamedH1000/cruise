@@ -120,11 +120,10 @@ export function CruisesTable<TData, TValue>({
         const reservationId = cruise?.id; // Replace this with the actual ID you want to pass
 
         return (
-          <Link
-            href={`/reservation/${reservationId}`}
-            className="bg-blue-500 text-white px-3 py-2 rounded-md hover:bg-blue-600 transition duration-200"
-          >
-            {t("cruisesTable.viewDetails")}
+          <Link href={`/reservation/${reservationId}`}>
+            <Button className="bg-blue-500 text-white px-3 py-2 rounded-md hover:bg-blue-600 transition duration-200">
+              {t("cruisesTable.viewDetails")}
+            </Button>
           </Link>
         );
       },
