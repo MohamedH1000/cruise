@@ -18,7 +18,7 @@ const Filters = () => {
   };
   const t = useTranslations();
   return (
-    <div className="w-full my-10">
+    <div className="w-[46%] my-10 max-sm:w-full">
       {" "}
       <h1 className="font-bold text-3xl">{t("translations.filters")}</h1>
       <div className="w-full border-[1px] border-[black]  rounded-md p-4 mt-3">
