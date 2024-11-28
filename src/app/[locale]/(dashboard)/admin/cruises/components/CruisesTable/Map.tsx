@@ -45,36 +45,41 @@ function MyComponent({ cruiseDetails, setCruiseDetails }: any) {
   return null;
 }
 
-const Map: React.FC<MapProps> = ({ setCruiseDetails, cruiseDetails }) => {
+const Map: React.FC<MapProps> = ({
+  setCruiseDetails,
+  cruiseDetails,
+  fullHeight,
+}) => {
   const [currentPosition, setCurrentPosition] = useState<
     [number, number] | null
   >(null);
   useEffect(() => {
-    if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition(
-        (position) => {
-          const { latitude, longitude } = position.coords;
-          setCurrentPosition([latitude, longitude]);
-        },
-        (error) => {
-          console.error("Error getting location:", error);
-          // Fallback to default position if geolocation fails
-          setCurrentPosition([25.276987, 55.296249]); // Cairo, Egypt (as fallback)
-        }
-      );
-    } else {
-      // If geolocation is not supported, set a default location
-      setCurrentPosition([25.276987, 55.296249]); // Cairo, Egypt (as fallback)
-    }
+    // if (navigator.geolocation) {
+    //   navigator.geolocation.getCurrentPosition(
+    //     (position) => {
+    //       const { latitude, longitude } = position.coords;
+    //       setCurrentPosition([latitude, longitude]);
+    //     },
+    //     (error) => {
+    //       console.error("Error getting location:", error);
+    //       // Fallback to default position if geolocation fails
+    //       setCurrentPosition([25.276987, 55.296249]); // Cairo, Egypt (as fallback)
+    //     }
+    //   );
+    // } else {
+    //   // If geolocation is not supported, set a default location
+    //   setCurrentPosition([25.276987, 55.296249]); // Cairo, Egypt (as fallback)
+    // }
+    setCurrentPosition([25.276987, 55.296249]); // Cairo, Egypt (as fallback)
   }, []);
   return (
     <div className="w-full">
       {currentPosition && (
         <MapContainer
           center={currentPosition} // Use the current position for centering the map
-          zoom={8}
+          zoom={12}
           scrollWheelZoom={false}
-          className="h-[35vh] rounded-[5px]"
+          className={`${fullHeight ? "h-[85vh]" : "h-[35vh]"} rounded-[5px]`}
         >
           <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
           {cruiseDetails.location.lat && (

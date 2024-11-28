@@ -109,7 +109,7 @@ const ProfileForm = ({ currentUser }: any) => {
               <FormItem className="basis-[48%]  max-md:basis-1">
                 <FormLabel>{t("SignUp.email")}</FormLabel>
                 <FormControl>
-                  <Input placeholder={t("SignUp.email")} {...field} />
+                  <Input placeholder={t("SignUp.email")} {...field} disabled />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -141,9 +141,7 @@ const ProfileForm = ({ currentUser }: any) => {
             name="accountRole"
             render={({ field }) => (
               <FormItem className="basis-[48%]">
-                <FormLabel className="text-xl">
-                  {t("SignUp.accountRole")}:
-                </FormLabel>{" "}
+                <FormLabel>{t("SignUp.accountRole")}:</FormLabel>{" "}
                 <FormControl>
                   <Select
                     value={field.value}
@@ -199,6 +197,51 @@ const ProfileForm = ({ currentUser }: any) => {
               </FormItem>
             )}
           />
+          {currentUser.role === "cruiseOwner" && (
+            <FormField
+              control={form.control}
+              name="toNoNights"
+              render={({ field }) => (
+                <FormItem className="basis-[48%] max-md:basis-1">
+                  <FormLabel>{t("translations.totalNumberOfNights")}</FormLabel>
+                  <FormControl>
+                    <Input {...field} disabled value={""} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          )}
+          {currentUser.role === "cruiseOwner" && (
+            <FormField
+              control={form.control}
+              name="totalPrice"
+              render={({ field }) => (
+                <FormItem className="basis-[48%] max-md:basis-1">
+                  <FormLabel>{t("translations.totalPrice")}</FormLabel>
+                  <FormControl>
+                    <Input {...field} disabled value={""} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          )}
+          {currentUser.role === "cruiseOwner" && (
+            <FormField
+              control={form.control}
+              name="YourDues"
+              render={({ field }) => (
+                <FormItem className="basis-[48%] max-md:basis-1">
+                  <FormLabel>{t("translations.YourDues")}</FormLabel>
+                  <FormControl>
+                    <Input {...field} disabled value={""} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          )}
           <FormField
             control={form.control}
             name="image"

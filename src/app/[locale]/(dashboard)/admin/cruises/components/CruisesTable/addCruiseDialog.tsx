@@ -9,6 +9,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import Image from "next/image";
 import ImageUpload from "@/components/imageUpload/ImageUpload";
 import { Textarea } from "@/components/ui/textarea";
+import "./cruise.css";
 import {
   createCruise,
   createCruiseByOwner,
@@ -16,12 +17,17 @@ import {
 } from "@/lib/actions/cruise.action";
 import { cn } from "@/lib/utils";
 import dynamic from "next/dynamic";
+import ImageUploadOne from "@/components/imageUpload/ImageUploadOne";
+import Select from "react-select";
+
 const Map = dynamic(() => import("./Map"), { ssr: false });
 
 const AddCruiseDialog = ({ cruiseOwner, admin, edit, cruiseEditData }: any) => {
   const t = useTranslations();
   const [open, setOpen] = useState(false);
+  const [openMap, setOpenMap] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [showFullscreenMap, setShowFullscreenMap] = useState(false);
   const [cruiseDetails, setCruiseDetails] = useState<any>({
     name: cruiseEditData?.name || "",
     description: cruiseEditData?.description || "",
@@ -33,6 +39,32 @@ const AddCruiseDialog = ({ cruiseOwner, admin, edit, cruiseEditData }: any) => {
     discount: cruiseEditData?.discount || "",
     delivery: cruiseEditData?.delivery || "",
   });
+  const amenities = [
+    { value: "العروض", label: `${t("translations.offers")}` },
+    { value: "مواقف سيارة مجاني", label: `${t("translations.freeParking")}` },
+    { value: "انترنت مجاني", label: `${t("translations.freeInternet")}` },
+    {
+      value: "منطقة جلوس خارجية",
+      label: `${t("translations.outdoorSeating")}`,
+    },
+    { value: "منطقة جلوس داخلية", label: `${t("translations.indoorSeating")}` },
+    { value: "منطقة تناول الطعام", label: `${t("translations.dining")}` },
+    { value: "شامل الإفطار", label: `${t("translations.includeBreak")}` },
+    { value: "مطبخ", label: `${t("translations.kitchen")}` },
+    { value: "غسالة ملابس", label: `${t("translations.waching")}` },
+    { value: "تلفزيون", label: `${t("translations.tv")}` },
+    {
+      value: "ماكينة تحضير الشاي/القهوة",
+      label: `${t("translations.teaMaker")}`,
+    },
+    { value: "خدمة تنظيف الغرف", label: `${t("translations.roomService")}` },
+    { value: "جاكوزي", label: `${t("translations.Jacuzzi")}` },
+    { value: "كرسي مساج", label: `${t("translations.messageChair")}` },
+    {
+      value: "ملائم لذوي الاحتياجات الخاصة",
+      label: `${t("translations.accessible")}`,
+    },
+  ];
   // console.log("cruise details", cruiseEditData);
   const clear = () => {
     setCruiseDetails({
@@ -54,10 +86,17 @@ const AddCruiseDialog = ({ cruiseOwner, admin, edit, cruiseEditData }: any) => {
     e.preventDefault();
     setIsLoading(true);
 
+    const updatedCruiseDetails = {
+      ...cruiseDetails,
+      imageSrc: [cruiseDetails.primaryImage, ...cruiseDetails.imageSrc].filter(
+        Boolean
+      ), // Ensure the primary image is first
+    };
+
     // Explicitly check for admin === true
     if (admin) {
       try {
-        await createCruise(cruiseDetails);
+        await createCruise(updatedCruiseDetails);
         toast.success("Cruise created successfully");
       } catch (error) {
         console.error("Error occurred:", error);
@@ -68,7 +107,7 @@ const AddCruiseDialog = ({ cruiseOwner, admin, edit, cruiseEditData }: any) => {
       }
     } else if (edit) {
       try {
-        await updateCruise(cruiseEditData?.id, cruiseDetails);
+        await updateCruise(cruiseEditData?.id, updatedCruiseDetails);
         toast.success("Cruise updated successfully");
       } catch (error) {
         console.log(error);
@@ -76,7 +115,7 @@ const AddCruiseDialog = ({ cruiseOwner, admin, edit, cruiseEditData }: any) => {
       }
     } else {
       try {
-        await createCruiseByOwner(cruiseDetails);
+        await createCruiseByOwner(updatedCruiseDetails);
         toast.success("Cruise added successfully, pending admin approval.");
       } catch (error) {
         console.error("Error occurred:", error);
@@ -195,14 +234,89 @@ const AddCruiseDialog = ({ cruiseOwner, admin, edit, cruiseEditData }: any) => {
                       disabled={isLoading ? true : false}
                     />
                   </div>
+                  <div>
+                    <p>اختر المميزات</p>
+                    <Select
+                      options={amenities}
+                      value={cruiseDetails?.amenities.map((amenity: string) =>
+                        amenities.find((option) => option.value === amenity)
+                      )} // Map the stored values to objects
+                      isMulti
+                      className="rounded-md mt-3 z-[100]"
+                      onChange={(selected: any) =>
+                        setCruiseDetails({
+                          ...cruiseDetails,
+                          amenities: selected.map(
+                            (option: any) => option.value
+                          ), // Store only values
+                        })
+                      }
+                    />
+                  </div>
                   <h1 className="mt-5 text-[#1e4164] font-bold">
                     {t("translations.locationTarget")}
                   </h1>
-                  <Map
-                    setCruiseDetails={setCruiseDetails}
-                    cruiseDetails={cruiseDetails}
+
+                  <div className="z-10">
+                    {/* Map Component */}
+                    <div onClick={() => setShowFullscreenMap(true)}>
+                      {" "}
+                      {/* Trigger fullscreen map */}
+                      <Map
+                        setCruiseDetails={setCruiseDetails}
+                        cruiseDetails={cruiseDetails}
+                      />
+                    </div>
+                  </div>
+
+                  {showFullscreenMap && (
+                    <div
+                      className="fixed inset-0 z-[1000] bg-black bg-opacity-75 flex items-center justify-center flex-col"
+                      // Close fullscreen on click
+                    >
+                      <div
+                        className="w-full bg-[black] flex justify-between items-center 
+                      text-[white] h-[64px] p-4"
+                      >
+                        <h1 className="font-bold text-xl">
+                          قم بتحديد المكان على الخريطه
+                        </h1>
+                        <Image
+                          src={"/assets/icons/close.png"}
+                          alt="close icon"
+                          height={20}
+                          width={20}
+                          className="invert cursor-pointer"
+                          onClick={() => setShowFullscreenMap(false)}
+                        />
+                      </div>
+                      <div className="w-full h-full">
+                        <Map
+                          setCruiseDetails={setCruiseDetails}
+                          cruiseDetails={cruiseDetails}
+                          fullHeight
+                        />
+                      </div>
+                    </div>
+                  )}
+                  <h1 className="mt-10">
+                    قم باضافة الصورة التي ستظهر في البحث:
+                  </h1>
+                  <ImageUploadOne
+                    value={
+                      cruiseDetails?.primaryImage
+                        ? [cruiseDetails?.primaryImage]
+                        : []
+                    }
+                    onChange={(value) =>
+                      setCruiseDetails({
+                        ...cruiseDetails,
+                        primaryImage: value[0], // Ensure only one image is selected
+                      })
+                    }
+                    // Limit to one file for primary image
                   />
-                  <h1 className="mt-10">قم باضافة صورة:</h1>
+                  <h1 className="mt-10">قم باضافة الصور الخاصة باليخت:</h1>
                   <p className="opacity-60">أظهر لعملائك كيف يبدو المكان</p>
                   <ImageUpload
                     value={cruiseDetails?.imageSrc || []}
@@ -213,6 +327,7 @@ const AddCruiseDialog = ({ cruiseOwner, admin, edit, cruiseEditData }: any) => {
                       })
                     }
                   />
+
                   <p className="opacity-85">
                     كم سعر خدمة التوصيل لليخت ان وجدت ؟
                   </p>

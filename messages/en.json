@@ -209,6 +209,8 @@
     "lowPrice": "Low Price",
     "cruiseLocation": "Cruise Location",
     "cruiseDesc": "Cruise description",
-    "deleteReservation": "Delete Reservation"
+    "deleteReservation": "Delete Reservation",
+    "totalNumberOfNights": "Total number of nights rented",
+    "YourDues": "Your dues"
   }
 }
