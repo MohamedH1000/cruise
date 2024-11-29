@@ -292,7 +292,7 @@ const ListingReservation = ({
     >
       <div className="flex flex-row items-center gap-1 p-4">
         <div className="text-2xl font-semibold">
-          {currency} {convertedPrice.toFixed(2)}
+          {currency} {convertedTotalPrice.toFixed(2)}
         </div>
         <div className="font-light text-neutral-600">
           {t("translations.pernight")}

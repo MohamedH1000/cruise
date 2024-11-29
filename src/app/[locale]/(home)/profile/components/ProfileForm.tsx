@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
@@ -29,11 +29,21 @@ import {
 import { editUser } from "@/lib/actions/user.action";
 import toast from "react-hot-toast";
 import { useRouter } from "@/i18n/routing";
+import { CurrencyContext } from "@/app/context/CurrencyContext";
 
-const ProfileForm = ({ currentUser }: any) => {
+const ProfileForm = ({ currentUser, reservationDetails }: any) => {
   const t = useTranslations();
+  const { currency } = useContext(CurrencyContext);
   const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
+
+  const { totalPrice, totalDays } = reservationDetails;
+  // console.log("total price", totalPrice);
+  const convertedTotalPrice = parseInt(totalPrice, 10);
+  const yourDues = totalPrice * 0.8;
+  const siteDues = totalPrice * 0.2;
+  const convertedYourDues = yourDues.toFixed(2);
+  const convertedSiteDues = siteDues.toFixed(2);
   const formSchema = z.object({
     name: z.string().min(2).max(50).optional(),
     email: z.string().email().optional(),
@@ -197,51 +207,113 @@ const ProfileForm = ({ currentUser }: any) => {
               </FormItem>
             )}
           />
-          {currentUser.role === "cruiseOwner" && (
-            <FormField
-              control={form.control}
-              name="toNoNights"
-              render={({ field }) => (
-                <FormItem className="basis-[48%] max-md:basis-1">
-                  <FormLabel>{t("translations.totalNumberOfNights")}</FormLabel>
-                  <FormControl>
-                    <Input {...field} disabled value={""} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+          {currentUser.role === "admin" && (
+            <>
+              <FormField
+                control={form.control}
+                name="toNoNights"
+                render={({ field }) => (
+                  <FormItem className="basis-[48%] max-md:basis-1">
+                    <FormLabel>
+                      {t("translations.totalNumberOfNights")}
+                    </FormLabel>
+                    <FormControl>
+                      <Input {...field} disabled value={totalDays} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="totalPrice"
+                render={({ field }) => (
+                  <FormItem className="basis-[48%] max-md:basis-1">
+                    <FormLabel>{t("translations.totalPrice")}</FormLabel>
+                    <FormControl>
+                      <Input
+                        {...field}
+                        disabled
+                        value={`${convertedTotalPrice + " " + currency}`}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="YourDues"
+                render={({ field }) => (
+                  <FormItem className="basis-[48%] max-md:basis-1">
+                    <FormLabel>{t("translations.YourDues")}</FormLabel>
+                    <FormControl>
+                      <Input
+                        {...field}
+                        disabled
+                        value={`${convertedSiteDues + " " + currency}`}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </>
           )}
           {currentUser.role === "cruiseOwner" && (
-            <FormField
-              control={form.control}
-              name="totalPrice"
-              render={({ field }) => (
-                <FormItem className="basis-[48%] max-md:basis-1">
-                  <FormLabel>{t("translations.totalPrice")}</FormLabel>
-                  <FormControl>
-                    <Input {...field} disabled value={""} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+            <>
+              <FormField
+                control={form.control}
+                name="toNoNights"
+                render={({ field }) => (
+                  <FormItem className="basis-[48%] max-md:basis-1">
+                    <FormLabel>
+                      {t("translations.totalNumberOfNights")}
+                    </FormLabel>
+                    <FormControl>
+                      <Input {...field} disabled value={totalDays} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="totalPrice"
+                render={({ field }) => (
+                  <FormItem className="basis-[48%] max-md:basis-1">
+                    <FormLabel>{t("translations.totalPrice")}</FormLabel>
+                    <FormControl>
+                      <Input
+                        {...field}
+                        disabled
+                        value={`${convertedTotalPrice + " " + currency}`}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="YourDues"
+                render={({ field }) => (
+                  <FormItem className="basis-[48%] max-md:basis-1">
+                    <FormLabel>{t("translations.YourDues")}</FormLabel>
+                    <FormControl>
+                      <Input
+                        {...field}
+                        disabled
+                        value={`${convertedYourDues + " " + currency}`}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </>
           )}
-          {currentUser.role === "cruiseOwner" && (
-            <FormField
-              control={form.control}
-              name="YourDues"
-              render={({ field }) => (
-                <FormItem className="basis-[48%] max-md:basis-1">
-                  <FormLabel>{t("translations.YourDues")}</FormLabel>
-                  <FormControl>
-                    <Input {...field} disabled value={""} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-          )}
+
           <FormField
             control={form.control}
             name="image"
