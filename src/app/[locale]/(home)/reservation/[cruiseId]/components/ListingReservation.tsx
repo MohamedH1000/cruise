@@ -375,7 +375,7 @@ const ListingReservation = ({
               <DialogTitle>{t("translations.enterDetails")}</DialogTitle>
             </DialogHeader>
             {!currentUser ? (
-              <div className="flex flex-col">
+              <div className="flex flex-col gap-3">
                 <Input
                   name="name"
                   onChange={(e) => setName(e.target.value)}
