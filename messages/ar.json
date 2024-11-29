@@ -211,6 +211,7 @@
     "cruiseDesc": "مواصفات القارب",
     "deleteReservation": "حذف الحجز",
     "totalNumberOfNights": "اجمالي عدد الليالي المستأجرة",
-    "YourDues": "مستحقاتك"
+    "YourDues": "مستحقاتك",
+    "editReservation": "قم بتعديل معاد الحجز (من - الى)"
   }
 }

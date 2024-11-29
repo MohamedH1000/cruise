@@ -211,6 +211,7 @@
     "cruiseDesc": "Cruise description",
     "deleteReservation": "Delete Reservation",
     "totalNumberOfNights": "Total number of nights rented",
-    "YourDues": "Your dues"
+    "YourDues": "Your dues",
+    "editReservation": "Edit your booking (from - to)"
   }
 }

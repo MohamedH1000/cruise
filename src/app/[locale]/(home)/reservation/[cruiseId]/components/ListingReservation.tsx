@@ -35,15 +35,14 @@ import {
 import PhoneInputWithCountrySelect from "react-phone-number-input";
 import { Input } from "@/components/ui/input";
 const initialDateRange = {
-  startDate: new Date(),
-  endDate: new Date(),
+  from: new Date(),
+  to: new Date(),
   key: "selection",
 };
 
 enum STEPS {
-  DATA = 0,
-  ATTRACTIONS = 1,
-  RESTAURANTS = 2,
+  ATTRACTIONS = 0,
+  RESTAURANTS = 1,
 }
 const ListingReservation = ({
   reservations,
@@ -72,10 +71,10 @@ const ListingReservation = ({
   const [selectedOptions, setSelectedOptions] = useState([]);
   // console.log("here is the selected options", selectedOptions);
   const [phoneNumber, setPhoneNumber] = useState("");
-  const [dateRange, setDateRange] = useState<Range>(initialDateRange);
+  const [dateRange, setDateRange] = useState<any>(initialDateRange);
   const [totalPrice, setTotalPrice] = useState<any>();
   const [numberOfAttractions, setNumberOfAttractions] = useState<any>();
-  const [steps, setSteps] = useState(STEPS.DATA);
+  const [steps, setSteps] = useState(STEPS.ATTRACTIONS);
   const [relatedRestaurants, setRelatedRestaurants] = useState<any>([]);
   const { convertCurrency, currency } = useContext(CurrencyContext);
   const debounceTimeout = useRef<number | any>(null); // Debounce timeout
@@ -107,31 +106,57 @@ const ListingReservation = ({
   }, [steps]);
 
   const secondaryActionLabel = useMemo(() => {
-    if (steps === STEPS.DATA) {
+    if (steps === STEPS.ATTRACTIONS) {
       return undefined;
     }
 
     return t("translations.previous");
   }, [steps]);
   // console.log(numberOfAttractions);
+  const disableDates = useMemo(() => {
+    let dates: Date[] = [];
+    reservations
+      ?.filter((res: any) => res.status === "active")
+      .forEach((reservations: any) => {
+        const range = eachDayOfInterval({
+          start: new Date(reservations.startDate),
+          end: new Date(reservations.endDate),
+        });
+        dates = [...dates, ...range];
+      });
+    return dates;
+  }, [reservations]);
 
   useEffect(() => {
-    if (dateRange.startDate && dateRange.endDate) {
-      const dayCount =
-        differenceInCalendarDays(dateRange.endDate, dateRange.startDate) + 1;
+    if (dateRange.from && dateRange.to) {
+      // Generate an array of all selected dates
+      const selectedDates = eachDayOfInterval({
+        start: dateRange.from,
+        end: dateRange.to,
+      });
+
+      // Filter out disabled dates
+      const validDates = selectedDates.filter(
+        (date) =>
+          !disableDates.some(
+            (disabledDate) => disabledDate.getTime() === date.getTime()
+          )
+      );
+
+      const validDayCount = validDates.length; // Count only valid dates
 
       let newTotalPrice: number = 0;
 
-      if (dayCount && cruise?.price) {
-        newTotalPrice = dayCount * cruise?.price;
+      if (validDayCount && cruise?.price) {
+        newTotalPrice = validDayCount * cruise?.price;
       } else {
-        newTotalPrice = cruise?.price;
+        newTotalPrice = cruise?.price || 0;
       }
 
       setTotalPrice(newTotalPrice);
-      setNumberOfAttractions(dayCount + 1);
+      setNumberOfAttractions(validDayCount);
     }
-  }, [dateRange, cruise?.price]);
+  }, [dateRange, cruise?.price, disableDates]);
 
   useEffect(() => {
     if (debounceTimeout.current) {
@@ -174,20 +199,6 @@ const ListingReservation = ({
       }
     };
   }, [selectedOptions]);
-
-  const disableDates = useMemo(() => {
-    let dates: Date[] = [];
-    reservations
-      ?.filter((res: any) => res.status === "active")
-      .forEach((reservations: any) => {
-        const range = eachDayOfInterval({
-          start: new Date(reservations.startDate),
-          end: new Date(reservations.endDate),
-        });
-        dates = [...dates, ...range];
-      });
-    return dates;
-  }, [reservations]);
 
   const convertedTotalPrice = convertCurrency(totalPrice, "AED", currency);
   const convertedPrice = convertCurrency(cruise?.price, "AED", currency);
@@ -284,7 +295,7 @@ const ListingReservation = ({
 
   return (
     <motion.div
-      className="bg-white rounded-xl border-[1px] border-neutral-200 overflow-hidden mt-5 w-full"
+      className="bg-white rounded-xl border-[1px] border-neutral-200 overflow-hidden mt-5 w-full px-[2.5px]"
       initial={{ opacity: 0, y: 35 }}
       whileInView={{ opacity: 100, y: 0 }}
       transition={{ duration: 1, delay: 0.1 }}
@@ -299,29 +310,29 @@ const ListingReservation = ({
         </div>
       </div>
       <Separator />
-      {steps === STEPS.DATA && (
-        <DetailsForm
-          name={name}
-          setName={setName}
-          email={email}
-          setEmail={setEmail}
-          phoneNumber={phoneNumber}
-          setPhoneNumber={setPhoneNumber}
-          dateRange={dateRange}
-          setDateRange={setDateRange}
-          disableDates={disableDates}
-          currentUser={currentUser}
-        />
-      )}
 
       {steps === STEPS.ATTRACTIONS && (
-        <AttractionForm
-          numberOfAttractions={numberOfAttractions}
-          availableOptions={availableOptions}
-          setAvailableOptions={setAvailableOptions}
-          selectedOptions={selectedOptions}
-          setSelectedOptions={setSelectedOptions}
-        />
+        <>
+          <DetailsForm
+            name={name}
+            setName={setName}
+            email={email}
+            setEmail={setEmail}
+            phoneNumber={phoneNumber}
+            setPhoneNumber={setPhoneNumber}
+            dateRange={dateRange}
+            setDateRange={setDateRange}
+            disableDates={disableDates}
+            currentUser={currentUser}
+          />
+          <AttractionForm
+            numberOfAttractions={numberOfAttractions}
+            availableOptions={availableOptions}
+            setAvailableOptions={setAvailableOptions}
+            selectedOptions={selectedOptions}
+            setSelectedOptions={setSelectedOptions}
+          />
+        </>
       )}
 
       {steps === STEPS.RESTAURANTS && (
