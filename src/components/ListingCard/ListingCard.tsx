@@ -38,7 +38,7 @@ const ListingCard = ({ data, currentUser, attraction }: any) => {
               }}
               orientation="horizontal"
             >
-              <Link href={`/attractions/${data?.id}`}>
+              <Link href={`/reservation/${data?.id}`}>
                 <CarouselContent
                   className={`${
                     locale === "ar" ? "flex-row-reverse" : "flex-row"

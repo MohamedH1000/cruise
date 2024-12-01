@@ -44,6 +44,25 @@ const page = async ({ params }: any) => {
           <p className="font-semibold text-2xl opacity-85 my-10">
             {cruise?.description}
           </p>
+          {cruise?.amenities && cruise?.amenities.length > 0 && (
+            <>
+              <Separator className="mt-5" />
+              <div className="flex flex-col items-start justify-center gap-2 my-5">
+                <h1 className="text-2xl font-bold">
+                  {t("cruisesTable.amenities")}
+                </h1>
+                <p className="mt-2 text-lg font-semibold">
+                  {cruise?.amenities.map((amenity, index) => (
+                    <span key={index}>
+                      {amenity}
+                      {index < cruise.amenities.length - 1 && ", "}
+                    </span>
+                  ))}{" "}
+                </p>
+              </div>
+            </>
+          )}
+
           <Separator className="mt-5" />
           <h1 className="font-bold text-2xl mt-5">
             {t("translations.location")}

@@ -195,6 +195,32 @@ const NavBar = ({ currentUser, isAdmin, isClient }: any) => {
                     </Link>
                   </DropdownMenu.Item>
                 )}
+                {currentUser.role === "cruiseOwner" && (
+                  <>
+                    <DropdownMenu.Separator className="h-px bg-gray-200 my-1" />
+                    <DropdownMenu.Item>
+                      <Link
+                        href="/my-cruises"
+                        className="block px-2 py-1 text-sm text-gray-700"
+                      >
+                        {t("translations.myCruises")}
+                      </Link>
+                    </DropdownMenu.Item>
+                  </>
+                )}
+                {currentUser.role === "cruiseOwner" && (
+                  <>
+                    <DropdownMenu.Separator className="h-px bg-gray-200 my-1" />
+                    <DropdownMenu.Item>
+                      <Link
+                        href="/my-reservations"
+                        className="block px-2 py-1 text-sm text-gray-700"
+                      >
+                        {t("translations.myReservations")}
+                      </Link>
+                    </DropdownMenu.Item>
+                  </>
+                )}
                 <DropdownMenu.Separator className="h-px bg-gray-200 my-1" />
                 <DropdownMenu.Item
                   className="cursor-pointer px-2 py-1 text-sm text-gray-700"

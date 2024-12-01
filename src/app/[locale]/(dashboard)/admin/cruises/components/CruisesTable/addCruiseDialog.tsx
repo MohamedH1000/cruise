@@ -19,14 +19,20 @@ import { cn } from "@/lib/utils";
 import dynamic from "next/dynamic";
 import ImageUploadOne from "@/components/imageUpload/ImageUploadOne";
 import Select from "react-select";
+import { Dialog, DialogActions, DialogContent } from "@mui/material";
+import { AiOutlineClose } from "react-icons/ai";
+import { getAmenities } from "@/lib/constants/amenties";
 
 const Map = dynamic(() => import("./Map"), { ssr: false });
 
 const AddCruiseDialog = ({ cruiseOwner, admin, edit, cruiseEditData }: any) => {
   const t = useTranslations();
+  const amenities = getAmenities(t);
+
   const [open, setOpen] = useState(false);
   const [openMap, setOpenMap] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [openDialog, setOpenDialog] = useState(false);
   const [showFullscreenMap, setShowFullscreenMap] = useState(false);
   const [cruiseDetails, setCruiseDetails] = useState<any>({
     name: cruiseEditData?.name || "",
@@ -35,36 +41,14 @@ const AddCruiseDialog = ({ cruiseOwner, admin, edit, cruiseEditData }: any) => {
     amenities: cruiseEditData?.amenities || [],
     price: cruiseEditData?.price || null,
     location: cruiseEditData?.location || {},
-    numberOfGuests: cruiseEditData?.numberOfGuests || null,
+    numberOfGuests: {
+      adults: cruiseEditData?.numberOfGuests.adults || null,
+      kids: cruiseEditData?.numberOfGuests.kids || null,
+    },
     discount: cruiseEditData?.discount || "",
     delivery: cruiseEditData?.delivery || "",
   });
-  const amenities = [
-    { value: "العروض", label: `${t("translations.offers")}` },
-    { value: "مواقف سيارة مجاني", label: `${t("translations.freeParking")}` },
-    { value: "انترنت مجاني", label: `${t("translations.freeInternet")}` },
-    {
-      value: "منطقة جلوس خارجية",
-      label: `${t("translations.outdoorSeating")}`,
-    },
-    { value: "منطقة جلوس داخلية", label: `${t("translations.indoorSeating")}` },
-    { value: "منطقة تناول الطعام", label: `${t("translations.dining")}` },
-    { value: "شامل الإفطار", label: `${t("translations.includeBreak")}` },
-    { value: "مطبخ", label: `${t("translations.kitchen")}` },
-    { value: "غسالة ملابس", label: `${t("translations.waching")}` },
-    { value: "تلفزيون", label: `${t("translations.tv")}` },
-    {
-      value: "ماكينة تحضير الشاي/القهوة",
-      label: `${t("translations.teaMaker")}`,
-    },
-    { value: "خدمة تنظيف الغرف", label: `${t("translations.roomService")}` },
-    { value: "جاكوزي", label: `${t("translations.Jacuzzi")}` },
-    { value: "كرسي مساج", label: `${t("translations.messageChair")}` },
-    {
-      value: "ملائم لذوي الاحتياجات الخاصة",
-      label: `${t("translations.accessible")}`,
-    },
-  ];
+
   // console.log("cruise details", cruiseEditData);
   const clear = () => {
     setCruiseDetails({
@@ -74,12 +58,13 @@ const AddCruiseDialog = ({ cruiseOwner, admin, edit, cruiseEditData }: any) => {
       amenities: [],
       location: {},
       price: null,
-      numberOfGuests: null,
+      numberOfGuests: { adults: null, kids: null },
       discount: "",
       delivery: null,
     });
   };
-
+  const openGalleryDialog = () => setOpenDialog(true);
+  const closeGalleryDialog = () => setOpenDialog(false);
   // console.log(cruiseDetails);
 
   const handleSubmit = async (e: any) => {
@@ -127,6 +112,24 @@ const AddCruiseDialog = ({ cruiseOwner, admin, edit, cruiseEditData }: any) => {
       }
     }
   };
+  const handleImageDelete = (index) => {
+    // Remove the image at the specified index
+    const updatedImageSrc = [...cruiseDetails.imageSrc];
+    updatedImageSrc.splice(index + 1, 1); // Remove from the imageSrc array, excluding the primary image
+
+    setCruiseDetails({
+      ...cruiseDetails,
+      imageSrc: updatedImageSrc,
+    });
+  };
+  const handleDeletePrimaryImage = () => {
+    // Remove the primary image and reset the imageSrc
+    setCruiseDetails({
+      ...cruiseDetails,
+      primaryImage: null, // Clear the primary image
+      imageSrc: cruiseDetails.imageSrc.slice(1), // Remove the first image (primary image)
+    });
+  };
   return (
     <>
       <div>
@@ -172,7 +175,7 @@ const AddCruiseDialog = ({ cruiseOwner, admin, edit, cruiseEditData }: any) => {
                 onClick={(e) => e.stopPropagation()}
               >
                 <div className="flex justify-between items-center">
-                  <h1 className="text-center font-bold text-[18px]">
+                  <h1 className="text-center font-bold text-[18px] my-3">
                     {edit ? "قم بتعديل اليخت" : "قم باضافة اليخت"}
                   </h1>
                   <Image
@@ -186,22 +189,42 @@ const AddCruiseDialog = ({ cruiseOwner, admin, edit, cruiseEditData }: any) => {
                 </div>
                 <Separator />
                 <div className="flex flex-col gap-5" dir="rtl">
-                  <h1>ما هي وسائل الراحة التي تمتلكها؟</h1>
-                  <div className="flex justify-between items-center">
+                  <div className="flex justify-between items-start mt-5">
                     <p>عدد الضيوف</p>
-                    <Input
-                      type="number"
-                      placeholder="عدد الضيوف"
-                      className="w-[100px] rounded-[12px] placeholder:opacity-75 focus:placeholder:opacity-50"
-                      value={cruiseDetails?.numberOfGuests}
-                      onChange={(e) =>
-                        setCruiseDetails({
-                          ...cruiseDetails,
-                          numberOfGuests: e.target.value,
-                        })
-                      }
-                      disabled={isLoading ? true : false}
-                    />
+                    <div className="flex flex-col gap-2">
+                      <Input
+                        type="number"
+                        placeholder="عدد الكبار"
+                        className="w-[100px] rounded-[12px] placeholder:opacity-75 focus:placeholder:opacity-50"
+                        value={cruiseDetails?.numberOfGuests?.adults}
+                        onChange={(e) =>
+                          setCruiseDetails({
+                            ...cruiseDetails,
+                            numberOfGuests: {
+                              ...cruiseDetails.numberOfGuests, // Preserve existing properties
+                              adults: e.target.value,
+                            },
+                          })
+                        }
+                        disabled={isLoading ? true : false}
+                      />
+                      <Input
+                        type="number"
+                        placeholder="عدد الصغار"
+                        className="w-[100px] rounded-[12px] placeholder:opacity-75 focus:placeholder:opacity-50"
+                        value={cruiseDetails?.numberOfGuests?.kids}
+                        onChange={(e) =>
+                          setCruiseDetails({
+                            ...cruiseDetails,
+                            numberOfGuests: {
+                              ...cruiseDetails.numberOfGuests,
+                              kids: e.target.value,
+                            },
+                          })
+                        }
+                        disabled={isLoading ? true : false}
+                      />
+                    </div>
                   </div>
                   <div className="flex flex-col justify-center items-start gap-3">
                     <p>الاسم</p>
@@ -235,7 +258,10 @@ const AddCruiseDialog = ({ cruiseOwner, admin, edit, cruiseEditData }: any) => {
                     />
                   </div>
                   <div>
-                    <p>اختر المميزات</p>
+                    <h1 className="font-bold">
+                      ما هي وسائل الراحة التي تمتلكها؟
+                    </h1>
+                    <p className="mt-2">اختر المميزات</p>
                     <Select
                       options={amenities}
                       value={cruiseDetails?.amenities.map((amenity: string) =>
@@ -304,30 +330,123 @@ const AddCruiseDialog = ({ cruiseOwner, admin, edit, cruiseEditData }: any) => {
                   </h1>
                   <ImageUploadOne
                     value={
-                      cruiseDetails?.primaryImage
-                        ? [cruiseDetails?.primaryImage]
-                        : []
+                      edit && cruiseEditData?.primaryImage
+                        ? [cruiseEditData.primaryImage] // Use the primary image from the edit data if available
+                        : cruiseDetails?.primaryImage
+                        ? [cruiseDetails.primaryImage] // If primaryImage exists, use it
+                        : cruiseDetails.imageSrc.length > 0
+                        ? [cruiseDetails.imageSrc[0]] // If no primaryImage, use the first image in imageSrc
+                        : [] // Default to an empty array if there are no images
                     }
-                    onChange={(value) =>
-                      setCruiseDetails({
-                        ...cruiseDetails,
-                        primaryImage: value[0], // Ensure only one image is selected
-                      })
-                    }
-                    // Limit to one file for primary image
+                    onChange={(value) => {
+                      const updatedPrimaryImage = value[0]; // Get the new primary image
+
+                      // Create a copy of the imageSrc array and set it to updatedImageSrc
+                      let updatedImageSrc = [...cruiseDetails.imageSrc];
+
+                      // Update imageSrc to include the new primary image at the start, avoiding duplication
+                      if (!updatedImageSrc.includes(updatedPrimaryImage)) {
+                        // If the primary image is not already in the array, add it to the front
+                        updatedImageSrc = [
+                          updatedPrimaryImage,
+                          ...updatedImageSrc,
+                        ];
+                      } else {
+                        // If it already exists, ensure it's at the front
+                        updatedImageSrc = [
+                          updatedPrimaryImage,
+                          ...updatedImageSrc.filter(
+                            (img) => img !== updatedPrimaryImage
+                          ),
+                        ];
+                      }
+
+                      // Log for debugging purposes
+                      console.log(
+                        "Updated primary image:",
+                        updatedPrimaryImage
+                      );
+                      console.log("Updated imageSrc:", updatedImageSrc);
+
+                      // Ensure that the primary image is updated and imageSrc is updated correctly
+                      setCruiseDetails((prevState) => {
+                        return {
+                          ...prevState,
+                          primaryImage: updatedPrimaryImage, // Update the primary image
+                          imageSrc: updatedImageSrc, // Update imageSrc with the correct order
+                        };
+                      });
+                    }}
+                    disabled={isLoading}
                   />
+                  {cruiseDetails?.imageSrc[0] && (
+                    <Button
+                      onClick={() => handleDeletePrimaryImage()}
+                      className="delete-button"
+                    >
+                      حذف الصورة الرئيسية
+                    </Button>
+                  )}
                   <h1 className="mt-10">قم باضافة الصور الخاصة باليخت:</h1>
                   <p className="opacity-60">أظهر لعملائك كيف يبدو المكان</p>
                   <ImageUpload
-                    value={cruiseDetails?.imageSrc || []}
-                    onChange={(value) =>
+                    value={
+                      cruiseDetails?.imageSrc?.length > 1
+                        ? cruiseDetails.imageSrc.slice(1) // Exclude the first image
+                        : [] // Default to an empty array if no images or only one image exists
+                    }
+                    onChange={(value) => {
+                      const updatedImageSrc = [
+                        cruiseDetails.imageSrc[0],
+                        ...value,
+                      ]; // Ensure the first image remains as the primary, and append the new secondary images
                       setCruiseDetails({
                         ...cruiseDetails,
-                        imageSrc: value,
-                      })
-                    }
+                        imageSrc: updatedImageSrc,
+                      });
+                    }}
                   />
+                  <Button onClick={openGalleryDialog}>عرض الصور</Button>
+                  <Dialog open={openDialog} onClose={closeGalleryDialog}>
+                    <DialogContent>
+                      <div>
+                        {cruiseDetails.imageSrc.slice(1).map((image, index) => (
+                          <div
+                            key={index}
+                            className="image-item flex items-center justify-between mb-2 relative"
+                          >
+                            <Image
+                              src={image}
+                              alt={`image-${index}`}
+                              width={300}
+                              height={300}
+                              className="rounded-md"
+                            />
 
+                            {/* "X" button to delete the image */}
+                            <button
+                              onClick={() => handleImageDelete(index)}
+                              className="absolute top-2 right-2"
+                              style={{
+                                background: "transparent",
+                                border: "none",
+                                color: "red",
+                                fontSize: "20px",
+                                cursor: "pointer",
+                              }}
+                            >
+                              <AiOutlineClose />
+                            </button>
+                          </div>
+                        ))}
+                      </div>
+                    </DialogContent>
+                    <DialogActions>
+                      <Button onClick={closeGalleryDialog} color="primary">
+                        اغلاق
+                      </Button>
+                    </DialogActions>
+                  </Dialog>
                   <p className="opacity-85">
                     كم سعر خدمة التوصيل لليخت ان وجدت ؟
                   </p>

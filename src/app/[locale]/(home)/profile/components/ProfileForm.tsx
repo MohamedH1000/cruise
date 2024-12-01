@@ -1,5 +1,5 @@
 "use client";
-import React, { useContext, useState } from "react";
+import React, { useContext, useState, useEffect } from "react";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
@@ -33,17 +33,44 @@ import { CurrencyContext } from "@/app/context/CurrencyContext";
 
 const ProfileForm = ({ currentUser, reservationDetails }: any) => {
   const t = useTranslations();
-  const { currency } = useContext(CurrencyContext);
+  const { currency, convertCurrency } = useContext(CurrencyContext);
   const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
 
-  const { totalPrice, totalDays } = reservationDetails;
-  // console.log("total price", totalPrice);
-  const convertedTotalPrice = parseInt(totalPrice, 10);
-  const yourDues = totalPrice * 0.8;
-  const siteDues = totalPrice * 0.2;
-  const convertedYourDues = yourDues.toFixed(2);
-  const convertedSiteDues = siteDues.toFixed(2);
+  // Extract reservation data from props
+  const { reservations, totalDays } = reservationDetails;
+
+  // Calculate totals based on current currency
+  const [convertedTotalPrice, setConvertedTotalPrice] = useState(0);
+  const [convertedYourDues, setConvertedYourDues] = useState(0);
+  const [convertedSiteDues, setConvertedSiteDues] = useState(0);
+
+  useEffect(() => {
+    if (reservations) {
+      let totalPriceInUSD = 0;
+
+      // Sum all prices in USD (assuming USD is the base currency)
+      reservations.forEach((reservation: any) => {
+        const price = parseFloat(reservation.totalPrice);
+        const currency = reservation.currency;
+        if (!isNaN(price)) {
+          totalPriceInUSD += convertCurrency(price, currency, "USD");
+        }
+      });
+
+      // Convert the total price from USD to the selected currency
+      const totalInSelectedCurrency = convertCurrency(
+        totalPriceInUSD,
+        "USD",
+        currency
+      );
+
+      setConvertedTotalPrice(totalInSelectedCurrency.toFixed(2));
+      setConvertedYourDues((totalInSelectedCurrency * 0.8).toFixed(2));
+      setConvertedSiteDues((totalInSelectedCurrency * 0.2).toFixed(2));
+    }
+  }, [reservations, currency, convertCurrency]);
+
   const formSchema = z.object({
     name: z.string().min(2).max(50).optional(),
     email: z.string().email().optional(),
@@ -62,6 +89,7 @@ const ProfileForm = ({ currentUser, reservationDetails }: any) => {
       .optional(),
     image: z.string(),
   });
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -74,8 +102,7 @@ const ProfileForm = ({ currentUser, reservationDetails }: any) => {
       image: currentUser?.image || "",
     },
   });
-  // console.log(form.getValues());
-  // 2. Define a submit handler.
+
   async function onSubmit(values: z.infer<typeof formSchema>) {
     setIsLoading(true);
     try {

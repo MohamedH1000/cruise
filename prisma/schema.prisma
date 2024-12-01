@@ -60,7 +60,7 @@ model Cruise {
   location Json?
   type String?
   status String?
-  numberOfGuests Int?
+  numberOfGuests Json?
   rating Int?
   discount String?
   price Int

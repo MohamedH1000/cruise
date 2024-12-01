@@ -13,32 +13,25 @@ declare global {
 
 interface ImageUploadProps {
   onChange: (value: string[]) => void;
-  value: string[];
-  profile?: any;
-  currentUser?: any;
+  value: string[]; // Array of images URLs
 }
-const ImageUploadOne: React.FC<ImageUploadProps> = ({
-  onChange,
-  value,
-  profile,
-  currentUser,
-}) => {
+
+const ImageUploadOne: React.FC<ImageUploadProps> = ({ onChange, value }) => {
   const t = useTranslations();
   const handleUpload = useCallback(
     (result: any) => {
-      // console.log(result);
-      profile
-        ? onChange(result?.info?.secure_url)
-        : onChange([...value, result?.info?.secure_url]);
+      const newImageUrl = result?.info?.secure_url;
+      // Set the new image as the first image in the array
+      onChange([newImageUrl, ...value]); // Insert new image at the start
     },
-    [onChange]
+    [onChange, value]
   );
 
   return (
     <CldUploadWidget
       onUpload={handleUpload}
       uploadPreset="cruises"
-      options={{ maxFiles: 1 }}
+      options={{ maxFiles: 1 }} // Limit to 1 image at a time
     >
       {({ open }) => {
         return (
@@ -46,24 +39,23 @@ const ImageUploadOne: React.FC<ImageUploadProps> = ({
             onClick={() => open?.()}
             className={cn(
               `relative cursor-pointer hover:opacity-70 transition border-dashed border-2 p-20
-            border-neutral-300 flex flex-col justify-center items-center gap-4 text-neutral-600`,
-              {
-                "rounded-md": profile,
-              }
+              border-neutral-300 flex flex-col justify-center items-center gap-4 text-neutral-600`
             )}
           >
             <TbPhotoPlus size={50} />
             <div className="font-semibold text-lg">
               {t("translations.clickToUpload")}
             </div>
-            {(profile ? value || currentUser?.image || "" : value[0]) && (
+
+            {/* Display the first image in the array or fallback to an empty string if no image is present */}
+            {value.length > 0 && (
               <div className="absolute inset-0 w-full h-full">
                 <Image
-                  alt="Upload"
+                  alt="Uploaded image"
                   fill
                   style={{ objectFit: "cover" }} // Replace objectFit and layout with style
-                  src={profile ? value || currentUser?.image || "" : value[0]}
-                  className={`${profile ? "rounded-md" : ""}`}
+                  src={value[0]} // Show the first image in the array
+                  className=""
                 />
               </div>
             )}

@@ -52,7 +52,7 @@ export type Payment = {
   name: string;
   description: string;
   amenities: Array<string>;
-  numberOfGuests: number;
+  numberOfGuests: any;
   price: number;
   discount: string;
   status: "pending" | "active" | "reject";
@@ -111,6 +111,15 @@ export function CruisesTable<TData, TValue>({
     {
       accessorKey: "numberOfGuests",
       header: `${t("cruisesTable.numberOfGuests")}`,
+      cell: ({ row }) => {
+        const cruise = row.original;
+        return (
+          <div className="flex flex-col">
+            <p>{`عدد الكبار:` + " " + `${cruise?.numberOfGuests.adults}`}</p>
+            <p>{`عدد الصغار:` + " " + `${cruise?.numberOfGuests.kids}`}</p>
+          </div>
+        );
+      },
     },
     {
       accessorKey: "view",

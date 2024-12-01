@@ -25,7 +25,10 @@ export async function createCruise(cruiseData: any) {
       name,
       description,
       imageSrc: { set: imageSrc },
-      numberOfGuests: parseInt(numberOfGuests),
+      numberOfGuests: {
+        adults: parseInt(numberOfGuests.adults),
+        kids: parseInt(numberOfGuests.kids),
+      },
       price: parseInt(price, 10),
       discount,
       delivery: parseInt(delivery, 10),
@@ -60,11 +63,14 @@ export async function createCruiseByOwner(cruiseData: any) {
       name,
       description,
       imageSrc: { set: imageSrc },
-      numberOfGuests: parseInt(numberOfGuests),
+      numberOfGuests: {
+        adults: parseInt(numberOfGuests.adults),
+        kids: parseInt(numberOfGuests.kids),
+      },
       price: parseInt(price, 10),
       discount,
       location,
-      amenities: [],
+      amenities,
       userId: currentUser.id,
       status: "pending",
     },
@@ -177,6 +183,21 @@ export async function getAllCruisesTable() {
     console.log(error);
   }
 }
+export async function getMyCruisesTable(userId: any) {
+  try {
+    const cruises = await prisma.cruise.findMany({
+      where: {
+        userId,
+      },
+      orderBy: {
+        createdAt: "desc",
+      },
+    });
+    return cruises;
+  } catch (error) {
+    console.log(error);
+  }
+}
 
 export async function getCruiseById(id: string) {
   try {
@@ -199,7 +220,7 @@ export async function updateCruise(cruiseId: string, cruiseData: any) {
   const currentUser = await getCurrentUser();
 
   // Ensure the user is an admin
-  if (currentUser?.role !== "admin") {
+  if (currentUser?.role !== "admin" && currentUser?.role !== "cruiseOwner") {
     throw new Error("You are not authorized to update this attraction");
   }
 
@@ -224,7 +245,10 @@ export async function updateCruise(cruiseId: string, cruiseData: any) {
       name,
       description,
       imageSrc: { set: imageSrc },
-      numberOfGuests: parseInt(numberOfGuests),
+      numberOfGuests: {
+        adults: parseInt(numberOfGuests.adults),
+        kids: parseInt(numberOfGuests.kids),
+      },
       price: parseInt(price, 10),
       discount,
       delivery: parseInt(delivery, 10),
