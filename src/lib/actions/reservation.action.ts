@@ -32,19 +32,29 @@ export async function getReservationsByUserId(userId: string) {
           startDate: true,
           endDate: true,
           totalPrice: true,
-          currency: true, // Include the currency field
-          userId: true, // Include userId for context if needed
+          currency: true,
+          userId: true,
+          cruise: {
+            select: {
+              name: true,
+              userId: true, // Include the cruise owner's userId for context
+            },
+          },
         },
       });
     } else {
-      // For regular users, fetch reservations related to the given user ID
+      // For regular users, fetch reservations related to the user's cruises (but not made by them)
       reservations = await prisma.reservation.findMany({
-        where: { userId },
-        select: {
-          startDate: true,
-          endDate: true,
-          currency: true, // Include the currency field
-          totalPrice: true,
+        where: {
+          cruise: {
+            userId: userId, // Fetch reservations for cruises owned by the user
+          },
+          userId: {
+            not: userId, // Exclude reservations made by the user
+          },
+        },
+        include: {
+          cruise: true,
         },
       });
     }

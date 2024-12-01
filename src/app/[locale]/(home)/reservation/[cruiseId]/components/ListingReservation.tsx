@@ -331,6 +331,7 @@ const ListingReservation = ({
             setAvailableOptions={setAvailableOptions}
             selectedOptions={selectedOptions}
             setSelectedOptions={setSelectedOptions}
+            currentUser={currentUser}
           />
         </>
       )}

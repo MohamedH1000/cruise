@@ -54,8 +54,19 @@ export function MyReservationTable({ data }: ReservationTableProps) {
   const router = useRouter();
   const t = useTranslations();
 
-  const formatDate = (dateString: string) =>
-    format(new Date(dateString), "MM/dd/yyyy");
+  const formatDate = (dateString: string | null | undefined) => {
+    if (!dateString) {
+      console.warn("Date string is missing or invalid:", dateString);
+      return "N/A";
+    }
+
+    try {
+      return format(new Date(dateString), "MM/dd/yyyy");
+    } catch (error) {
+      console.error("Error formatting date:", dateString, error);
+      return "Invalid Date";
+    }
+  };
 
   const columns: ColumnDef<Reservation, any>[] = [
     {

@@ -8,7 +8,9 @@ import { getCurrentUser } from "@/lib/actions/user.action";
 const ReservationsPage = async () => {
   const t = await getTranslations();
   const currentUser = await getCurrentUser();
-  const reservations = await getReservationsByUserId(currentUser?.id);
+  const getReservations = await getReservationsByUserId(currentUser?.id);
+  const { reservations } = getReservations;
+  // console.log(reservations);
 
   return (
     <div

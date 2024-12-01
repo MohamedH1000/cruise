@@ -99,9 +99,9 @@ const AttractionForm = ({
   selectedOptions,
   setAvailableOptions,
   setSelectedOptions,
+  currentUser,
 }: any) => {
   const t = useTranslations();
-
   useEffect(() => {
     if (selectedOptions.length !== numberOfAttractions) {
       setSelectedOptions(Array(numberOfAttractions).fill(null));
@@ -201,15 +201,16 @@ const AttractionForm = ({
         ) : (
           <p className="mt-3 font-bold">{t("translations.noOptions")}</p>
         )}
-
-        <p className="text-[gray] text-sm mt-10">
-          {t("translations.attractionKnow")}{" "}
-          <Link href={"/attractions"} target="_blank">
-            <span className="text-blue-600 font-semibold cursor-pointer">
-              {t("translations.click")}
-            </span>
-          </Link>
-        </p>
+        {currentUser?.role === "client" && (
+          <p className="text-[gray] text-sm mt-10">
+            {t("translations.attractionKnow")}{" "}
+            <Link href={"/attractions"} target="_blank">
+              <span className="text-blue-600 font-semibold cursor-pointer">
+                {t("translations.click")}
+              </span>
+            </Link>
+          </p>
+        )}
       </div>
     </div>
   );

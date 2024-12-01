@@ -57,6 +57,7 @@ export const fetchRestaurantsByAttractions = async (
   try {
     // Clean the attraction names
     const attractions = selectedAttractions.map((name) => name.trim());
+    // console.log("attractions", attractions);
 
     // Log the attractions to ensure they are correct
     // console.log("Selected Attractions:", attractions);
