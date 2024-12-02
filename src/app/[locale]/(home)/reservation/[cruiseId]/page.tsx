@@ -86,15 +86,17 @@ const page = async ({ params }: any) => {
           )}
         </div>
         {/* second col */}
-        <div className="w-full">
-          <ListingReservation
-            reservations={reservations}
-            currentUser={currentUser}
-            cruise={cruise}
-            attractions={attractions}
-            combAttractions={combinedAttractions}
-          />
-        </div>
+        {currentUser?.role !== "cruiseOwner" && (
+          <div className="w-full">
+            <ListingReservation
+              reservations={reservations}
+              currentUser={currentUser}
+              cruise={cruise}
+              attractions={attractions}
+              combAttractions={combinedAttractions}
+            />
+          </div>
+        )}
       </div>
     </div>
   );

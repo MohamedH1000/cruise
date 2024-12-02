@@ -6,7 +6,6 @@ import PhoneInput from "react-phone-number-input";
 import { CalendarIcon } from "@radix-ui/react-icons";
 import { DateRange } from "react-day-picker";
 import { cn } from "@/lib/utils";
-
 import { Input } from "@/components/ui/input";
 import { useTranslations } from "next-intl";
 import { addDays, differenceInDays, format, setDate } from "date-fns";
