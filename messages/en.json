@@ -214,6 +214,8 @@
     "YourDues": "Your dues",
     "editReservation": "Edit your booking (from - to)",
     "myCruises": "Manage your cruises",
-    "myReservations": "Bookings in your cruise"
+    "myReservations": "Bookings in your cruise",
+    "sitePercent": "Site Percent",
+    "Remaining": "The net price"
   }
 }

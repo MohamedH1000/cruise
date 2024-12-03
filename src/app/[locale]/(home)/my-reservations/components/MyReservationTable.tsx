@@ -81,12 +81,16 @@ export function MyReservationTable({ data }: ReservationTableProps) {
     {
       accessorKey: "user.name",
       header: `${t("translations.username")}`,
-      cell: ({ row }) => row.original.user?.name || "N/A",
+      cell: ({ row }) =>
+        row.original.user?.name || row.original.nameOfReserver || "N/A",
     },
     {
       accessorKey: "cruise.name",
       header: `${t("translations.cruisename")}`,
-      cell: ({ row }) => row.original.cruise.name,
+      cell: ({ row }) => {
+        const name = row.original.cruise.name;
+        return <div>{name}</div>;
+      },
     },
     {
       accessorKey: "startDate",
@@ -103,8 +107,24 @@ export function MyReservationTable({ data }: ReservationTableProps) {
       header: `${t("translations.totalPrice")}`,
     },
     {
+      accessorKey: "sitePercent",
+      header: `${t("translations.sitePercent")}`,
+      cell: ({ row }) => {
+        const reservation = row.original;
+        return <div>{reservation.totalPrice * 0.2}</div>;
+      },
+    },
+    {
+      accessorKey: "remaining",
+      header: `${t("translations.Remaining")}`,
+      cell: ({ row }) => {
+        const reservation = row.original;
+        return <div>{reservation.totalPrice * 0.8}</div>;
+      },
+    },
+    {
       accessorKey: "currency",
-      header: `${t("translations.totalPrice")}`,
+      header: `${t("translations.currency")}`,
     },
     {
       accessorKey: "phoneNumber",
@@ -141,7 +161,20 @@ export function MyReservationTable({ data }: ReservationTableProps) {
       sorting,
     },
   });
+  const totalPriceSum = data.reduce(
+    (sum, reservation) => sum + Number(reservation.totalPrice || 0),
+    0
+  );
+  const sitePercentSum = data.reduce(
+    (sum, reservation) => sum + Number(reservation.totalPrice || 0) * 0.2,
+    0
+  );
+  const remainingSum = data.reduce(
+    (sum, reservation) => sum + Number(reservation.totalPrice || 0) * 0.8,
+    0
+  );
 
+  console.log(data);
   return (
     <div className="rounded-lg border mt-4">
       <Table>
@@ -161,15 +194,31 @@ export function MyReservationTable({ data }: ReservationTableProps) {
         </TableHeader>
         <TableBody>
           {table.getRowModel().rows?.length ? (
-            table.getRowModel().rows.map((row) => (
-              <TableRow key={row.id}>
-                {row.getVisibleCells().map((cell) => (
-                  <TableCell key={cell.id}>
-                    {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                  </TableCell>
-                ))}
+            <>
+              {table.getRowModel().rows.map((row) => (
+                <TableRow key={row.id}>
+                  {row.getVisibleCells().map((cell) => (
+                    <TableCell key={cell.id}>
+                      {flexRender(
+                        cell.column.columnDef.cell,
+                        cell.getContext()
+                      )}
+                    </TableCell>
+                  ))}
+                </TableRow>
+              ))}
+              <TableRow>
+                <TableCell colSpan={6} className="font-bold text-right">
+                  {t("translations.total")}
+                </TableCell>
+                <TableCell className="font-bold">
+                  {totalPriceSum.toFixed(2)}
+                </TableCell>
+                <TableCell className="font-bold">{sitePercentSum}</TableCell>
+                <TableCell className="font-bold">{remainingSum}</TableCell>
+                <TableCell colSpan={3}></TableCell>
               </TableRow>
-            ))
+            </>
           ) : (
             <TableRow>
               <TableCell colSpan={columns.length} className="h-24 text-center">
