@@ -158,6 +158,36 @@ const MobileNav: React.FC<MobileNavProps> = ({
                 </Link>
               </>
             )}
+            {currentUser.role === "cruiseOwner" && (
+              <>
+                <Link
+                  href="/my-cruises"
+                  className={`${
+                    pathname === "/my-cruises"
+                      ? "bg-[#003b95] text-white"
+                      : "hover:bg-[#c3bbbb] text-black"
+                  } w-full  px-4 py-2 rounded-[12px] sm:hidden`}
+                  onClick={() => setOpen((prev: any) => !prev)}
+                >
+                  {t("translations.myCruises")}
+                </Link>
+              </>
+            )}
+            {currentUser.role === "cruiseOwner" && (
+              <>
+                <Link
+                  href="/my-reservations"
+                  className={`${
+                    pathname === "/my-reservations"
+                      ? "bg-[#003b95] text-white"
+                      : "hover:bg-[#c3bbbb] text-black"
+                  } w-full  px-4 py-2 rounded-[12px] sm:hidden`}
+                  onClick={() => setOpen((prev: any) => !prev)}
+                >
+                  {t("translations.myReservations")}
+                </Link>
+              </>
+            )}
             {isAdmin && (
               <>
                 <Link

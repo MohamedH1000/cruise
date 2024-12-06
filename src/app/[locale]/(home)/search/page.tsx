@@ -18,6 +18,7 @@ const page = async ({ searchParams }: any) => {
     page: searchParams?.page ? +searchParams.page : 1,
     startDate: from || null,
     endDate: to || null,
+    amenities: searchParams?.amenities || null,
   });
 
   const allowedCruises = allCruises?.cruises?.filter(
@@ -55,8 +56,11 @@ const page = async ({ searchParams }: any) => {
         />
       </div>
       {allowedCruises?.length === 0 ? (
-        <div className="min-h-screen mt-[130px] flex justify-center text-[40px]">
-          <EmptyState />
+        <div className="min-h-screen  flex justify-between items-center gap-4 max-md:flex-col max-md:justify-center">
+          <Filters />
+          <div className="text-[40px] mt-[130px] max-md:mt-5 text-center">
+            <EmptyState />
+          </div>
         </div>
       ) : (
         <>

@@ -5,6 +5,7 @@ import { Separator } from "@/components/ui/separator";
 import { useTranslations } from "next-intl";
 import React, { useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
+import { getAmenities } from "@/lib/constants/amenties";
 
 const Filters = () => {
   const router = useRouter();
@@ -14,38 +15,33 @@ const Filters = () => {
   const [selectedRate, setSelectedRate] = useState(
     searchParams?.get("rate") || null
   );
-  const [filters, setFilters] = useState(() => {
-    const initialFilters: any = {};
-    [
-      "offers",
-      "freeParking",
-      "freeInternet",
-      "outdoorSeating",
-      "indoorSeating",
-      "dining",
-      "includeBreak",
-      "kitchen",
-      "waching",
-      "tv",
-      "teaMaker",
-      "roomService",
-      "Jacuzzi",
-      "messageChair",
-      "accessible",
-    ].forEach((key) => {
-      initialFilters[key] = searchParams?.get(key) === "true";
-    });
-    return initialFilters;
-  });
+  const t = useTranslations();
+  const amenities = getAmenities(t);
 
-  const updateQueryParams = (key: string, value: string | boolean | null) => {
+  // Parse existing amenities from URL
+  const initialAmenities = searchParams?.get("amenities")?.split(",") || [];
+  const [selectedAmenities, setSelectedAmenities] =
+    useState<string[]>(initialAmenities);
+
+  const amenitiesList = amenities.map((amenity) => amenity.value);
+
+  const updateQueryParams = (key: string, value: string | null) => {
     const params = new URLSearchParams(searchParams?.toString());
     if (value === null || value === "") {
       params.delete(key);
     } else {
-      params.set(key, value.toString());
+      params.set(key, value);
     }
     router.push(`?${params.toString()}`, { scroll: false });
+  };
+  // Price input change handlers
+  const handleCheckboxToggle = (amenity: string) => {
+    const updatedAmenities = selectedAmenities.includes(amenity)
+      ? selectedAmenities.filter((item) => item !== amenity) // Remove if already selected
+      : [...selectedAmenities, amenity]; // Add if not selected
+
+    setSelectedAmenities(updatedAmenities);
+    updateQueryParams("amenities", updatedAmenities.join(","));
   };
 
   // Price input change handlers
@@ -61,12 +57,6 @@ const Filters = () => {
     updateQueryParams("toPrice", value);
   };
 
-  const handleCheckboxToggle = (key: string) => {
-    const updatedFilters = { ...filters, [key]: !filters[key] };
-    setFilters(updatedFilters);
-    updateQueryParams(key, updatedFilters[key]);
-  };
-
   const handleRateClick = (rate: string) => {
     if (selectedRate === rate) {
       setSelectedRate(null);
@@ -76,9 +66,9 @@ const Filters = () => {
       updateQueryParams("rate", rate);
     }
   };
-  const t = useTranslations();
+
   return (
-    <div className="w-[46%] my-10 max-sm:w-full">
+    <div className="w-[46%] my-10 max-md:w-full">
       <h1 className="font-bold text-3xl">{t("translations.filters")}</h1>
       <div className="w-full border-[1px] border-[black] rounded-md p-4 mt-3">
         <div className="flex justify-center items-center gap-5">
@@ -121,18 +111,20 @@ const Filters = () => {
           </div>
         </div>
         <Separator className="mt-5" />
-        {Object.keys(filters).map((key) => (
-          <div
-            key={key}
-            className="mt-2 flex justify-between gap-5 items-center px-10"
-          >
-            <p className="font-bold">{t(`translations.${key}`)}</p>
-            <Checkbox
-              checked={filters[key]}
-              onCheckedChange={() => handleCheckboxToggle(key)}
-            />
-          </div>
-        ))}
+        <div className="max-md:flex overflow-x-scroll max-md:items-center">
+          {amenitiesList.map((amenity) => (
+            <div
+              key={amenity}
+              className="mt-2 flex justify-between gap-5 items-center px-10 "
+            >
+              <p className="font-bold">{amenity}</p>
+              <Checkbox
+                checked={selectedAmenities.includes(amenity)}
+                onCheckedChange={() => handleCheckboxToggle(amenity)}
+              />
+            </div>
+          ))}
+        </div>
       </div>
     </div>
   );

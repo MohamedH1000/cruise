@@ -112,26 +112,28 @@ export async function getAllCruises(params: any) {
   }
 }
 export async function getAllCruisesBySearch(params: any) {
-  const { page = 1, pageSize = 9, date, startDate, endDate } = params;
+  const { page = 1, pageSize = 9, startDate, endDate, amenities } = params;
   const skipAmount = (page - 1) * pageSize;
+
+  // Parse amenities string into an array if provided
+  const amenitiesArray = amenities ? amenities.split(",") : [];
 
   try {
     const cruises = await prisma.cruise.findMany({
       where: {
         status: "active",
-        // Assuming these fields are present in the cruise model:
-        // adults: adults ? { gte: adults } : undefined,
-        // kids: kids ? { gte: kids } : undefined,
-        // rooms: rooms ? { gte: rooms } : undefined,
+        // Filter by amenities if provided
+        amenities:
+          amenitiesArray.length > 0 ? { hasEvery: amenitiesArray } : undefined,
         reservations: {
           none: {
             OR: [
               {
                 startDate: {
-                  lte: new Date(endDate), // Reservation starts before or on the end date
+                  lte: endDate ? new Date(endDate) : undefined,
                 },
                 endDate: {
-                  gte: new Date(startDate), // Reservation ends after or on the start date
+                  gte: startDate ? new Date(startDate) : undefined,
                 },
               },
             ],
@@ -148,15 +150,17 @@ export async function getAllCruisesBySearch(params: any) {
     const totalAllowedCruises = await prisma.cruise.count({
       where: {
         status: "active",
+        amenities:
+          amenitiesArray.length > 0 ? { hasEvery: amenitiesArray } : undefined,
         reservations: {
           none: {
             OR: [
               {
                 startDate: {
-                  lte: new Date(endDate),
+                  lte: endDate ? new Date(endDate) : undefined,
                 },
                 endDate: {
-                  gte: new Date(startDate),
+                  gte: startDate ? new Date(startDate) : undefined,
                 },
               },
             ],
@@ -168,7 +172,8 @@ export async function getAllCruisesBySearch(params: any) {
     const isNext = totalAllowedCruises > skipAmount + cruises.length;
     return { cruises, isNext, totalAllowedCruises };
   } catch (error) {
-    console.log(error);
+    console.error(error);
+    throw new Error("Failed to fetch cruises");
   }
 }
 export async function getAllCruisesTable() {
