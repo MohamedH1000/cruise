@@ -1,11 +1,12 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { CalendarIcon } from "@radix-ui/react-icons";
-import { format } from "date-fns";
+import { format, parseISO } from "date-fns";
 import { DateRange } from "react-day-picker";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
+import { useSearchParams } from "next/navigation"; // Import to read URL search params
 import {
   Popover,
   PopoverContent,
@@ -19,11 +20,30 @@ import { useRouter } from "@/i18n/routing";
 
 const DataPicker = ({ searchPage }: any) => {
   const router = useRouter();
+  const searchParams = useSearchParams(); // Hook to get search params
   const [date, setDate] = useState<DateRange | undefined>();
   const [adults, setAdults] = useState(0);
   const [kids, setKids] = useState(0);
   const [rooms, setRooms] = useState(0);
   const t = useTranslations();
+
+  useEffect(() => {
+    const from = searchParams?.get("from");
+    const to = searchParams?.get("to");
+    const adultsParam = searchParams?.get("adults");
+    const kidsParam = searchParams?.get("kids");
+    const roomsParam = searchParams?.get("rooms");
+
+    if (from || to) {
+      setDate({
+        from: from ? parseISO(from) : undefined,
+        to: to ? parseISO(to) : undefined,
+      });
+    }
+    if (adultsParam) setAdults(parseInt(adultsParam, 10));
+    if (kidsParam) setKids(parseInt(kidsParam, 10));
+    if (roomsParam) setRooms(parseInt(roomsParam, 10));
+  }, [searchParams]);
 
   const handleSearch = () => {
     // Construct the query parameters

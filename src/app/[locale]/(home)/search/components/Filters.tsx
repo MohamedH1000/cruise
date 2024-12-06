@@ -4,34 +4,101 @@ import { Input } from "@/components/ui/input";
 import { Separator } from "@/components/ui/separator";
 import { useTranslations } from "next-intl";
 import React, { useState } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 
 const Filters = () => {
-  const [selectedRate, setSelectedRate] = useState(null);
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const [priceFrom, setPriceFrom] = useState(searchParams?.get("from") || "");
+  const [priceTo, setPriceTo] = useState(searchParams?.get("to") || "");
+  const [selectedRate, setSelectedRate] = useState(
+    searchParams?.get("rate") || null
+  );
+  const [filters, setFilters] = useState(() => {
+    const initialFilters: any = {};
+    [
+      "offers",
+      "freeParking",
+      "freeInternet",
+      "outdoorSeating",
+      "indoorSeating",
+      "dining",
+      "includeBreak",
+      "kitchen",
+      "waching",
+      "tv",
+      "teaMaker",
+      "roomService",
+      "Jacuzzi",
+      "messageChair",
+      "accessible",
+    ].forEach((key) => {
+      initialFilters[key] = searchParams?.get(key) === "true";
+    });
+    return initialFilters;
+  });
 
-  const handleRateClick = (rate: any) => {
-    // Toggle selection: if the same rate is clicked, deselect it
-    if (selectedRate === rate) {
-      setSelectedRate(null); // Deselect
+  const updateQueryParams = (key: string, value: string | boolean | null) => {
+    const params = new URLSearchParams(searchParams?.toString());
+    if (value === null || value === "") {
+      params.delete(key);
     } else {
-      setSelectedRate(rate); // Select the clicked rate
+      params.set(key, value.toString());
+    }
+    router.push(`?${params.toString()}`, { scroll: false });
+  };
+
+  // Price input change handlers
+  const handlePriceFromChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    setPriceFrom(value);
+    updateQueryParams("fromPrice", value);
+  };
+
+  const handlePriceToChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    setPriceTo(value);
+    updateQueryParams("toPrice", value);
+  };
+
+  const handleCheckboxToggle = (key: string) => {
+    const updatedFilters = { ...filters, [key]: !filters[key] };
+    setFilters(updatedFilters);
+    updateQueryParams(key, updatedFilters[key]);
+  };
+
+  const handleRateClick = (rate: string) => {
+    if (selectedRate === rate) {
+      setSelectedRate(null);
+      updateQueryParams("rate", null);
+    } else {
+      setSelectedRate(rate);
+      updateQueryParams("rate", rate);
     }
   };
   const t = useTranslations();
   return (
     <div className="w-[46%] my-10 max-sm:w-full">
-      {" "}
       <h1 className="font-bold text-3xl">{t("translations.filters")}</h1>
-      <div className="w-full border-[1px] border-[black]  rounded-md p-4 mt-3">
+      <div className="w-full border-[1px] border-[black] rounded-md p-4 mt-3">
         <div className="flex justify-center items-center gap-5">
           <p className="font-bold">{t("cruisesTable.price")}</p>
           <div className="flex justify-center items-center gap-1">
             <div className="flex items-center gap-2">
               <p>{t("translations.from")}</p>
-              <Input type="number" />
+              <Input
+                type="number"
+                value={priceFrom}
+                onChange={handlePriceFromChange}
+              />
             </div>
             <div className="flex items-center gap-2">
               <p>{t("translations.to")}</p>
-              <Input type="number" />
+              <Input
+                type="number"
+                value={priceTo}
+                onChange={handlePriceToChange}
+              />
             </div>
           </div>
         </div>
@@ -54,66 +121,18 @@ const Filters = () => {
           </div>
         </div>
         <Separator className="mt-5" />
-        <div className="mt-2 flex justify-between gap-5 items-center px-10">
-          <p className="font-bold">{t("translations.offers")}</p>
-          <Checkbox />
-        </div>
-        <div className="mt-2 flex justify-between gap-5 items-center px-10">
-          <p className="font-bold">{t("translations.freeParking")}</p>
-          <Checkbox />
-        </div>
-        <div className="mt-2 flex justify-between gap-5 items-center px-10">
-          <p className="font-bold">{t("translations.freeInternet")}</p>
-          <Checkbox />
-        </div>
-        <div className="mt-2 flex justify-between gap-5 items-center px-10">
-          <p className="font-bold">{t("translations.outdoorSeating")}</p>
-          <Checkbox />
-        </div>
-        <div className="mt-2 flex justify-between gap-5 items-center px-10">
-          <p className="font-bold">{t("translations.indoorSeating")}</p>
-          <Checkbox />
-        </div>
-        <div className="mt-2 flex justify-between gap-5 items-center px-10">
-          <p className="font-bold">{t("translations.dining")}</p>
-          <Checkbox />
-        </div>
-        <div className="mt-2 flex justify-between gap-5 items-center px-10">
-          <p className="font-bold">{t("translations.includeBreak")}</p>
-          <Checkbox />
-        </div>
-        <div className="mt-2 flex justify-between gap-5 items-center px-10">
-          <p className="font-bold">{t("translations.kitchen")}</p>
-          <Checkbox />
-        </div>
-        <div className="mt-2 flex justify-between gap-5 items-center px-10">
-          <p className="font-bold">{t("translations.waching")}</p>
-          <Checkbox />
-        </div>
-        <div className="mt-2 flex justify-between gap-5 items-center px-10">
-          <p className="font-bold">{t("translations.tv")}</p>
-          <Checkbox />
-        </div>
-        <div className="mt-2 flex justify-between gap-5 items-center px-10">
-          <p className="font-bold">{t("translations.teaMaker")}</p>
-          <Checkbox />
-        </div>
-        <div className="mt-2 flex justify-between gap-5 items-center px-10">
-          <p className="font-bold">{t("translations.roomService")}</p>
-          <Checkbox />
-        </div>
-        <div className="mt-2 flex justify-between gap-5 items-center px-10">
-          <p className="font-bold">{t("translations.Jacuzzi")}</p>
-          <Checkbox />
-        </div>
-        <div className="mt-2 flex justify-between gap-5 items-center px-10">
-          <p className="font-bold">{t("translations.messageChair")}</p>
-          <Checkbox />
-        </div>
-        <div className="mt-2 flex justify-between gap-5 items-center px-10">
-          <p className="font-bold">{t("translations.accessible")}</p>
-          <Checkbox />
-        </div>
+        {Object.keys(filters).map((key) => (
+          <div
+            key={key}
+            className="mt-2 flex justify-between gap-5 items-center px-10"
+          >
+            <p className="font-bold">{t(`translations.${key}`)}</p>
+            <Checkbox
+              checked={filters[key]}
+              onCheckedChange={() => handleCheckboxToggle(key)}
+            />
+          </div>
+        ))}
       </div>
     </div>
   );
