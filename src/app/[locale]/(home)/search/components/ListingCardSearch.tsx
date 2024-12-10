@@ -13,10 +13,14 @@ import {
   CarouselNext,
   CarouselPrevious,
 } from "@/components/ui/carousel";
+import { useSearchParams } from "next/navigation";
 
 const ListingCardSearch = ({ data, currentUser, attraction }: any) => {
   const locale = useLocale();
   const t = useTranslations();
+  const searchParams = useSearchParams(); // Get the search params
+  const paramsString = searchParams?.toString(); // Convert to a query string
+
   return (
     <motion.div
       className="col-span-1 cursor-default group"
@@ -85,7 +89,9 @@ const ListingCardSearch = ({ data, currentUser, attraction }: any) => {
               </div>
 
               <Link
-                href={`/reservation/${data?.id}`}
+                href={`/reservation/${data?.id}${
+                  paramsString ? `?${paramsString}` : ""
+                }`}
                 className="w-full text-center bg-[#003b95] text-white hover:border-[#003b95] hover:border-[1px] hover:bg-white hover:text-[#003b95] transition duration-300 p-2 rounded-md font-bold"
               >
                 {t("translations.reservenow")}

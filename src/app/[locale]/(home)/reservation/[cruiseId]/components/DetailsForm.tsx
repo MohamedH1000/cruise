@@ -1,6 +1,6 @@
 "use client";
 import { Separator } from "@/components/ui/separator";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Calender from "./Calender";
 import PhoneInput from "react-phone-number-input";
 import { CalendarIcon } from "@radix-ui/react-icons";
@@ -8,7 +8,7 @@ import { DateRange } from "react-day-picker";
 import { cn } from "@/lib/utils";
 import { Input } from "@/components/ui/input";
 import { useTranslations } from "next-intl";
-import { addDays, differenceInDays, format, setDate } from "date-fns";
+import { addDays, differenceInDays, format, parseISO, setDate } from "date-fns";
 import {
   Popover,
   PopoverContent,
@@ -20,6 +20,7 @@ import AdultCounter from "@/components/NavBar/AdultCounter";
 import KidCounter from "@/components/NavBar/KidCounter";
 import RoomCounter from "@/components/NavBar/RoomCounter";
 import { date } from "zod";
+import { useSearchParams } from "next/navigation";
 
 const DetailsForm = ({
   name,
@@ -34,6 +35,27 @@ const DetailsForm = ({
   currentUser,
 }: any) => {
   const t = useTranslations();
+  const searchParams = useSearchParams();
+  useEffect(() => {
+    const dateFromParam = searchParams.get("from");
+    const dateToParam = searchParams.get("to");
+
+    const parsedFrom = dateFromParam ? parseISO(dateFromParam) : null;
+    const parsedTo = dateToParam ? parseISO(dateToParam) : null;
+
+    if (parsedFrom && !isNaN(parsedFrom.getTime())) {
+      setDateRange((prev: any) => ({
+        ...prev,
+        from: parsedFrom,
+      }));
+    }
+    if (parsedTo && !isNaN(parsedTo.getTime())) {
+      setDateRange((prev: any) => ({
+        ...prev,
+        to: parsedTo,
+      }));
+    }
+  }, [searchParams, setDateRange]);
 
   // const handleDateChange = (newDateRange: DateRange | undefined) => {
   //   if (!newDateRange?.from || !newDateRange?.to) {

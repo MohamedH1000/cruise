@@ -1,7 +1,7 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import { CalendarIcon } from "@radix-ui/react-icons";
-import { format, parseISO } from "date-fns";
+import { addDays, differenceInDays, format, parseISO } from "date-fns";
 import { DateRange } from "react-day-picker";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
@@ -44,6 +44,26 @@ const DataPicker = ({ searchPage }: any) => {
     if (kidsParam) setKids(parseInt(kidsParam, 10));
     if (roomsParam) setRooms(parseInt(roomsParam, 10));
   }, [searchParams]);
+
+  const handleDateChange = (newDateRange: DateRange | undefined) => {
+    if (!newDateRange?.from || !newDateRange?.to) {
+      setDate(newDateRange); // Update if no end date is selected yet
+      return;
+    }
+
+    const { from, to } = newDateRange;
+    const daysDifference = differenceInDays(to, from);
+
+    if (daysDifference > 7) {
+      alert(t("Maximum range is 7 days"));
+      setDate({ from, to: addDays(from, 7) }); // Automatically limit to 7 days
+    } else if (daysDifference < 3) {
+      alert(t("Minimum range is 3 days"));
+      setDate({ from, to: addDays(from, 3) }); // Automatically extend to 3 days
+    } else {
+      setDate(newDateRange); // Valid range
+    }
+  };
 
   const handleSearch = () => {
     // Construct the query parameters
@@ -104,7 +124,7 @@ const DataPicker = ({ searchPage }: any) => {
             mode="range"
             defaultMonth={date?.from}
             selected={date}
-            onSelect={setDate}
+            onSelect={handleDateChange}
             numberOfMonths={2}
           />
         </PopoverContent>
