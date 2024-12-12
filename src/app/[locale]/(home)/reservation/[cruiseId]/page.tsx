@@ -11,6 +11,7 @@ import {
   getAllAttractionsTable,
   getCombinedAttractionsByRestaurantArray,
 } from "@/lib/actions/attraction.action";
+import DataPicker from "./components/DataPicker";
 
 const page = async ({ params }: any) => {
   const cruise = await getCruiseById(params.cruiseId);
@@ -27,6 +28,7 @@ const page = async ({ params }: any) => {
     >
       <h1 className="font-bold text-4xl">{cruise?.name}</h1>
       <ImageGallery images={cruise?.imageSrc} />
+      <DataPicker reservations={reservations} />
       <div className="grid grid-cols-2 max-md:grid-cols-1 gap-3">
         {/* first col */}
         <div>
