@@ -158,7 +158,7 @@ const MobileNav: React.FC<MobileNavProps> = ({
                 </Link>
               </>
             )}
-            {currentUser.role === "cruiseOwner" && (
+            {currentUser?.role === "cruiseOwner" && (
               <>
                 <Link
                   href="/my-cruises"
@@ -173,7 +173,7 @@ const MobileNav: React.FC<MobileNavProps> = ({
                 </Link>
               </>
             )}
-            {currentUser.role === "cruiseOwner" && (
+            {currentUser?.role === "cruiseOwner" && (
               <>
                 <Link
                   href="/my-reservations"

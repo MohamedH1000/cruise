@@ -1,14 +1,10 @@
 "use client";
 import { Separator } from "@/components/ui/separator";
 import React, { useEffect, useState } from "react";
-import Calender from "./Calender";
-import PhoneInput from "react-phone-number-input";
 import { CalendarIcon } from "@radix-ui/react-icons";
-import { DateRange } from "react-day-picker";
 import { cn } from "@/lib/utils";
-import { Input } from "@/components/ui/input";
 import { useTranslations } from "next-intl";
-import { addDays, differenceInDays, format, parseISO, setDate } from "date-fns";
+import { format, parseISO } from "date-fns";
 import {
   Popover,
   PopoverContent,
@@ -19,8 +15,8 @@ import { Calendar } from "@/components/ui/calendar";
 import AdultCounter from "@/components/NavBar/AdultCounter";
 import KidCounter from "@/components/NavBar/KidCounter";
 import RoomCounter from "@/components/NavBar/RoomCounter";
-import { date } from "zod";
 import { useSearchParams } from "next/navigation";
+import { useRouter } from "@/i18n/routing";
 
 const DetailsForm = ({
   name,
@@ -36,9 +32,17 @@ const DetailsForm = ({
 }: any) => {
   const t = useTranslations();
   const searchParams = useSearchParams();
+  const [adults, setAdults] = useState(0);
+  const [kids, setKids] = useState(0);
+  const [rooms, setRooms] = useState(0);
+  const router = useRouter();
+
   useEffect(() => {
     const dateFromParam = searchParams.get("from");
     const dateToParam = searchParams.get("to");
+    const adults = searchParams?.get("adults");
+    const kids = searchParams?.get("kids");
+    const rooms = searchParams?.get("rooms");
 
     const parsedFrom = dateFromParam ? parseISO(dateFromParam) : null;
     const parsedTo = dateToParam ? parseISO(dateToParam) : null;
@@ -54,6 +58,18 @@ const DetailsForm = ({
         ...prev,
         to: parsedTo,
       }));
+    }
+
+    if (adults) {
+      setAdults(parseInt(adults));
+    }
+
+    if (kids) {
+      setKids(parseInt(kids));
+    }
+
+    if (rooms) {
+      setRooms(parseInt(rooms));
     }
   }, [searchParams, setDateRange]);
 
@@ -114,6 +130,21 @@ const DetailsForm = ({
     } else {
       setDateRange((prev) => ({ ...prev, to: null }));
     }
+  };
+
+  const handleSearch = () => {
+    // Construct the query parameters
+    const query = new URLSearchParams();
+
+    if (dateRange?.from)
+      query.append("from", format(dateRange.from, "yyyy-MM-dd"));
+    if (dateRange?.to) query.append("to", format(dateRange.to, "yyyy-MM-dd"));
+    if (adults) query.append("adults", adults.toString());
+    if (kids) query.append("kids", kids.toString());
+    if (rooms) query.append("rooms", rooms.toString());
+
+    // Navigate to /search with the constructed query string
+    router.push(`/search?${query.toString()}`);
   };
   return (
     <>
@@ -216,7 +247,7 @@ const DetailsForm = ({
               id="from-date"
               variant={"outline"}
               className={cn(
-                "w-[300px] justify-start text-left font-normal",
+                "w-[300px] justify-start text-left font-normal max-md:w-full",
                 !dateRange.from && "text-muted-foreground"
               )}
             >
@@ -257,7 +288,7 @@ const DetailsForm = ({
               id="to-date"
               variant={"outline"}
               className={cn(
-                "w-[300px] justify-start text-left font-normal",
+                "w-[300px] justify-start text-left font-normal max-md:w-full",
                 !dateRange.to && "text-muted-foreground"
               )}
               disabled={!dateRange.from} // Disable "to" button until "from" is selected
@@ -288,6 +319,49 @@ const DetailsForm = ({
             />
           </PopoverContent>
         </Popover>
+        <Popover>
+          <PopoverTrigger
+            asChild
+            className="bg-white border-none h-full rounded-[12px] flex-1 max-md:w-full"
+          >
+            <Button
+              variant={"outline"}
+              className={"w-[300px] justify-start text-left font-normal"}
+            >
+              <span className="font-bold truncate">
+                {adults + " "}
+                {t("NavItems.adults")}
+                {" ," + kids + " "}
+                {t("NavItems.kids")}
+                {" ," + rooms + " "}
+                {t("NavItems.rooms")}
+              </span>
+            </Button>
+          </PopoverTrigger>
+          <PopoverContent
+            className="w-[350px] p-4 bg-white rounded-[12px] max-w-[500px] max-sm:w-[225px]"
+            align="start"
+          >
+            <div className="flex justify-between items-center">
+              <p>{t("PopoverContent.adults")}</p>
+              <AdultCounter adults={adults} setAdults={setAdults} />
+            </div>
+            <div className="flex justify-between items-center mt-5">
+              <p>{t("PopoverContent.kids")}</p>
+              <KidCounter kids={kids} setKids={setKids} />
+            </div>
+            <div className="flex justify-between items-center mt-5">
+              <p>{t("PopoverContent.rooms")}</p>
+              <RoomCounter rooms={rooms} setRooms={setRooms} />
+            </div>
+          </PopoverContent>
+        </Popover>
+        <Button
+          className="h-full rounded-[12px] ml-auto w-[100px] max-md:w-full"
+          onClick={handleSearch}
+        >
+          {t("Buttons.search")}
+        </Button>
       </div>
     </>
   );
