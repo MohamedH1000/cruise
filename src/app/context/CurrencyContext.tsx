@@ -2,13 +2,18 @@
 import { createContext, useEffect, useState } from "react";
 
 export const CurrencyContext = createContext<any>(null);
-
+const initialDateRange = {
+  from: new Date(),
+  to: new Date(),
+  key: "selection",
+};
 export const CurrencyProvider = ({
   children,
 }: {
   children: React.ReactNode;
 }) => {
   const [currency, setCurrency] = useState<any>(null);
+  const [dateRange, setDateRange] = useState<any>(initialDateRange);
   const [rates, setRates] = useState({
     AED: 1,
     USD: 0.272294,
@@ -59,7 +64,14 @@ export const CurrencyProvider = ({
 
   return (
     <CurrencyContext.Provider
-      value={{ currency, setCurrency, convertCurrency, rates }}
+      value={{
+        currency,
+        setCurrency,
+        convertCurrency,
+        rates,
+        dateRange,
+        setDateRange,
+      }}
     >
       {children}
     </CurrencyContext.Provider>

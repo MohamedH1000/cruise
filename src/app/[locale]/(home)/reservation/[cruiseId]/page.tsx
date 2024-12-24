@@ -29,10 +29,10 @@ const page = async ({ params }: any) => {
       <h1 className="font-bold text-4xl">{cruise?.name}</h1>
       <ImageGallery images={cruise?.imageSrc} />
       <DataPicker reservations={reservations} />
-      <div className="grid grid-cols-2 max-md:grid-cols-1 gap-3">
+      <div className="grid grid-cols-1 max-md:grid-cols-1 gap-3">
         {/* first col */}
-        <div>
-          <div className="mt-5 text-xl flex items-center gap-2">
+        <div className="flex justify-between items-start flex-wrap gap-3 mt-5">
+          <div className=" text-xl flex items-center gap-2">
             <p>
               {t("translations.createdBy")} :{" "}
               <span className="font-bold">{cruise?.user?.name}</span>
@@ -42,14 +42,25 @@ const page = async ({ params }: any) => {
               <AvatarFallback>{cruise?.user?.name?.slice(0, 2)}</AvatarFallback>
             </Avatar>
           </div>
-          <Separator className="mt-5" />
-          <p className="font-semibold text-2xl opacity-85 my-10">
-            {cruise?.description}
-          </p>
+          {/* <Separator className="mt-5" /> */}
+          <div className="flex flex-col items-start justify-center gap-2">
+            <p className="font-bold text-2xl">{t("cruisesTable.name")}</p>
+            <p className="font-semibold text-xl">{cruise?.name}</p>
+          </div>
+          <div className="flex flex-col items-start justify-center gap-2">
+            <p className="font-bold text-2xl">
+              {t("cruisesTable.description")}
+            </p>
+            <p className="font-semibold text-xl">{cruise?.description}</p>
+          </div>
+          <div className="flex flex-col items-start justify-center gap-2">
+            <p className="font-bold text-xl">{t("translations.voting")}</p>
+            <p>{cruise?.rating}</p>
+          </div>
           {cruise?.amenities && cruise?.amenities.length > 0 && (
             <>
-              <Separator className="mt-5" />
-              <div className="flex flex-col items-start justify-center gap-2 my-5">
+              {/* <Separator className="mt-5" /> */}
+              <div className="flex flex-col items-start justify-center gap-2 ">
                 <h1 className="text-2xl font-bold">
                   {t("cruisesTable.amenities")}
                 </h1>
@@ -64,29 +75,28 @@ const page = async ({ params }: any) => {
               </div>
             </>
           )}
-
-          <Separator className="mt-5" />
-          <h1 className="font-bold text-2xl mt-5">
-            {t("translations.location")}
-          </h1>
-          {cruise?.location?.lat ? (
-            <iframe
-              width="550"
-              height="450"
-              style={{ border: 0 }}
-              loading="lazy"
-              allowFullScreen
-              className="rounded-md mt-5 w-full"
-              src={`https://www.google.com/maps?q=${cruise?.location?.lat},${cruise?.location?.lng}&hl=es;z=14&output=embed`}
-            ></iframe>
-          ) : (
-            <div className="mt-20">
-              <h1 className="font-bold text-xl">
-                {t("translations.noLocation")}
-              </h1>
-            </div>
-          )}
         </div>
+        <Separator className="mt-5" />
+        <h1 className="font-bold text-2xl mt-5">
+          {t("translations.location")}
+        </h1>
+        {cruise?.location?.lat ? (
+          <iframe
+            width="550"
+            height="450"
+            style={{ border: 0 }}
+            loading="lazy"
+            allowFullScreen
+            className="rounded-md mt-5 w-full"
+            src={`https://www.google.com/maps?q=${cruise?.location?.lat},${cruise?.location?.lng}&hl=es;z=14&output=embed`}
+          ></iframe>
+        ) : (
+          <div className="mt-20">
+            <h1 className="font-bold text-xl">
+              {t("translations.noLocation")}
+            </h1>
+          </div>
+        )}
         {/* second col */}
         {currentUser?.role !== "cruiseOwner" && (
           <div className="w-full">

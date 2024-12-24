@@ -137,33 +137,43 @@ const AttractionForm = ({
   };
 
   return (
-    <div className="p-4 mt-2">
-      <h1 className="font-bold">{t("translations.selectOrder")}</h1>
+    <div className="p-4 mt-2 grid grid-cols-2 max-md:grid-cols-1 gap-3">
+      <div>
+        <h1 className="font-bold">{t("translations.selectOrder")}</h1>
 
-      {/* Table for available options */}
-      <table className="mt-3 w-full border-collapse border border-gray-300">
-        <thead>
-          <tr>
-            <th className="border border-gray-300 p-2">
-              {t("translations.selectOption")}
-            </th>
-          </tr>
-        </thead>
-        <tbody>
-          {availableOptions.map((option, index) => (
-            <tr
-              key={index}
-              className="cursor-pointer hover:bg-gray-100"
-              onClick={() => handleSelect(option)}
-            >
-              <td className="border border-gray-300 p-2">{option}</td>
+        {/* Table for available options */}
+        <table className="mt-3 w-full border-collapse border border-gray-300">
+          <thead>
+            <tr>
+              <th className="border border-gray-300 p-2">
+                {t("translations.selectOption")}
+              </th>
             </tr>
-          ))}
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            {availableOptions.map((option, index) => (
+              <tr
+                key={index}
+                className="cursor-pointer hover:bg-gray-100"
+                onClick={() => handleSelect(option)}
+              >
+                <td className="border border-gray-300 p-2">{option}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+        <p className="text-[gray] text-sm mt-10">
+          {t("translations.attractionKnow")}{" "}
+          <Link href={"/attractions"} target="_blank">
+            <span className="text-blue-600 font-semibold cursor-pointer">
+              {t("translations.click")}
+            </span>
+          </Link>
+        </p>
+      </div>
 
       {/* Table for selected options */}
-      <div className="mt-5">
+      <div className="max-md:mt-5">
         <h3 className="font-bold">{t("translations.order")}</h3>
         {selectedOptions && selectedOptions.length > 0 ? (
           <table className="mt-3 w-full border-collapse border border-gray-300">
@@ -201,14 +211,6 @@ const AttractionForm = ({
         ) : (
           <p className="mt-3 font-bold">{t("translations.noOptions")}</p>
         )}
-        <p className="text-[gray] text-sm mt-10">
-          {t("translations.attractionKnow")}{" "}
-          <Link href={"/attractions"} target="_blank">
-            <span className="text-blue-600 font-semibold cursor-pointer">
-              {t("translations.click")}
-            </span>
-          </Link>
-        </p>
       </div>
     </div>
   );

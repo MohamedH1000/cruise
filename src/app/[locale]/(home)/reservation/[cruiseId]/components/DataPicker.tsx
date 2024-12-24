@@ -1,4 +1,5 @@
 "use client";
+import { CurrencyContext } from "@/app/context/CurrencyContext";
 import AdultCounter from "@/components/NavBar/AdultCounter";
 import KidCounter from "@/components/NavBar/KidCounter";
 import RoomCounter from "@/components/NavBar/RoomCounter";
@@ -15,7 +16,7 @@ import { eachDayOfInterval, format, parseISO } from "date-fns";
 import { CalendarIcon } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { useSearchParams } from "next/navigation";
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useContext, useEffect, useMemo, useState } from "react";
 
 const initialDateRange = {
   from: new Date(),
@@ -25,7 +26,7 @@ const initialDateRange = {
 
 const DataPicker = ({ reservations }: any) => {
   const [adults, setAdults] = useState(0);
-  const [dateRange, setDateRange] = useState<any>(initialDateRange);
+  const { dateRange, setDateRange } = useContext(CurrencyContext);
   const [kids, setKids] = useState(0);
   const [rooms, setRooms] = useState(0);
   const t = useTranslations();

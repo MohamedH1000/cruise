@@ -1,20 +1,10 @@
 "use client";
-import { Range } from "react-date-range";
-
-import React, {
-  Dispatch,
-  SetStateAction,
-  useContext,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-} from "react";
+import React, { useContext, useEffect, useMemo, useRef, useState } from "react";
 import { Separator } from "@/components/ui/separator";
 import { motion } from "framer-motion";
 import "react-phone-number-input/style.css";
 
-import { differenceInCalendarDays, eachDayOfInterval } from "date-fns";
+import { eachDayOfInterval } from "date-fns";
 import { useTranslations } from "next-intl";
 import { Button } from "@/components/ui/button";
 import DetailsForm from "./DetailsForm";
@@ -23,18 +13,16 @@ import RestaurantForm from "./RestaurantForm";
 import { CurrencyContext } from "@/app/context/CurrencyContext";
 import { fetchRestaurantsByAttractions } from "@/lib/actions/restaurant.action";
 import { loadStripe } from "@stripe/stripe-js";
-import { Restaurant } from "@prisma/client";
 import {
   Dialog,
   DialogContent,
   DialogFooter,
   DialogHeader,
   DialogTitle,
-  DialogTrigger,
 } from "@/components/ui/dialog";
 import PhoneInputWithCountrySelect from "react-phone-number-input";
 import { Input } from "@/components/ui/input";
-import DataPicker from "./DataPicker";
+
 const initialDateRange = {
   from: new Date(),
   to: new Date(),
@@ -72,12 +60,12 @@ const ListingReservation = ({
   const [selectedOptions, setSelectedOptions] = useState([]);
   // console.log("here is the selected options", selectedOptions);
   const [phoneNumber, setPhoneNumber] = useState("");
-  const [dateRange, setDateRange] = useState<any>(initialDateRange);
   const [totalPrice, setTotalPrice] = useState<any>();
   const [numberOfAttractions, setNumberOfAttractions] = useState<any>();
   const [steps, setSteps] = useState(STEPS.ATTRACTIONS);
   const [relatedRestaurants, setRelatedRestaurants] = useState<any>([]);
-  const { convertCurrency, currency } = useContext(CurrencyContext);
+  const { convertCurrency, currency, dateRange, setDateRange } =
+    useContext(CurrencyContext);
   const debounceTimeout = useRef<number | any>(null); // Debounce timeout
   const [combinedAttractions, setCombinedAttractions] = useState([]);
   const [availableOptions, setAvailableOptions] = useState(attractionNames);
@@ -145,6 +133,8 @@ const ListingReservation = ({
       );
 
       const validDayCount = validDates.length; // Count only valid dates
+
+      console.log(validDayCount);
 
       let newTotalPrice: number = 0;
 
