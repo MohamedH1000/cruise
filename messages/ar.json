@@ -220,6 +220,11 @@
     "close": "اغلاق",
     "arrivalDay": "دخول يوم",
     "leaveDay": "مغادرة يوم",
-    "totalAccomodation": "مدة الاقامة الاجمالية 5 ليالي"
+    "totalAccomodation": "مدة الاقامة الاجمالية",
+    "Date": "تاريخ",
+    "time": "الساعة",
+    "noRate": "لا يوجد تقييم",
+    "reservationDetails": "تفاصيل حجزك",
+    "nights": "ليالي"
   }
 }

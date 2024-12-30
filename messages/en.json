@@ -220,6 +220,11 @@
     "close": "close",
     "arrivalDay": "Arrive Date",
     "leaveDay": "Leave Date",
-    "totalAccomodation": "total accomodation nights is 5"
+    "totalAccomodation": "total accomodation is",
+    "Date": "Date",
+    "time": "time",
+    "noRate": "no voting exist yet",
+    "reservationDetails": "Booking Details",
+    "nights": "nights"
   }
 }

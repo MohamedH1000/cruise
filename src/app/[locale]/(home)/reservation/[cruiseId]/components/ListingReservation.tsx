@@ -22,6 +22,7 @@ import {
 } from "@/components/ui/dialog";
 import PhoneInputWithCountrySelect from "react-phone-number-input";
 import { Input } from "@/components/ui/input";
+import { DateContext } from "@/app/context/DateContext";
 
 const initialDateRange = {
   from: new Date(),
@@ -60,14 +61,19 @@ const ListingReservation = ({
   const [selectedOptions, setSelectedOptions] = useState([]);
   // console.log("here is the selected options", selectedOptions);
   const [phoneNumber, setPhoneNumber] = useState("");
-  const [totalPrice, setTotalPrice] = useState<any>();
-  const [numberOfAttractions, setNumberOfAttractions] = useState<any>();
   const [steps, setSteps] = useState(STEPS.ATTRACTIONS);
   const [relatedRestaurants, setRelatedRestaurants] = useState<any>([]);
-  const { convertCurrency, currency, dateRange, setDateRange } =
-    useContext(CurrencyContext);
+  const { convertCurrency, currency } = useContext(CurrencyContext);
   const debounceTimeout = useRef<number | any>(null); // Debounce timeout
   const [combinedAttractions, setCombinedAttractions] = useState([]);
+  const {
+    dateRange,
+    setDateRange,
+    totalPrice,
+    setTotalPrice,
+    numberOfAttractions,
+    setNumberOfAttractions,
+  } = useContext(DateContext);
   const [availableOptions, setAvailableOptions] = useState(attractionNames);
   const prevSelectedOptions = useRef<string[]>([]); // Store previous selected options
   // console.log(totalPrice);
@@ -134,7 +140,7 @@ const ListingReservation = ({
 
       const validDayCount = validDates.length; // Count only valid dates
 
-      console.log(validDayCount);
+      // console.log(validDayCount);
 
       let newTotalPrice: number = 0;
 

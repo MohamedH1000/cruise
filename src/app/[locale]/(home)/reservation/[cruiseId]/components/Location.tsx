@@ -38,8 +38,10 @@ const Location = ({ cruise }: any) => {
   };
   return (
     <div className="flex flex-col items-start justify-center gap-2">
-      <h1 className="font-bold text-2xl">{t("translations.location")}</h1>
-      <Button onClick={handleClickOpen}>قم بعرض الموقع على الخريطة</Button>
+      <h1 className="font-bold text-xl">{t("translations.location")}</h1>
+      <Button onClick={handleClickOpen} className="text-sm font-bold">
+        قم بعرض الموقع على الخريطة
+      </Button>
       <Dialog
         fullScreen
         open={open}

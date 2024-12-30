@@ -1,5 +1,5 @@
 "use client";
-import { CurrencyContext } from "@/app/context/CurrencyContext";
+import { DateContext } from "@/app/context/DateContext";
 import AdultCounter from "@/components/NavBar/AdultCounter";
 import KidCounter from "@/components/NavBar/KidCounter";
 import RoomCounter from "@/components/NavBar/RoomCounter";
@@ -18,15 +18,9 @@ import { useTranslations } from "next-intl";
 import { useSearchParams } from "next/navigation";
 import React, { useContext, useEffect, useMemo, useState } from "react";
 
-const initialDateRange = {
-  from: new Date(),
-  to: new Date(),
-  key: "selection",
-};
-
 const DataPicker = ({ reservations }: any) => {
   const [adults, setAdults] = useState(0);
-  const { dateRange, setDateRange } = useContext(CurrencyContext);
+  const { dateRange, setDateRange } = useContext(DateContext);
   const [kids, setKids] = useState(0);
   const [rooms, setRooms] = useState(0);
   const t = useTranslations();
