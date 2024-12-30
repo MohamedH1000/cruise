@@ -12,6 +12,7 @@ import {
   getCombinedAttractionsByRestaurantArray,
 } from "@/lib/actions/attraction.action";
 import DataPicker from "./components/DataPicker";
+import Location from "./components/Location";
 
 const page = async ({ params }: any) => {
   const cruise = await getCruiseById(params.cruiseId);
@@ -31,7 +32,7 @@ const page = async ({ params }: any) => {
       <DataPicker reservations={reservations} />
       <div className="grid grid-cols-1 max-md:grid-cols-1 gap-3">
         {/* first col */}
-        <div className="flex justify-between items-start flex-wrap gap-3 mt-5">
+        <div className="flex justify-between items-start flex-wrap gap-8 mt-5">
           <div className=" text-xl flex items-center gap-2">
             <p>
               {t("translations.createdBy")} :{" "}
@@ -57,6 +58,18 @@ const page = async ({ params }: any) => {
             <p className="font-bold text-xl">{t("translations.voting")}</p>
             <p>{cruise?.rating}</p>
           </div>
+          <Location cruise={cruise} />
+
+          <div className="flex flex-col items-start justify-center gap-2">
+            <p className="font-bold text-2xl">{t("translations.arrivalDay")}</p>
+          </div>
+
+          <div className="flex flex-col items-start justify-center gap-2">
+            <p className="font-bold text-2xl">
+              {t("translations.totalAccomodation")}
+            </p>
+          </div>
+
           {cruise?.amenities && cruise?.amenities.length > 0 && (
             <>
               {/* <Separator className="mt-5" /> */}
@@ -75,28 +88,11 @@ const page = async ({ params }: any) => {
               </div>
             </>
           )}
-        </div>
-        <Separator className="mt-5" />
-        <h1 className="font-bold text-2xl mt-5">
-          {t("translations.location")}
-        </h1>
-        {cruise?.location?.lat ? (
-          <iframe
-            width="550"
-            height="450"
-            style={{ border: 0 }}
-            loading="lazy"
-            allowFullScreen
-            className="rounded-md mt-5 w-full"
-            src={`https://www.google.com/maps?q=${cruise?.location?.lat},${cruise?.location?.lng}&hl=es;z=14&output=embed`}
-          ></iframe>
-        ) : (
-          <div className="mt-20">
-            <h1 className="font-bold text-xl">
-              {t("translations.noLocation")}
-            </h1>
+          <div className="flex flex-col items-start justify-center gap-2">
+            <p className="font-bold text-2xl">{t("translations.totalPrice")}</p>
           </div>
-        )}
+        </div>
+
         {/* second col */}
         {currentUser?.role !== "cruiseOwner" && (
           <div className="w-full">

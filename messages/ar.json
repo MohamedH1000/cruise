@@ -216,6 +216,10 @@
     "myCruises": "ادارة اليخوت الخاصة",
     "myReservations": "الحجوزات على اليخت الخاص بك",
     "sitePercent": "نسبة الموقع",
-    "Remaining": "الصافي بعد خصم النسبة"
+    "Remaining": "الصافي بعد خصم النسبة",
+    "close": "اغلاق",
+    "arrivalDay": "دخول يوم",
+    "leaveDay": "مغادرة يوم",
+    "totalAccomodation": "مدة الاقامة الاجمالية 5 ليالي"
   }
 }

@@ -216,6 +216,10 @@
     "myCruises": "Manage your cruises",
     "myReservations": "Bookings in your cruise",
     "sitePercent": "Site Percent",
-    "Remaining": "The net price"
+    "Remaining": "The net price",
+    "close": "close",
+    "arrivalDay": "Arrive Date",
+    "leaveDay": "Leave Date",
+    "totalAccomodation": "total accomodation nights is 5"
   }
 }
