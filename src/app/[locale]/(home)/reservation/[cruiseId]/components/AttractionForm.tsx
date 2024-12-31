@@ -136,6 +136,21 @@ const AttractionForm = ({
     );
   };
 
+  function getOrdinalDay(dayNumber) {
+    const ordinals = [
+      `${t("translations.first")}`,
+      `${t("translations.second")}`,
+      `${t("translations.third")}`,
+      `${t("translations.forth")}`,
+      `${t("translations.fifth")}`,
+      `${t("translations.sixth")}`,
+      `${t("translations.seventh")}`,
+      `${t("translations.eigtht")}`,
+      `${t("translations.ninth")}`,
+      `${t("translations.tenth")}`,
+    ];
+    return ordinals[dayNumber - 1] || `${dayNumber}th`; // Fallback for numbers beyond 10
+  }
   return (
     <div className="p-4 mt-2 grid grid-cols-2 max-md:grid-cols-1 gap-3">
       <div>
@@ -145,7 +160,7 @@ const AttractionForm = ({
         <table className="mt-3 w-full border-collapse border border-gray-300">
           <thead>
             <tr>
-              <th className="border border-gray-300 p-2">
+              <th className="border border-gray-300 p-2" colSpan="2">
                 {t("translations.selectOption")}
               </th>
             </tr>
@@ -157,6 +172,9 @@ const AttractionForm = ({
                 className="cursor-pointer hover:bg-gray-100"
                 onClick={() => handleSelect(option)}
               >
+                <td className="border border-gray-300 p-2 font-bold whitespace-nowrap">
+                  {t("translations.OneDayAttraction")}
+                </td>
                 <td className="border border-gray-300 p-2">{option}</td>
               </tr>
             ))}
@@ -180,7 +198,7 @@ const AttractionForm = ({
             <thead>
               <tr>
                 <th className="border border-gray-300 p-2">
-                  {t("translations.orderNumber")}
+                  {t("translations.days")}
                 </th>
                 <th className="border border-gray-300 p-2">
                   {t("translations.selectedOption")}
@@ -191,21 +209,27 @@ const AttractionForm = ({
               </tr>
             </thead>
             <tbody>
-              {Array.from({ length: numberOfAttractions }, (_, index) => (
-                <tr key={index}>
-                  <td className="border border-gray-300 p-2">{index + 1}</td>
-                  <td className="border border-gray-300 p-2">
-                    {selectedOptions[index] || "-"}
-                  </td>
-                  <td className="border border-gray-300 p-2">
-                    {selectedOptions[index] && (
-                      <button onClick={() => handleDelete(index)}>
-                        <RemoveIcon className="text-[red] cursor-pointer" />
-                      </button>
-                    )}
-                  </td>
-                </tr>
-              ))}
+              {Array.from({ length: numberOfAttractions }, (_, index) => {
+                const dayNumber = index + 1;
+                const dayText = `${getOrdinalDay(dayNumber)}`; // e.g., "1st Day", "2nd Day"
+                return (
+                  <tr key={index}>
+                    <td className="border border-gray-300 p-2">
+                      {t("translations.day") + " " + dayText}
+                    </td>
+                    <td className="border border-gray-300 p-2">
+                      {selectedOptions[index] || "-"}
+                    </td>
+                    <td className="border border-gray-300 p-2">
+                      {selectedOptions[index] && (
+                        <button onClick={() => handleDelete(index)}>
+                          <RemoveIcon className="text-[red] cursor-pointer" />
+                        </button>
+                      )}
+                    </td>
+                  </tr>
+                );
+              })}
             </tbody>
           </table>
         ) : (

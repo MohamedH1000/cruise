@@ -225,6 +225,20 @@
     "time": "time",
     "noRate": "no voting exist yet",
     "reservationDetails": "Booking Details",
-    "nights": "nights"
+    "nights": "nights",
+    "OneDayAttraction": "attraction for one day",
+    "days": "days",
+    "confirmAndNext": "Next",
+    "first": "first",
+    "second": "second",
+    "third": "third",
+    "forth": "forth",
+    "fifth": "fifth",
+    "sixth": "sixth",
+    "seventh": "seventh",
+    "eighth": "eighth",
+    "ninth": "ninth",
+    "tenth": "tenth",
+    "day": "day"
   }
 }

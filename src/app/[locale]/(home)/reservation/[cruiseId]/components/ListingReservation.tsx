@@ -97,7 +97,7 @@ const ListingReservation = ({
     if (steps === STEPS.RESTAURANTS) {
       return t("translations.reservenow");
     }
-    return t("translations.next");
+    return t("translations.confirmAndNext");
   }, [steps]);
 
   const secondaryActionLabel = useMemo(() => {
