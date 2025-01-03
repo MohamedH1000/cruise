@@ -5,7 +5,7 @@ import { motion } from "framer-motion";
 import "react-phone-number-input/style.css";
 
 import { eachDayOfInterval } from "date-fns";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import { Button } from "@/components/ui/button";
 import DetailsForm from "./DetailsForm";
 import AttractionForm from "./AttractionForm";
@@ -23,6 +23,7 @@ import {
 import PhoneInputWithCountrySelect from "react-phone-number-input";
 import { Input } from "@/components/ui/input";
 import { DateContext } from "@/app/context/DateContext";
+import { DialogTrigger } from "@radix-ui/react-dialog";
 
 const initialDateRange = {
   from: new Date(),
@@ -66,6 +67,7 @@ const ListingReservation = ({
   const { convertCurrency, currency } = useContext(CurrencyContext);
   const debounceTimeout = useRef<number | any>(null); // Debounce timeout
   const [combinedAttractions, setCombinedAttractions] = useState([]);
+  const locale = useLocale();
   const {
     dateRange,
     setDateRange,
@@ -337,6 +339,8 @@ const ListingReservation = ({
         <RestaurantForm
           relatedRestaurants={relatedRestaurants}
           setTotalPrice={setTotalPrice}
+          selectedOptions={selectedOptions}
+          numberOfAttractions={numberOfAttractions}
         />
       )}
 
@@ -357,7 +361,9 @@ const ListingReservation = ({
 
         <Button
           onClick={
-            actionLabel === t("translations.next") ? onNext : onPreSubmit
+            actionLabel === t("translations.confirmAndNext")
+              ? onNext
+              : onPreSubmit
           }
           disabled={isLoading ? true : false}
           className="w-full rounded-md bg-[#003b95]
@@ -370,7 +376,13 @@ const ListingReservation = ({
         <Dialog open={isDialogOpen}>
           <DialogContent>
             <DialogHeader>
-              <DialogTitle>{t("translations.enterDetails")}</DialogTitle>
+              <DialogTitle
+                className={`${
+                  locale === "ar" ? "text-right" : "text-left"
+                } mt-5`}
+              >
+                {t("translations.enterDetails")}
+              </DialogTitle>
             </DialogHeader>
             {!currentUser ? (
               <div className="flex flex-col gap-3">
