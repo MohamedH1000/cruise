@@ -115,24 +115,29 @@ export function AttractionsTable<TData, TValue>({
           <Popover>
             <PopoverTrigger asChild>
               <Button variant="link" className="text-blue-500">
-                {restaurants.length > 0
-                  ? `${restaurants.length} ${t("translations.restaurants")}`
+                {restaurants?.length > 0
+                  ? `${restaurants?.length} ${t("translations.restaurants")}`
                   : t("translations.noRestaurant")}
               </Button>
             </PopoverTrigger>
             <PopoverContent>
               <div className="p-2 space-y-1">
-                {restaurants.length > 0 ? (
+                {restaurants?.length > 0 ? (
                   <ol className="list-decimal pl-4">
                     {" "}
                     {/* list-decimal gives numbered list, pl-4 adds padding to indent */}
-                    {restaurants.map((res: { name: string }, index: number) => (
-                      <li key={res.restaurant.name} className="mb-1 font-bold">
-                        {" "}
-                        {/* mb-1 adds margin between items */}
-                        {res.restaurant.name}
-                      </li>
-                    ))}
+                    {restaurants?.map(
+                      (res: { name: string }, index: number) => (
+                        <li
+                          key={res.restaurant.name}
+                          className="mb-1 font-bold"
+                        >
+                          {" "}
+                          {/* mb-1 adds margin between items */}
+                          {res.restaurant.name}
+                        </li>
+                      )
+                    )}
                   </ol>
                 ) : (
                   <span>No restaurants</span>
