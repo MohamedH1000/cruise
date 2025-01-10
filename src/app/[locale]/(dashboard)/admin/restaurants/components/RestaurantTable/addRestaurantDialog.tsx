@@ -11,8 +11,16 @@ import ImageUpload from "@/components/imageUpload/ImageUpload";
 import { Textarea } from "@/components/ui/textarea";
 import { cn } from "@/lib/utils";
 import { createRestaurant } from "@/lib/actions/restaurant.action";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Attractions } from "@prisma/client";
 
-const AddRestaurantDialog = ({ cruiseOwner, admin }: any) => {
+const AddRestaurantDialog = ({ cruiseOwner, admin, attractions }: any) => {
   const t = useTranslations();
   const [open, setOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -20,6 +28,7 @@ const AddRestaurantDialog = ({ cruiseOwner, admin }: any) => {
     name: "",
     description: "",
     imageSrc: [],
+    attractionId: "",
   });
   // console.log("cruise details", cruiseDetails);
   const clear = () => {
@@ -27,6 +36,7 @@ const AddRestaurantDialog = ({ cruiseOwner, admin }: any) => {
       name: "",
       description: "",
       imageSrc: [],
+      attractionId: "",
     });
   };
 
@@ -123,6 +133,32 @@ const AddRestaurantDialog = ({ cruiseOwner, admin }: any) => {
                       disabled={isLoading ? true : false}
                     />
                   </div>
+                  <div className="flex flex-col justify-center items-start gap-3">
+                    <p>المعلم المرتبط به</p>
+                    <Select
+                      dir="rtl"
+                      required
+                      value={restaurantDetails.attractionId}
+                      onValueChange={(value) =>
+                        setRestaurantDetails((prev: any) => ({
+                          ...prev,
+                          attractionId: value,
+                        }))
+                      }
+                    >
+                      <SelectTrigger className="w-full">
+                        <SelectValue placeholder="قم باختيار المعلم" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {attractions.map((attraction: Attractions) => (
+                          <SelectItem key={attraction.id} value={attraction.id}>
+                            {attraction.name}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
+
                   <div className="flex flex-col items-start justify-center gap-3">
                     <p>الوصف</p>
                     <Textarea

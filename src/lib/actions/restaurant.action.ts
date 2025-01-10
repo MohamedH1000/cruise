@@ -9,12 +9,13 @@ export async function createRestaurant(restaurantDetails: any) {
   if (currentUser?.role !== "admin") {
     throw new Error("You are not authorized to create the cruise");
   }
-  const { name, description, imageSrc = [] } = restaurantDetails;
+  const { name, description, imageSrc = [], attractionId } = restaurantDetails;
   const restaurant = await prisma.restaurant.create({
     data: {
       name,
       description,
       imageSrc: { set: imageSrc },
+      attractionId,
     },
   });
 
@@ -54,13 +55,17 @@ export async function fetchRestaurants() {
 export const fetchRestaurantsByAttractions = async (
   selectedAttractions: string[]
 ) => {
+  // console.log("attractions", attractions);
+  if (!Array.isArray(selectedAttractions) || selectedAttractions.length === 0) {
+    throw new Error("Invalid or empty attractions array");
+  }
+
   try {
     // Clean the attraction names
-    const attractions = selectedAttractions.map((name) => name.trim());
-    // console.log("attractions", attractions);
+    const attractionsName = selectedAttractions.map((name) => name.trim());
 
     // Log the attractions to ensure they are correct
-    // console.log("Selected Attractions:", attractions);
+    console.log("Selected Attractions:", attractionsName);
 
     // Fetch restaurants related to the attractions through the join table
     const restaurants = await prisma.restaurant.findMany({
@@ -69,7 +74,7 @@ export const fetchRestaurantsByAttractions = async (
           some: {
             attraction: {
               name: {
-                in: attractions, // This queries the 'name' field on the Attraction model
+                in: attractionsName, // This queries the 'name' field on the Attraction model
               },
             },
           },
@@ -91,6 +96,31 @@ export const fetchRestaurantsByAttractions = async (
       console.error(error.stack); // Log the stack trace for deeper insight
     }
     throw new Error("Failed to fetch restaurants");
+  }
+};
+
+export const fetchRestaurantsByName = async (names: string[]) => {
+  try {
+    const attractions = await prisma.attractions.findMany({
+      where: {
+        name: {
+          in: names, // Matches any attraction name in the provided array
+        },
+      },
+      include: {
+        restaurants: true, // Include the associated restaurants
+      },
+    });
+
+    // Extract all restaurants from the attractions
+
+    // Remove duplicates if the same restaurant is linked to multiple attractions
+    return attractions;
+  } catch (error) {
+    console.error("Error fetching restaurants by attraction names:", error);
+    throw new Error("Failed to fetch restaurants.");
+  } finally {
+    await prisma.$disconnect();
   }
 };
 

@@ -11,7 +11,7 @@ import DetailsForm from "./DetailsForm";
 import AttractionForm from "./AttractionForm";
 import RestaurantForm from "./RestaurantForm";
 import { CurrencyContext } from "@/app/context/CurrencyContext";
-import { fetchRestaurantsByAttractions } from "@/lib/actions/restaurant.action";
+import { fetchRestaurantsByName } from "@/lib/actions/restaurant.action";
 import { loadStripe } from "@stripe/stripe-js";
 import {
   Dialog,
@@ -23,7 +23,6 @@ import {
 import PhoneInputWithCountrySelect from "react-phone-number-input";
 import { Input } from "@/components/ui/input";
 import { DateContext } from "@/app/context/DateContext";
-import { DialogTrigger } from "@radix-ui/react-dialog";
 
 const initialDateRange = {
   from: new Date(),
@@ -40,7 +39,6 @@ const ListingReservation = ({
   currentUser,
   cruise,
   attractions,
-  combAttractions,
 }: any) => {
   // console.log("here is the combined attractions", combAttractions);
   // const attractionsData = attractions.map((attraction: any) => {
@@ -50,20 +48,23 @@ const ListingReservation = ({
   //     restaurantId: attraction.restaurants.id, // Adjust this according to your actual property structure
   //   };
   // });
-  const attractionNames = combAttractions.map(
-    (attraction) => attraction.attractions
+  const attractionNames = attractions?.map(
+    (attraction: any) => attraction.name
   );
-  // console.log(initialOptions);
+
+  // console.log("attractions", attractions);
   const t = useTranslations();
   const [name, setName] = useState(currentUser?.name || "");
   const [isLoading, setIsLoading] = useState(false);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [email, setEmail] = useState(currentUser?.email || "");
   const [selectedOptions, setSelectedOptions] = useState([]);
-  // console.log("here is the selected options", selectedOptions);
+  // console.log("heres is the selected options", selectedOptions);
+  // console.log("heres is the attraction names", attractionNames);
   const [phoneNumber, setPhoneNumber] = useState("");
   const [steps, setSteps] = useState(STEPS.ATTRACTIONS);
   const [relatedRestaurants, setRelatedRestaurants] = useState<any>([]);
+  // console.log("related restaurants", relatedRestaurants)
   const { convertCurrency, currency } = useContext(CurrencyContext);
   const debounceTimeout = useRef<number | any>(null); // Debounce timeout
   const [combinedAttractions, setCombinedAttractions] = useState([]);
@@ -171,16 +172,18 @@ const ListingReservation = ({
       ) {
         // Update the previous options ref
         prevSelectedOptions.current = [...selectedOptions];
+        // console.log(prevSelectedOptions.current, "the prev selected options");
         const validAttractions = selectedOptions.filter(
           (option) => option !== null
         );
+
+        // console.log("selected options", selectedOptions);
         // console.log("here is the valid attractions", validAttractions);
         // Fetch related restaurants based on the selected attractions
         const fetchRestaurants = async () => {
           try {
-            const restaurants = await fetchRestaurantsByAttractions(
-              validAttractions
-            );
+            const restaurants = await fetchRestaurantsByName(validAttractions);
+            // console.log("here is the related restaurants", restaurants);
             setRelatedRestaurants(restaurants);
           } catch (error) {
             console.error("Error fetching restaurants:", error);
@@ -341,6 +344,7 @@ const ListingReservation = ({
           setTotalPrice={setTotalPrice}
           selectedOptions={selectedOptions}
           numberOfAttractions={numberOfAttractions}
+          attractions={attractions}
         />
       )}
 

@@ -7,7 +7,7 @@ import React, { useContext } from "react";
 const DateDetails = () => {
   const t = useTranslations();
   const { dateDetails } = useContext(DateContext);
-  console.log(dateDetails);
+  // console.log(dateDetails);
   return (
     <>
       {/* arrival day */}

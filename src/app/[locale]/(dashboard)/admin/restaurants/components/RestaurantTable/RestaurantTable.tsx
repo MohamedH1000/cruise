@@ -52,10 +52,12 @@ export type Payment = {
 
 interface DataTableProps<TData, TValue> {
   data: TData[];
+  attractions: any;
 }
 
 export function RestaurantTable<TData, TValue>({
   data,
+  attractions,
 }: DataTableProps<TData, TValue>) {
   const [sorting, setSorting] = useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
@@ -100,13 +102,17 @@ export function RestaurantTable<TData, TValue>({
       accessorKey: "delete",
       header: `${t("RestaurantTable.delete")}`,
       cell: ({ row }) => {
+        const [open, setOpen] = React.useState(false); // State specific to this row
         const restaurant = row.original; // Access the original row data
+        // console.log("Row data:", row.original);
 
         const handleDelete = async (id: string) => {
           try {
-            await handleDeleteById(id); // Call your backend function to update the status
+            // console.log("Deleting restaurant with ID:", id); // Debug the passed ID
+            await handleDeleteById(id); // Call your backend function to delete the item
             toast.success(`Restaurant Deleted Successfully`);
           } catch (error) {
+            console.error("Error during deletion:", error);
             toast.error("Error Deleting the restaurant");
           } finally {
             router.refresh();
@@ -121,7 +127,6 @@ export function RestaurantTable<TData, TValue>({
             <DialogContent>
               <DialogHeader>
                 <DialogTitle>
-                  {" "}
                   {t("RestaurantTable.dialogTriggerTitleDelete")}
                 </DialogTitle>
                 <DialogDescription>
@@ -131,8 +136,8 @@ export function RestaurantTable<TData, TValue>({
               <Button
                 className="bg-[red] text-white"
                 onClick={() => {
-                  handleDelete(restaurant?.id);
-                  setOpen(false);
+                  handleDelete(restaurant.id); // Pass the correct ID from the current row
+                  setOpen(false); // Close the dialog
                 }}
               >
                 {t("cruisesTable.dialogTriggerDelete")}
@@ -167,7 +172,7 @@ export function RestaurantTable<TData, TValue>({
 
   return (
     <>
-      <AddRestaurantDialog admin />
+      <AddRestaurantDialog admin attractions={attractions} />
       <div>
         <div className="flex items-center justify-start gap-2">
           <div className="flex items-center py-4">
